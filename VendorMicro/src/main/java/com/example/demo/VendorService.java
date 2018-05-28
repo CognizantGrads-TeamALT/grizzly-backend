@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -18,7 +19,8 @@ public class VendorService {
      * @return ArrayList of Vendor objs
      */
     public ArrayList<Vendor> getAll() {
-        PageRequest request = PageRequest.of(0, 25);
+        Sort sort = new Sort(Sort.Direction.ASC, "name");
+        PageRequest request = PageRequest.of(0, 25, sort);
 
         return makeListFromIterable(
                 vendorRepository.findAll(request)
