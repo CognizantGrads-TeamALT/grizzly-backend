@@ -1,11 +1,9 @@
-package com.example.demo.VendorMicro;
+package com.example.demo;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VendorRepository extends CrudRepository<Vendor, String>{
-    public Iterable<Vendor> findAllByVendorId(String vendorId);
+public interface VendorRepository extends PagingAndSortingRepository<Vendor, String>{
 
-    public Iterable<Vendor> findAll();
 }

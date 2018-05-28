@@ -1,8 +1,9 @@
-package com.example.demo.VendorMicro;
+package com.example.demo;
 
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
@@ -17,8 +18,10 @@ public class VendorService {
      * @return ArrayList of Vendor objs
      */
     public ArrayList<Vendor> getAll() {
+        PageRequest request = PageRequest.of(0, 25);
+
         return makeListFromIterable(
-                vendorRepository.findAll()
+                vendorRepository.findAll(request)
         );
     }
 

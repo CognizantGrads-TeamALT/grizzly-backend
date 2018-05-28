@@ -1,4 +1,4 @@
-package com.example.demo.VendorMicro;
+package com.example.demo;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
