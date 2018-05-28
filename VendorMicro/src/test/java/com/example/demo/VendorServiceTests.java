@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -39,5 +40,27 @@ public class VendorServiceTests {
 		// verification
         assertEquals(original, after);
 	}
+
+    @Test
+    public void makeListFromIterableChangesIterableType() {
+        // set up
+        List<String> expected = new ArrayList<String>();
+        expected.add("one");
+        expected.add("three");
+        expected.add("two");
+
+        List<String> original = new LinkedList<String>();
+        original.add("one");
+        original.add("three");
+        original.add("two");
+
+        ArrayList<String> result;
+
+        // execution
+        result = testService.makeListFromIterable(original);
+
+        // verification
+        assertEquals(expected, result);
+    }
 
 }
