@@ -15,7 +15,8 @@ public class VendorService {
     private VendorRepository vendorRepository;
 
     /**
-     * Get all vendors in the database
+     * Get all vendors in the database, sorted by name and paginated to 25 vendors at a time.
+     * Currently only returns 1st page (can update with first param of PageRequest.of()
      * @return ArrayList of Vendor objs
      */
     public ArrayList<Vendor> getAll() {
