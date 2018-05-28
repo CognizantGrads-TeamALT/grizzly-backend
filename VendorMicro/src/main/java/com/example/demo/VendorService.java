@@ -29,6 +29,12 @@ public class VendorService {
     }
 
     /**
+     * Get a filtered list of vendors, based on a given search string to match to name or ID.
+     * @param search, the string to match to name or ID to filter the vendors by
+     * @return ArrayList of Vendor objs whose names or IDs
+     */
+
+    /**
      * Make an ArrayList of Objects based on a passed-in Iterable
      * @param iter An Iterable of Objects
      * @return An ArrayList made from the Iterable
