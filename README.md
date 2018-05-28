@@ -8,10 +8,17 @@
 > Each folder is it's own micro service
 
 > AuthMicro = Authentication
-> GatewayMicro = Main API Gateway
+> apigatewayserver = Main API Gateway
 > VendorMicro = Vendor info
 > ProductMicro = Product info
 > CategoryMicro = Category info
 > UserMicro = User info
+> namingserver = Naming Server
+> configserver = Config Server
 
+## Run order
 
+1. Config Server (Optional)
+2. Naming Server
+3. Microservices
+4. API Gateway
