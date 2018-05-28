@@ -13,6 +13,3 @@
 > ProductMicro = Product info
 > CategoryMicro = Category info
 > UserMicro = User info
-
-
-> This is a test message
