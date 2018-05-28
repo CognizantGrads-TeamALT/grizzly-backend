@@ -1,0 +1,8 @@
+*/.DS_Store
+.idea/
+.DS_Store
+*.idea
+*.iml
+*.ipr
+*.class
+*/target/*
