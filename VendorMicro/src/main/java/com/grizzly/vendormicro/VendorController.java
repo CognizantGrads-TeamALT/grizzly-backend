@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequestMapping("/vendor")
 public class VendorController {
 
     @Autowired
@@ -18,11 +19,11 @@ public class VendorController {
      * Return a list of all vendors in the system
      * @return vendors in a list
      */
-    @GetMapping("/vendor/all")
+    @GetMapping("/all")
     public ResponseEntity<ArrayList<Vendor>> getAll() {
         ArrayList<Vendor> vendors = vendorService.getAll();
 
-        // no stats found
+        // no vendors found
 //        if (vendors == null || vendors.isEmpty()) {
 //            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
 //        }
