@@ -19,9 +19,9 @@ public class VendorController {
      * Return a list of all vendors in the system
      * @return vendors in a list
      */
-    @GetMapping("/all")
-    public ResponseEntity<ArrayList<Vendor>> getAll() {
-        ArrayList<Vendor> vendors = vendorService.getAll();
+    @GetMapping("/all/{column_name}")
+    public ResponseEntity<ArrayList<Vendor>> getAll(@PathVariable(value="column_name") String column_name) {
+        ArrayList<Vendor> vendors = vendorService.getAll(column_name);
 
         // no vendors found
 //        if (vendors == null || vendors.isEmpty()) {
