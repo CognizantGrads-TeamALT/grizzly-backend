@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.grizzly.authmicro;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.grizzly.categorymicro;
 
 import java.util.Arrays;
 

@@ -24,12 +24,9 @@ public class VendorController {
         ArrayList<Vendor> vendors = vendorService.getAll(column_name);
 
         // no vendors found
-//        if (vendors == null || vendors.isEmpty()) {
-//            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
-//        }
-        vendors.add(new Vendor("1", "Bob", "0456789219", "www.bob.com", "bob@website.com", "This is Bob"));
-        vendors.add(new Vendor("2", "Jane", "0454329219", "www.jane.com", "jane@website.com", "This is Jane"));
-        vendors.add(new Vendor("3", "Marty", "0447789249", "www.marty.com", "marty@website.com", "This is Marty"));
+        if (vendors == null || vendors.isEmpty()) {
+            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(vendors, HttpStatus.OK);
     }

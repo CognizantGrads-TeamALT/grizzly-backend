@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.grizzly.authmicro;
 
 import java.util.Arrays;
 
