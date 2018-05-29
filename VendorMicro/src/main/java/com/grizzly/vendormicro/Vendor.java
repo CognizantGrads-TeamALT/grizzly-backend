@@ -1,12 +1,11 @@
 package com.grizzly.vendormicro;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name="vendor")
 public class Vendor {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="vendor_id") private String vendorId;
 
     @Column(name="name") private String name;
