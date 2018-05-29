@@ -43,6 +43,14 @@ public class VendorService {
     }
 
     /**
+     * Delete a vendor given an ID
+     * @param deleteId, ID of the vendor to delete
+     */
+    public void deleteById(String deleteId) {
+        vendorRepository.deleteById(deleteId);
+    }
+
+    /**
      * Make an ArrayList of Objects based on a passed-in Iterable
      * @param iter An Iterable of Objects
      * @return An ArrayList made from the Iterable
