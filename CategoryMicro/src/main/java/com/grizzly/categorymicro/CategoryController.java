@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.grizzly.categorymicro;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,7 +7,7 @@ import java.util.Random;
 
 
 @RestController
-public class HelloController {
+public class CategoryController {
 
     @RequestMapping("/")
     public String index() {
