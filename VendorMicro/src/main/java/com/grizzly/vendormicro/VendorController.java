@@ -34,6 +34,23 @@ public class VendorController {
         return new ResponseEntity<>(vendors, HttpStatus.OK);
     }
 
+    /**
+     * Return a list of vendors in the system filtered by a given search string on ID or name
+     * @param search, string to filter returned list on by ID or name
+     * @return the filtered vendors in a list
+     */
+    @RequestMapping("/search/{search}")
+    public ResponseEntity<ArrayList<Vendor>> getFiltered(@PathVariable(value="search") String search) {
+        ArrayList<Vendor> vendors = vendorService.getFiltered(search);
+
+        // no stats found
+        if (vendors == null || vendors.isEmpty()) {
+            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
+    }
+
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);
