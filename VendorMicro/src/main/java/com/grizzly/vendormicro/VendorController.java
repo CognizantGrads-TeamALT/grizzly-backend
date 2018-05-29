@@ -3,9 +3,11 @@ package com.grizzly.vendormicro;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.NestedServletException;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -43,12 +45,29 @@ public class VendorController {
     public ResponseEntity<ArrayList<Vendor>> getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Vendor> vendors = vendorService.getFiltered(search);
 
-        // no stats found
+        // no vendors found
         if (vendors == null || vendors.isEmpty()) {
             return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(vendors, HttpStatus.OK);
+    }
+
+    /**
+     * Delete a vendor based on a given ID
+     * @param id, ID of the vendor to delete
+     * @return HTTP status response only
+     */
+    @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
+    public ResponseEntity deleteVendor(@PathVariable(value="id") String id) {
+        try {
+            vendorService.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            // this ID didn't match any vendors
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/hello")
