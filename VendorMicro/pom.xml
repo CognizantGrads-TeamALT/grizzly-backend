@@ -71,6 +71,12 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>2.0.2.RELEASE</version>
         </dependency>
+
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
     </dependencies>
 
 	<build>
@@ -79,7 +85,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>--add-modules java.base</argLine>
+				</configuration>
+			</plugin>
 		</plugins>
+
+
 	</build>
 
 
