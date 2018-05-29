@@ -20,7 +20,7 @@ public class VendorService {
      * @return ArrayList of Vendor objs
      */
     public ArrayList<Vendor> getAll() {
-        Sort sort = new Sort(Sort.Direction.ASC, "vendor_id");
+        Sort sort = new Sort(Sort.Direction.ASC, "vendorId");
         PageRequest request = PageRequest.of(0, 25, sort);
 
         return makeListFromIterable(
@@ -34,9 +34,6 @@ public class VendorService {
      * @return ArrayList of Vendor objs whose names or IDs
      */
     public ArrayList<Vendor> getFiltered(String search) {
-        Sort sort = new Sort(Sort.Direction.ASC, "vendor_id");
-        PageRequest request = PageRequest.of(0, 25, sort);
-
         return makeListFromIterable(
                 vendorRepository.findByVendorIdOrName(search, search)
         );
