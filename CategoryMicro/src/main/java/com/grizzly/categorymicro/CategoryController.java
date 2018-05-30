@@ -24,23 +24,14 @@ public class CategoryController {
      */
     @GetMapping("/all/{column_name}")
     public ResponseEntity<ArrayList<Category>> getAll(@PathVariable(value="column_name") String column_name) {
-        // FAKE DATA START
-        ArrayList<Category> fakeCats = new ArrayList<Category>();
-        fakeCats.add(new Category("hates", "sport hates"));
-        fakeCats.add(new Category("pants", "bentley's pants"));
-        fakeCats.add(new Category("jackets", "sport jackets"));
-
-        return new ResponseEntity<>(fakeCats, HttpStatus.OK);
-        // FAKE DATA END
-
-        /*ArrayList<Category> categories = categoryService.getAll(column_name);
+        ArrayList<Category> categories = categoryService.getAll(column_name);
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
             return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(categories, HttpStatus.OK);*/
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
 
@@ -50,7 +41,6 @@ public class CategoryController {
 //        return categoryService.getAllCategories();
 //    }
 
-//    @RequestMapping(value="/add", method= RequestMethod.PUT)
     @PutMapping("/add")
     public void addCategory(@RequestBody Request request)
     {
