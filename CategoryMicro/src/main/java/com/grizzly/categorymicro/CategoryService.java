@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @Service
 public class CategoryService {
@@ -36,9 +37,20 @@ public class CategoryService {
      * @return a status boolean; false if no existing category was found with this ID, true if update succeeded
      */
     public boolean update(String id, String name, String description) {
-        // find
-        categoryRepository.findById(id);
+        // find the existing category
+        Category cat;
+        try {
+            cat = categoryRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
 
+        // make the changes to the category
+        cat.setName(name);
+        cat.setDescription(description);
+
+        // save the updated category
+        categoryRepository.save(cat);
         return true;
     }
 

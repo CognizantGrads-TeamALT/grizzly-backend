@@ -8,10 +8,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -78,6 +81,28 @@ public class CategorymicroApplicationTests {
 		//verification
 		assertEquals(expected, resultString);
 
+
+	}
+
+	@Test
+	public void update_changesNameAndDescription() {
+		// set up
+		Category testCat = new Category("testId", "old", "old desc", true);
+		Iterator iter = mock(Iterator.class);
+		when(iter.next()).thenReturn(testCat).thenReturn("World");
+
+		String newName = "new";
+		String newDescription = "new desc";
+
+	}
+
+	@Test
+	public void update_unchangedValuesRemain() {
+
+	}
+
+	@Test
+	public void update_returnsFalseIfNonexistant() {
 
 	}
 }
