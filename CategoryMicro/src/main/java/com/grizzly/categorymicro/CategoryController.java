@@ -17,7 +17,6 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-
     /**
      * Return a list of all categories in the system
      * @return categories in a list

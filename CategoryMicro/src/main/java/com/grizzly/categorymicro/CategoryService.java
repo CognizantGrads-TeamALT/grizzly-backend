@@ -15,6 +15,11 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    // This exists for mocking purposes - regular code should never call it
+    public void setCategoryRepository(CategoryRepository newRepo) {
+        this.categoryRepository = newRepo;
+    }
+
     /**
      * Get all categories in the database, sorted by name and paginated to 25 categories at a time.
      * Currently only returns 1st page (can update with first param of PageRequest.of()

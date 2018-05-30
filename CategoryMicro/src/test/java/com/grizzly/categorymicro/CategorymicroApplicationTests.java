@@ -87,12 +87,21 @@ public class CategorymicroApplicationTests {
 	@Test
 	public void update_changesNameAndDescription() {
 		// set up
+		CategoryService mockService = mock(CategoryService.class);
+		CategoryRepository mockRepo = mock(CategoryRepository.class);
+		mockService.setCategoryRepository(mockRepo);
 		Category testCat = new Category("testId", "old", "old desc", true);
-		Iterator iter = mock(Iterator.class);
-		when(iter.next()).thenReturn(testCat).thenReturn("World");
+		when(mockRepo.findById)
 
+		String id = "testId";
 		String newName = "new";
 		String newDescription = "new desc";
+
+		// execution
+		testService.update(id, newName, newDescription);
+
+		// verification
+
 
 	}
 
