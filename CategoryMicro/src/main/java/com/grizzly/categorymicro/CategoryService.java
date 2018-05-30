@@ -64,22 +64,11 @@ public class CategoryService {
         return request;
     }
 
-    /**
-     * Function to add category
-     * @return
-     */
-    @Transactional
-    public ArrayList<Category> getAllCategories()
-    {
-        return (ArrayList<Category>) categoryRepository.findAll();
-
-    }
-
-
     @Transactional
     public void addCategory(String name, String description)
     {
         categoryRepository.save(new Category(name, description));
 
     }
+
 }
