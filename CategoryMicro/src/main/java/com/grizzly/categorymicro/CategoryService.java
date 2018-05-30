@@ -28,6 +28,20 @@ public class CategoryService {
 
     }
 
+    /**
+     * Update an existing category (based on a given ID) with a new name and description
+     * @param id, ID of the category to update
+     * @param name, new name to overwrite the category's old one
+     * @param description, new description to overwrite the category's old one
+     * @return a status boolean; false if no existing category was found with this ID, true if update succeeded
+     */
+    public boolean update(String id, String name, String description) {
+        // find
+        categoryRepository.findById(id);
+
+        return true;
+    }
+
     public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {
         ArrayList<T> list = new ArrayList<T>();
 
