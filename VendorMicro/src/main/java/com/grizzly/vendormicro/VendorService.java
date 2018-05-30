@@ -15,11 +15,7 @@ public class VendorService {
     @Autowired
     private VendorRepository vendorRepository;
 
-    /**
-     * Get all vendors in the database, sorted by name and paginated to 25 vendors at a time.
-     * Currently only returns 1st page (can update with first param of PageRequest.of()
-     * @return ArrayList of Vendor objs
-     */
+
     public ArrayList<Vendor> getAll(String column_name)
     {
 
@@ -63,6 +59,14 @@ public class VendorService {
         return makeListFromIterable(
                 vendorRepository.findByVendorIdOrName(search, search, request)
         );
+    }
+
+    /**
+     * Delete a vendor given an ID
+     * @param deleteId, ID of the vendor to delete
+     */
+    public void deleteById(String deleteId) {
+        vendorRepository.deleteById(deleteId);
     }
 
     /**

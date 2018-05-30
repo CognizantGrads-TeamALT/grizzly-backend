@@ -8,6 +8,9 @@ zuul:
     vendormicro:
       path: /vendor/**
       serviceId: vendormicro
+    categorymicro:
+      path: /category/**
+      serviceId: categorymicro
 eureka:
   instance:
     preferIpAddress: true
