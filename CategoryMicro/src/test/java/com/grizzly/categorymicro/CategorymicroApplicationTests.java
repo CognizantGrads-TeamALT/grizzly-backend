@@ -87,7 +87,7 @@ public class CategorymicroApplicationTests {
 	}
 
 	@Test
-	public void update_changesNameAndDescription() {
+	public void edit_changesNameAndDescription() {
 		// set up
 		String newName = "new";
 		String newDescription = "new desc";
@@ -99,7 +99,7 @@ public class CategorymicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.update("id", newName, newDescription);
+		Category newCat = mockService.edit("id", newName, newDescription);
 
 		// verification
 		assertEquals(newName, newCat.getName());
@@ -108,7 +108,7 @@ public class CategorymicroApplicationTests {
 	}
 
 	@Test
-	public void update_unchangedValuesRemain() {
+	public void edit_unchangedValuesRemain() {
 		// set up
 		String newName = "new";
 		String newDescription = "old desc";
@@ -120,7 +120,7 @@ public class CategorymicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.update("id", newName, newDescription);
+		Category newCat = mockService.edit("id", newName, newDescription);
 
 		// verification
 		assertEquals(newName, newCat.getName());
@@ -128,7 +128,7 @@ public class CategorymicroApplicationTests {
 	}
 
 	@Test
-	public void update_returnsNullIfNonexistant() {
+	public void edit_returnsNullIfNonexistant() {
 		// set up
 		String id = "testId";
 		String newName = "new";
@@ -141,7 +141,7 @@ public class CategorymicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.update("id", newName, newDescription);
+		Category newCat = mockService.edit("id", newName, newDescription);
 
 		// verification
 		assertNull(newCat);

@@ -73,8 +73,8 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @RequestMapping(value="/edit/{id}", method=RequestMethod.POST)
-    public ResponseEntity update(@PathVariable(value="id") String id, @RequestParam String name, @RequestParam String description) {
-        Category newCat = categoryService.update(id, name, description);
+    public ResponseEntity edit(@PathVariable(value="id") String id, @RequestParam String name, @RequestParam String description) {
+        Category newCat = categoryService.edit(id, name, description);
 
         // null if the ID did not map to an existing category
         if (newCat == null) {

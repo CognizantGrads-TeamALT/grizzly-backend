@@ -44,7 +44,7 @@ public class CategoryService {
      * @param description, new description to overwrite the category's old one
      * @return the original category object; null if none was found
      */
-    public Category update(String id, String name, String description) {
+    public Category edit(String id, String name, String description) {
         // find the existing category
         Category cat;
         try {
