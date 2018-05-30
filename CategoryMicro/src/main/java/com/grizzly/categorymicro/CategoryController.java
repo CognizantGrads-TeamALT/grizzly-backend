@@ -44,9 +44,9 @@ public class CategoryController {
     @RequestMapping(value="/add", method= RequestMethod.PUT)
     public void addCategory(@RequestParam String name, @RequestParam String description)
     {
-//        categoryService.addCategory(name,description);
-        categoryService.addCategory("abc","description of abc");
-        categoryService.addCategory("XYZ","description of xyz");
+         categoryService.addCategory(name,description);
+       // categoryService.addCategory("abc","description of abc");
+       // categoryService.addCategory("XYZ","description of xyz");
 
     }
 
