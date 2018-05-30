@@ -26,9 +26,9 @@ public class CategoryController {
     public ResponseEntity<ArrayList<Category>> getAll(@PathVariable(value="column_name") String column_name) {
         // FAKE DATA START
         ArrayList<Category> fakeCats = new ArrayList<Category>();
-        fakeCats.add(new Category("1", "hates", "sport hates", true));
-        fakeCats.add(new Category("2", "pants", "bentley's pants", true));
-        fakeCats.add(new Category("3", "jackets", "sport jackets", true));
+        fakeCats.add(new Category("hates", "sport hates"));
+        fakeCats.add(new Category("pants", "bentley's pants"));
+        fakeCats.add(new Category("jackets", "sport jackets"));
 
         return new ResponseEntity<>(fakeCats, HttpStatus.OK);
         // FAKE DATA END
@@ -44,11 +44,11 @@ public class CategoryController {
     }
 
 
-   //@RequestMapping(value="/category", method= RequestMethod.GET)
+    //@RequestMapping(value="/category", method= RequestMethod.GET)
     //public ArrayList<Category> getAllCategories()
-//    {
-//        return categoryService.getAllCategories();
-//    }
+    //{
+    //    return categoryService.getAllCategories();
+    //}
 
     @RequestMapping(value="/add", method= RequestMethod.PUT)
     public void addCategory(@RequestParam String name, @RequestParam String description)
@@ -60,12 +60,29 @@ public class CategoryController {
     }
 
 
+    /**
+     * Return a list of categories in the system filtered by a given search string on name
+     * @param search, string to filter returned list on by name
+     * @return the filtered categories in a list
+     */
+    @RequestMapping("/search/{search}")
+    public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search)
+    {
+        ArrayList<Category> categories = categoryService.getFiltered(search);
+
+        // no categories found
+        if (categories == null || categories.isEmpty()) {
+            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
     @GetMapping("/hello")
     public ResponseEntity<String> hello()
     {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);
     }
-
 
 
 

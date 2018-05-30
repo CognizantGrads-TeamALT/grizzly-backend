@@ -71,4 +71,17 @@ public class CategoryService {
 
     }
 
+    /**
+     * Get a filtered list of categories, based on a given search string to match to name .
+     * @param search, the string to match to name to filter the categories by
+     * @return ArrayList of Category objs whose names
+     */
+    public ArrayList<Category> getFiltered(String search)
+    {
+        Sort sort = new Sort(Sort.Direction.ASC, "name");
+        PageRequest request = PageRequest.of(0, 25, sort);
+
+        return makeListFromIterable(
+                categoryRepository.findByCategoryIdOrName(search, search, request));
+    }
 }
