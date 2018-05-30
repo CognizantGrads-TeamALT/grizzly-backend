@@ -89,10 +89,9 @@ public class CategorymicroApplicationTests {
 	@Test
 	public void update_changesNameAndDescription() {
 		// set up
-		String id = "testId";
 		String newName = "new";
 		String newDescription = "new desc";
-		Category testCat = new Category(id, "old", "old desc", true);
+		Category testCat = new Category("old", "old desc");
 
 		CategoryRepository mockRepo = mock(CategoryRepository.class);
 		when(mockRepo.findById(anyString())).thenReturn(Optional.of(testCat));
@@ -100,7 +99,7 @@ public class CategorymicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.update(id, newName, newDescription);
+		Category newCat = mockService.update("id", newName, newDescription);
 
 		// verification
 		assertEquals(newName, newCat.getName());
@@ -111,10 +110,9 @@ public class CategorymicroApplicationTests {
 	@Test
 	public void update_unchangedValuesRemain() {
 		// set up
-		String id = "testId";
 		String newName = "new";
 		String newDescription = "old desc";
-		Category testCat = new Category(id, "old", "old desc", true);
+		Category testCat = new Category("old", "old desc");
 
 		CategoryRepository mockRepo = mock(CategoryRepository.class);
 		when(mockRepo.findById(anyString())).thenReturn(Optional.of(testCat));
@@ -122,7 +120,7 @@ public class CategorymicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.update(id, newName, newDescription);
+		Category newCat = mockService.update("id", newName, newDescription);
 
 		// verification
 		assertEquals(newName, newCat.getName());
@@ -135,7 +133,7 @@ public class CategorymicroApplicationTests {
 		String id = "testId";
 		String newName = "new";
 		String newDescription = "new desc";
-		Category testCat = new Category(id, "old", "old desc", true);
+		Category testCat = new Category("old", "old desc");
 
 		CategoryRepository mockRepo = mock(CategoryRepository.class);
 		when(mockRepo.findById(anyString())).thenReturn(Optional.empty());
@@ -143,7 +141,7 @@ public class CategorymicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.update(id, newName, newDescription);
+		Category newCat = mockService.update("id", newName, newDescription);
 
 		// verification
 		assertNull(newCat);

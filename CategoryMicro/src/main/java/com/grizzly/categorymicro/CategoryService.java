@@ -1,11 +1,13 @@
 package com.grizzly.categorymicro;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Null;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -93,4 +95,12 @@ public class CategoryService {
         PageRequest request = PageRequest.of(0, 25, sort);
         return request;
     }
+
+    @Transactional
+    public void addCategory(String name, String description)
+    {
+        categoryRepository.save(new Category(name, description));
+
+    }
+
 }

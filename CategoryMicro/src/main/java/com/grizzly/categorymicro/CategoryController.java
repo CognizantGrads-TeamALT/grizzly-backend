@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Random;
+
 
 
 @RestController
-
+@CrossOrigin(origins = "*")
 @RequestMapping("/category")
 public class CategoryController {
 
@@ -25,9 +25,9 @@ public class CategoryController {
     public ResponseEntity<ArrayList<Category>> getAll(@PathVariable(value="column_name") String column_name) {
         // FAKE DATA START
         ArrayList<Category> fakeCats = new ArrayList<Category>();
-        fakeCats.add(new Category("1", "hates", "sport hates", true));
-        fakeCats.add(new Category("2", "pants", "bentley's pants", true));
-        fakeCats.add(new Category("3", "jackets", "sport jackets", true));
+        fakeCats.add(new Category("hates", "sport hates"));
+        fakeCats.add(new Category("pants", "bentley's pants"));
+        fakeCats.add(new Category("jackets", "sport jackets"));
 
         return new ResponseEntity<>(fakeCats, HttpStatus.OK);
         // FAKE DATA END
@@ -42,6 +42,23 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);*/
     }
 
+
+   //@RequestMapping(value="/category", method= RequestMethod.GET)
+    //public ArrayList<Category> getAllCategories()
+//    {
+//        return categoryService.getAllCategories();
+//    }
+
+    @RequestMapping(value="/add", method= RequestMethod.PUT)
+    public void addCategory(@RequestParam String name, @RequestParam String description)
+    {
+         categoryService.addCategory(name,description);
+       // categoryService.addCategory("abc","description of abc");
+       // categoryService.addCategory("XYZ","description of xyz");
+
+    }
+
+
     @GetMapping("/hello")
     public ResponseEntity<String> hello()
     {
@@ -55,7 +72,7 @@ public class CategoryController {
      * @param description, new description of the category to overwrite old one
      * @return HTTP status response only
      */
-    @RequestMapping(value="/update/{id}", method=RequestMethod.POST)
+    @RequestMapping(value="/edit/{id}", method=RequestMethod.POST)
     public ResponseEntity update(@PathVariable(value="id") String id, @RequestParam String name, @RequestParam String description) {
         Category newCat = categoryService.update(id, name, description);
 
@@ -66,5 +83,7 @@ public class CategoryController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
 
 }
