@@ -26,9 +26,9 @@ public class CategoryController {
     public ResponseEntity<ArrayList<Category>> getAll(@PathVariable(value="column_name") String column_name) {
         // FAKE DATA START
         ArrayList<Category> fakeCats = new ArrayList<Category>();
-        fakeCats.add(new Category("1", "hates", "sport hates", true));
-        fakeCats.add(new Category("2", "pants", "bentley's pants", true));
-        fakeCats.add(new Category("3", "jackets", "sport jackets", true));
+        fakeCats.add(new Category("hates", "sport hates"));
+        fakeCats.add(new Category("pants", "bentley's pants"));
+        fakeCats.add(new Category("jackets", "sport jackets"));
 
         return new ResponseEntity<>(fakeCats, HttpStatus.OK);
         // FAKE DATA END
@@ -50,12 +50,12 @@ public class CategoryController {
 //        return categoryService.getAllCategories();
 //    }
 
-    @RequestMapping(value="/add", method= RequestMethod.PUT)
-    public void addCategory(@RequestParam String name, @RequestParam String description)
+//    @RequestMapping(value="/add", method= RequestMethod.PUT)
+    @PutMapping("/add")
+    public void addCategory(@RequestBody Request request)
     {
-         categoryService.addCategory(name,description);
-       // categoryService.addCategory("abc","description of abc");
-       // categoryService.addCategory("XYZ","description of xyz");
+         categoryService.addCategory(request.getName(),request.getDescription());
+
 
     }
 
