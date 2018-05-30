@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -109,12 +110,43 @@ public class CategorymicroApplicationTests {
 
 	@Test
 	public void update_unchangedValuesRemain() {
+		// set up
+		String id = "testId";
+		String newName = "new";
+		String newDescription = "old desc";
+		Category testCat = new Category(id, "old", "old desc", true);
 
+		CategoryRepository mockRepo = mock(CategoryRepository.class);
+		when(mockRepo.findById(anyString())).thenReturn(Optional.of(testCat));
+		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
+		mockService.setCategoryRepository(mockRepo);
+
+		// execution
+		Category newCat = mockService.update(id, newName, newDescription);
+
+		// verification
+		assertEquals(newName, newCat.getName());
+		assertEquals(newDescription, newCat.getDescription());
 	}
 
 	@Test
-	public void update_returnsFalseIfNonexistant() {
+	public void update_returnsNullIfNonexistant() {
+		// set up
+		String id = "testId";
+		String newName = "new";
+		String newDescription = "new desc";
+		Category testCat = new Category(id, "old", "old desc", true);
 
+		CategoryRepository mockRepo = mock(CategoryRepository.class);
+		when(mockRepo.findById(anyString())).thenReturn(Optional.empty());
+		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
+		mockService.setCategoryRepository(mockRepo);
+
+		// execution
+		Category newCat = mockService.update(id, newName, newDescription);
+
+		// verification
+		assertNull(newCat);
 	}
 }
 

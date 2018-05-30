@@ -47,7 +47,7 @@ public class CategoryService {
         Category cat;
         try {
             cat = categoryRepository.findById(id).get();
-        } catch (NullPointerException e) {
+        } catch (NoSuchElementException e) {
             return null;
         }
 
