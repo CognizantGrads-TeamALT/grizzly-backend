@@ -2,19 +2,17 @@ package com.grizzly.categorymicro;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -22,6 +20,9 @@ public class CategorymicroApplicationTests {
 
 	@Autowired
 	CategoryService testService;
+
+	@InjectMocks
+	CategoryService mockService;
 
 	@Test
 	public void contextLoads() {
@@ -87,21 +88,22 @@ public class CategorymicroApplicationTests {
 	@Test
 	public void update_changesNameAndDescription() {
 		// set up
-		CategoryService mockService = mock(CategoryService.class);
-		CategoryRepository mockRepo = mock(CategoryRepository.class);
-		mockService.setCategoryRepository(mockRepo);
-		Category testCat = new Category("testId", "old", "old desc", true);
-		when(mockRepo.findById)
-
 		String id = "testId";
 		String newName = "new";
 		String newDescription = "new desc";
+		Category testCat = new Category(id, "old", "old desc", true);
+
+		CategoryRepository mockRepo = mock(CategoryRepository.class);
+		when(mockRepo.findById(anyString())).thenReturn(Optional.of(testCat));
+		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
+		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		testService.update(id, newName, newDescription);
+		Category newCat = mockService.update(id, newName, newDescription);
 
 		// verification
-
+		assertEquals(newName, newCat.getName());
+		assertEquals(newDescription, newCat.getDescription());
 
 	}
 

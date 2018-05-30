@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -39,15 +40,15 @@ public class CategoryService {
      * @param id, ID of the category to update
      * @param name, new name to overwrite the category's old one
      * @param description, new description to overwrite the category's old one
-     * @return a status boolean; false if no existing category was found with this ID, true if update succeeded
+     * @return the original category object; null if none was found
      */
-    public boolean update(String id, String name, String description) {
+    public Category update(String id, String name, String description) {
         // find the existing category
         Category cat;
         try {
             cat = categoryRepository.findById(id).get();
-        } catch (NoSuchElementException e) {
-            return false;
+        } catch (NullPointerException e) {
+            return null;
         }
 
         // make the changes to the category
@@ -56,7 +57,7 @@ public class CategoryService {
 
         // save the updated category
         categoryRepository.save(cat);
-        return true;
+        return cat;
     }
 
     public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {

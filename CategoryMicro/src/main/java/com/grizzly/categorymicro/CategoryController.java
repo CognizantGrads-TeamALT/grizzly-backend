@@ -57,10 +57,10 @@ public class CategoryController {
      */
     @RequestMapping(value="/update/{id}", method=RequestMethod.POST)
     public ResponseEntity update(@PathVariable(value="id") String id, @RequestParam String name, @RequestParam String description) {
-        boolean status = categoryService.update(id, name, description);
+        Category newCat = categoryService.update(id, name, description);
 
-        // status is 0 if the ID did not map to an existing category
-        if (!status) {
+        // null if the ID did not map to an existing category
+        if (newCat == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
