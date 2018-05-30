@@ -1,10 +1,12 @@
 package com.grizzly.categorymicro;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -62,5 +64,22 @@ public class CategoryService {
         return request;
     }
 
-    public 
+    /**
+     * Function to add category
+     * @return
+     */
+    @Transactional
+    public ArrayList<Category> getAllCategories()
+    {
+        return (ArrayList<Category>) categoryRepository.findAll();
+
+    }
+
+
+    @Transactional
+    public void addCategory(String name, String description)
+    {
+        categoryRepository.save(new Category(name, description));
+
+    }
 }

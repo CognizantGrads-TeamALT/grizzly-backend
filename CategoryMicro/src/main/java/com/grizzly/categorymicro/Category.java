@@ -1,15 +1,14 @@
 package com.grizzly.categorymicro;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name="category")
 public class Category {
     @Id
-
-    @Column(name="category_id") private String categoryId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="category_id")
+    private String categoryId;
     @Column(name="name") private String name;
     @Column(name="description") private String description;
     @Column(name="enabled") private boolean enabled;
@@ -20,11 +19,11 @@ public class Category {
 
     }
 
-    public Category(String categoryId, String name, String description, boolean enabled) {
-        this.categoryId = categoryId;
+
+    public Category(String name, String description ) {
         this.name = name;
         this.description = description;
-        this.enabled = enabled;
+        this.enabled = true;
     }
 
     public String getCategoryId() {

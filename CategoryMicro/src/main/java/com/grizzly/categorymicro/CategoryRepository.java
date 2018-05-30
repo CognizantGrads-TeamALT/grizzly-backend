@@ -1,6 +1,8 @@
 package com.grizzly.categorymicro;
 
 
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +16,10 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
 
 
     List<Category> findByCategoryIdOrName(@Param("categoryId") String categoryId, @Param("name") String name, Pageable pageable);
+
+
+
+
 
 
 }
