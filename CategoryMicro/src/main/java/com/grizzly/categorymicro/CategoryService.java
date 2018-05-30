@@ -6,15 +6,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @Service
 public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    // This exists for mocking purposes - regular code should never call it
+    public void setCategoryRepository(CategoryRepository newRepo) {
+        this.categoryRepository = newRepo;
+    }
 
     /**
      * Get all categories in the database, sorted by name and paginated to 25 categories at a time.
@@ -28,6 +35,31 @@ public class CategoryService {
        PageRequest request = getPageRequest(column_name);
         return makeListFromIterable(categoryRepository.findAll(request));
 
+    }
+
+    /**
+     * Update an existing category (based on a given ID) with a new name and description
+     * @param id, ID of the category to update
+     * @param name, new name to overwrite the category's old one
+     * @param description, new description to overwrite the category's old one
+     * @return the original category object; null if none was found
+     */
+    public Category edit(String id, String name, String description) {
+        // find the existing category
+        Category cat;
+        try {
+            cat = categoryRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+
+        // make the changes to the category
+        cat.setName(name);
+        cat.setDescription(description);
+
+        // save the updated category
+        categoryRepository.save(cat);
+        return cat;
     }
 
     public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {
