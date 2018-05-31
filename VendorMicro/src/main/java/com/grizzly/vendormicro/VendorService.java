@@ -75,6 +75,7 @@ public class VendorService {
      * @return the added vendor object
      */
     public Vendor add(Vendor newVendor) {
+        System.out.println("Name: " + newVendor.getName());
         Vendor created = vendorRepository.save(newVendor);
         return created;
     }
