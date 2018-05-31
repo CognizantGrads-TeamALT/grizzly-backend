@@ -14,12 +14,6 @@ import java.util.List;
 public interface CategoryRepository extends PagingAndSortingRepository<Category, String>
 {
 
-
     List<Category> findByCategoryIdOrName(@Param("categoryId") String categoryId, @Param("name") String name, Pageable pageable);
-
-
-
-
-
 
 }

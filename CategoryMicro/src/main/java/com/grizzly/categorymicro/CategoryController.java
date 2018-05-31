@@ -1,6 +1,7 @@
 package com.grizzly.categorymicro;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -92,5 +93,21 @@ public class CategoryController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    /**
+     * Delete a vendor based on a given ID
+     * @param id, ID of the vendor to delete
+     * @return HTTP status response only
+     */
+    @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
+    public ResponseEntity deleteCategory(@PathVariable(value="id") String id) {
+        try {
+            categoryService.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            // this ID didn't match any vendors
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 }
