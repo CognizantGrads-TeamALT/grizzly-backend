@@ -18,6 +18,7 @@ public class ProductService {
        PageRequest request = getPageRequest(column_name);
        return makeListFromIterable(productRepository.findAll(request));
     }
+
     /**
     * Utility function to generate a pagerequest to tell the database how to page and sort a query
     * @param column_name, the fieldname in the database to sort the list
@@ -37,10 +38,25 @@ public class ProductService {
         PageRequest request = PageRequest.of(0, 25, sort);
         return request;
     }
+
     /**
-     * Get a filtered list of vendors, based on a given search string to match to name or ID.
-     * @param search, the string to match to name or ID to filter the vendors by
-     * @return ArrayList of Vendor objs whose names or IDs
+     * Get a single item from product id.
+     * @param search, the string to match to ID to filter the product by
+     * @return ArrayList of Product objs whose names or IDs
+     */
+    public ArrayList<Product> getSingle(String search) {
+        Sort sort = new Sort(Sort.Direction.ASC, "productId");
+        PageRequest request = PageRequest.of(0, 25, sort);
+
+        return makeListFromIterable(
+                productRepository.findByProductId(search, request)
+        );
+    }
+
+    /**
+     * Get a filtered list of products, based on a given search string to match to name or ID.
+     * @param search, the string to match to name or ID to filter the products by
+     * @return ArrayList of Product objs whose names or IDs
      */
     public ArrayList<Product> getFiltered(String search) {
         Sort sort = new Sort(Sort.Direction.ASC, "productId");
@@ -52,18 +68,18 @@ public class ProductService {
     }
 
     /**
-     * Add a new vendor to the database
-     * @param newVendor, the entity of the new vendor to save
-     * @return the added vendor object
+     * Add a new product to the database
+     * @param newVendor, the entity of the new product to save
+     * @return the added product object
      */
-    public Product add(Product newVendor) {
-        Product created = productRepository.save(newVendor);
+    public Product add(Product newProduct) {
+        Product created = productRepository.save(newProduct);
         return created;
     }
 
     /**
-     * Delete a vendor given an ID
-     * @param deleteId, ID of the vendor to delete
+     * Delete a product given an ID
+     * @param deleteId, ID of the product to delete
      */
     public void deleteById(String deleteId) {
         productRepository.deleteById(deleteId);
