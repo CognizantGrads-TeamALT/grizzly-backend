@@ -74,13 +74,13 @@ public class VendorController {
      */
     @RequestMapping(value="/add", method=RequestMethod.PUT)
     public ResponseEntity<Vendor> addVendor(@RequestBody VendorDTO newVendor) {
-        Vendor newVendor = vendorService.add(VendorDTO.toEntity());
+        Vendor created = vendorService.add(newVendor.toEntity());
 
-        if (newVendor == null) {
-            return new ResponseEntity<>(newVendor, HttpStatus.BAD_REQUEST);
+        if (created == null) {
+            return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping("/hello")
