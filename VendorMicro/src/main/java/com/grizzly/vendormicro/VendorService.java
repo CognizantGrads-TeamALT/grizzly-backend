@@ -70,6 +70,16 @@ public class VendorService {
     }
 
     /**
+     * Add a new vendor to the database
+     * @param newVendor, the entity of the new vendor to save
+     * @return the added vendor object
+     */
+    public Vendor add(Vendor newVendor) {
+        Vendor created = vendorRepository.save(newVendor);
+        return created;
+    }
+
+    /**
      * Make an ArrayList of Objects based on a passed-in Iterable
      * @param iter An Iterable of Objects
      * @return An ArrayList made from the Iterable
