@@ -69,7 +69,7 @@ public class ProductService {
 
     /**
      * Add a new product to the database
-     * @param newVendor, the entity of the new product to save
+     * @param newProduct, the entity of the new product to save
      * @return the added product object
      */
     public Product add(Product newProduct) {
