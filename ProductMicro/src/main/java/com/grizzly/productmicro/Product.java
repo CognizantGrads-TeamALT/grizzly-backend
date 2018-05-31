@@ -18,10 +18,8 @@ public class Product {
         super();
     }
 
-    public Product(String productId, String name, String vendorId, String categoryId, String desc, Integer price) {
-        super();
+    public Product(String name, String vendorId, String categoryId, String desc, Integer price) {
 
-        setProductId(productId);
         setName(name);
         setVendorId(vendorId);
         setCategoryId(categoryId);
