@@ -7,7 +7,6 @@ import javax.persistence.*;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="category_id")
     private String categoryId;
     @Column(name="name") private String name;
     @Column(name="description") private String description;
@@ -15,7 +14,6 @@ public class Category {
 
     public Category()
     {
-        super();
 
     }
 

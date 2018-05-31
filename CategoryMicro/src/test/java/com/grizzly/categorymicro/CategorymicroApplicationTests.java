@@ -2,16 +2,18 @@ package com.grizzly.categorymicro;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -19,6 +21,9 @@ public class CategorymicroApplicationTests {
 
 	@Autowired
 	CategoryService testService;
+
+	@InjectMocks
+	CategoryService mockService;
 
 	@Test
 	public void contextLoads() {
@@ -81,6 +86,65 @@ public class CategorymicroApplicationTests {
 
 	}
 
+	@Test
+	public void edit_changesNameAndDescription() {
+		// set up
+		String newName = "new";
+		String newDescription = "new desc";
+		Category testCat = new Category("old", "old desc");
 
+		CategoryRepository mockRepo = mock(CategoryRepository.class);
+		when(mockRepo.findById(anyString())).thenReturn(Optional.of(testCat));
+		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
+		mockService.setCategoryRepository(mockRepo);
+
+		// execution
+		Category newCat = mockService.edit("id", newName, newDescription);
+
+		// verification
+		assertEquals(newName, newCat.getName());
+		assertEquals(newDescription, newCat.getDescription());
+
+	}
+
+	@Test
+	public void edit_unchangedValuesRemain() {
+		// set up
+		String newName = "new";
+		String newDescription = "old desc";
+		Category testCat = new Category("old", "old desc");
+
+		CategoryRepository mockRepo = mock(CategoryRepository.class);
+		when(mockRepo.findById(anyString())).thenReturn(Optional.of(testCat));
+		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
+		mockService.setCategoryRepository(mockRepo);
+
+		// execution
+		Category newCat = mockService.edit("id", newName, newDescription);
+
+		// verification
+		assertEquals(newName, newCat.getName());
+		assertEquals(newDescription, newCat.getDescription());
+	}
+
+	@Test
+	public void edit_returnsNullIfNonexistant() {
+		// set up
+		String id = "testId";
+		String newName = "new";
+		String newDescription = "new desc";
+		Category testCat = new Category("old", "old desc");
+
+		CategoryRepository mockRepo = mock(CategoryRepository.class);
+		when(mockRepo.findById(anyString())).thenReturn(Optional.empty());
+		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
+		mockService.setCategoryRepository(mockRepo);
+
+		// execution
+		Category newCat = mockService.edit("id", newName, newDescription);
+
+		// verification
+		assertNull(newCat);
+	}
 }
 
