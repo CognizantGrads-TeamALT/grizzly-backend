@@ -67,6 +67,22 @@ public class VendorController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    /**
+     * Add a new vendor based on a given DTO resource
+     * @param newVendor, the new vendor to store in the database
+     * @return the newly created vendor
+     */
+    @RequestMapping(value="/add", method=RequestMethod.PUT)
+    public ResponseEntity<Vendor> addVendor(@RequestBody VendorDTO newVendor) {
+        Vendor newVendor = vendorService.add(VendorDTO.toEntity());
+
+        if (newVendor == null) {
+            return new ResponseEntity<>(newVendor, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
+
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);
