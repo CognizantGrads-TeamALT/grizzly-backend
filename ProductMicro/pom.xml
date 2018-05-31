@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.grizzly</groupId>
-    <artifactId>vendormicro</artifactId>
+    <artifactId>productmicro</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>vendormicro</name>
+    <name>productmicro</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
@@ -80,6 +80,11 @@
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.0</version>
 		</dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
