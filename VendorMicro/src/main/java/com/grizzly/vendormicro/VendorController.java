@@ -72,7 +72,7 @@ public class VendorController {
      * @param newVendor, the new vendor to store in the database
      * @return the newly created vendor
      */
-    @RequestMapping(value="/add", method=RequestMethod.PUT)
+    @PutMapping("/add")
     public ResponseEntity<Vendor> addVendor(@RequestBody VendorDTO newVendor) {
         Vendor created = vendorService.add(newVendor.toEntity());
 
