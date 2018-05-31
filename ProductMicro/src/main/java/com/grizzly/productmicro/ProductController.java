@@ -68,12 +68,12 @@ public class ProductController {
 
     /**
      * Add a new vendor based on a given DTO resource
-     * @param newVendor, the new vendor to store in the database
+     * @param newProduct, the new vendor to store in the database
      * @return the newly created vendor
      */
     @RequestMapping(value="/add", method=RequestMethod.PUT)
-    public ResponseEntity<Product> addVendor(@RequestBody ProductDTO newVendor) {
-        Product created = productService.add(newVendor.toEntity());
+    public ResponseEntity<Product> addVendor(@RequestBody ProductDTO newProduct) {
+        Product created = productService.add(newProduct.toEntity());
 
         if (created == null) {
             return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);

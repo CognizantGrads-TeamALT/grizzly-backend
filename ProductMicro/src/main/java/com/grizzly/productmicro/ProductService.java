@@ -52,6 +52,16 @@ public class ProductService {
     }
 
     /**
+     * Add a new vendor to the database
+     * @param newVendor, the entity of the new vendor to save
+     * @return the added vendor object
+     */
+    public Product add(Product newVendor) {
+        Product created = productRepository.save(newVendor);
+        return created;
+    }
+
+    /**
      * Delete a vendor given an ID
      * @param deleteId, ID of the vendor to delete
      */
