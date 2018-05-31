@@ -43,9 +43,9 @@ public class CategoryController {
     //}
 
     @PutMapping("/add")
-    public void addCategory(@RequestBody Request request)
+    public void addCategory(@RequestBody CategoryDTO categoryDTO)
     {
-         categoryService.addCategory(request.getName(),request.getDescription());
+         categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
 
 
     }
@@ -78,19 +78,17 @@ public class CategoryController {
     /**
      * Update a given category (by ID) with the given new values
      * @param id, ID of the category to update
-     * @param name, new name of the category to overwrite old one
-     * @param description, new description of the category to overwrite old one
+     * @param request, the new category to overwrite old one
      * @return HTTP status response only
      */
     @RequestMapping(value="/edit/{id}", method=RequestMethod.POST)
-    public ResponseEntity edit(@PathVariable(value="id") String id, @RequestParam String name, @RequestParam String description) {
-        Category newCat = categoryService.edit(id, name, description);
+    public ResponseEntity edit(@PathVariable(value="id") String id, @RequestBody CategoryDTO request) {
+        Category newCat = categoryService.edit(id, request.getName(), request.getDescription());
 
         // null if the ID did not map to an existing category
         if (newCat == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity(HttpStatus.OK);
     }
 
