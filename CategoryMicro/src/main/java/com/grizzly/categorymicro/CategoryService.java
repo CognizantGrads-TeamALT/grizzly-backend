@@ -104,6 +104,15 @@ public class CategoryService {
     }
 
     /**
+     * Delete a vendor given an ID
+     * @param deleteId, ID of the vendor to delete
+     */
+    public void deleteById(String deleteId) {
+        categoryRepository.deleteById(deleteId);
+    }
+
+
+    /**
      * Get a filtered list of categories, based on a given search string to match to name .
      * @param search, the string to match to name to filter the categories by
      * @return ArrayList of Category objs whose names
