@@ -18,10 +18,9 @@ public class Vendor {
         super();
     }
 
-    public Vendor(String vendorId, String name, String contactNum, String website, String email, String bio) {
+    public Vendor(String name, String contactNum, String website, String email, String bio) {
         super();
 
-        setVendorId(vendorId);
         setName(name);
         setContactNum(contactNum);
         setWebsite(website);

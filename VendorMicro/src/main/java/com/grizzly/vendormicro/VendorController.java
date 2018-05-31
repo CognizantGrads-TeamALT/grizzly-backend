@@ -74,7 +74,6 @@ public class VendorController {
      */
     @PutMapping("/add")
     public ResponseEntity<Vendor> addVendor(@RequestBody VendorDTO newVendor) {
-        System.out.println("RequestBody: " + newVendor.getName());
         Vendor created = vendorService.add(newVendor.toEntity());
 
         if (created == null) {

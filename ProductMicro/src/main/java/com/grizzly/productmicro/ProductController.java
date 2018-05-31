@@ -17,8 +17,8 @@ public class ProductController {
     private ProductService productService;
 
     /**
-     * Return a list of all vendors in the system
-     * @return vendors in a list
+     * Return a list of all products in the system
+     * @return products in a list
      */
     @GetMapping("/all/{column_name}")
     public ResponseEntity<ArrayList<Product>> getAll(@PathVariable(value="column_name") String column_name) {
@@ -33,15 +33,15 @@ public class ProductController {
     }
 
     /**
-     * Return a list of vendors in the system filtered by a given search string on ID or name
+     * Return a list of products in the system filtered by a given search string on ID or name
      * @param search, string to filter returned list on by ID or name
-     * @return the filtered vendors in a list
+     * @return the filtered products in a list
      */
-    @RequestMapping("/search/{search}")
-    public ResponseEntity<ArrayList<Product>> getFiltered(@PathVariable(value="search") String search) {
+    @RequestMapping("/get/{search}")
+    public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="search") String search) {
         ArrayList<Product> products = productService.getFiltered(search);
 
-        // no vendors found
+        // no products found
         if (products == null || products.isEmpty()) {
             return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
         }
@@ -50,8 +50,25 @@ public class ProductController {
     }
 
     /**
-     * Delete a vendor based on a given ID
-     * @param id, ID of the vendor to delete
+     * Return a list of products in the system filtered by a given search string on ID or name
+     * @param search, string to filter returned list on by ID or name
+     * @return the filtered products in a list
+     */
+    @RequestMapping("/search/{search}")
+    public ResponseEntity<ArrayList<Product>> getFiltered(@PathVariable(value="search") String search) {
+        ArrayList<Product> products = productService.getFiltered(search);
+
+        // no products found
+        if (products == null || products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
+     * Delete a product based on a given ID
+     * @param id, ID of the product to delete
      * @return HTTP status response only
      */
     @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
@@ -59,7 +76,7 @@ public class ProductController {
         try {
             productService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            // this ID didn't match any vendors
+            // this ID didn't match any products
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
@@ -67,12 +84,12 @@ public class ProductController {
     }
 
     /**
-     * Add a new vendor based on a given DTO resource
-     * @param newProduct, the new vendor to store in the database
-     * @return the newly created vendor
+     * Add a new products based on a given DTO resource
+     * @param newProduct, the new product to store in the database
+     * @return the newly created product
      */
     @RequestMapping(value="/add", method=RequestMethod.PUT)
-    public ResponseEntity<Product> addVendor(@RequestBody ProductDTO newProduct) {
+    public ResponseEntity<Product> addProduct(@RequestBody ProductDTO newProduct) {
         Product created = productService.add(newProduct.toEntity());
 
         if (created == null) {

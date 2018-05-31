@@ -57,13 +57,7 @@ public class VendorDTO {
     }
 
     public Vendor toEntity() {
-        Vendor vendor = new Vendor();
-        vendor.setVendorId(this.vendorId);
-        vendor.setName(this.name);
-        vendor.setContactNum(this.contactNum);
-        vendor.setWebsite(this.website);
-        vendor.setEmail(this.email);
-        vendor.setBio(this.bio);
+        Vendor vendor = new Vendor(this.name, this.contactNum, this.website, this.email, this.bio);
         return vendor;
     }
 }
