@@ -3,14 +3,6 @@ spring:
     name: apigatewayserver
 server:
   port: 8765
-zuul:
-  routes:
-    vendormicro:
-      path: /vendor/**
-      serviceId: vendormicro
-    categorymicro:
-      path: /category/**
-      serviceId: categorymicro
 eureka:
   instance:
     preferIpAddress: true
