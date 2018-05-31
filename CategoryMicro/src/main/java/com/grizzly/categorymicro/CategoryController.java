@@ -23,7 +23,9 @@ public class CategoryController {
      */
     @GetMapping("/all/{column_name}")
     public ResponseEntity<ArrayList<Category>> getAll(@PathVariable(value="column_name") String column_name) {
+
         ArrayList<Category> categories = categoryService.getAll(column_name);
+
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
@@ -34,11 +36,11 @@ public class CategoryController {
     }
 
 
-   //@RequestMapping(value="/category", method= RequestMethod.GET)
+    //@RequestMapping(value="/category", method= RequestMethod.GET)
     //public ArrayList<Category> getAllCategories()
-//    {
-//        return categoryService.getAllCategories();
-//    }
+    //{
+    //    return categoryService.getAllCategories();
+    //}
 
     @PutMapping("/add")
     public void addCategory(@RequestBody Request request)
@@ -48,6 +50,24 @@ public class CategoryController {
 
     }
 
+
+    /**
+     * Return a list of categories in the system filtered by a given search string on name
+     * @param search, string to filter returned list on by name
+     * @return the filtered categories in a list
+     */
+    @RequestMapping("/search/{search}")
+    public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search)
+    {
+        ArrayList<Category> categories = categoryService.getFiltered(search);
+
+        // no categories found
+        if (categories == null || categories.isEmpty()) {
+            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
 
     @GetMapping("/hello")
     public ResponseEntity<String> hello()
@@ -73,7 +93,6 @@ public class CategoryController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
-
 
 
 }
