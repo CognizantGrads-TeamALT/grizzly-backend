@@ -19,9 +19,9 @@ public class CategoryController {
      * Return a list of all categories in the system
      * @return categories in a list
      */
-    @GetMapping("/all/{column_name}")
-    public ResponseEntity<ArrayList<Category>> getAll(@PathVariable(value="column_name") String column_name) {
-        ArrayList<Category> categories = categoryService.getAll(column_name);
+    @GetMapping("/get/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Category>> get(@PathVariable(value="pageIndex") String pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<Category> categories = categoryService.get(pageIndex, column_name);
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
