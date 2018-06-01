@@ -69,13 +69,14 @@ public class CategoryMicroApplicationTests {
 	@Test
 	public void getPageRequest_DefaultstoId() {
 		//set up
+		String pageIndex = "0";
 		String column_name = "invalid";
 		String expected = "categoryId: ASC";
 		PageRequest result;
 		String resultString;
 
 		//execution
-		result = testService.getPageRequest(column_name);
+		result = testService.getPageRequest(pageIndex, column_name);
 		resultString = result.getSort().toString();
 
 		//verification

@@ -27,8 +27,8 @@ public class CategoryService {
      * @return ArrayList of Category objs
      */
 
-    public ArrayList<Category> getAll(String column_name) {
-       PageRequest request = getPageRequest(column_name);
+    public ArrayList<Category> get(String pageIndex, String column_name) {
+       PageRequest request = getPageRequest(pageIndex, column_name);
         return makeListFromIterable(categoryRepository.findAll(request));
     }
 
@@ -72,7 +72,7 @@ public class CategoryService {
      * @param column_name, the fieldname in the database to sort the list
      * @return pageRequest to the method called
      */
-    public PageRequest getPageRequest(String column_name) {
+    public PageRequest getPageRequest(String pageIndex, String column_name) {
         final String[] fields = {"categoryId", "name", "description", "enabled"};
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
@@ -83,7 +83,7 @@ public class CategoryService {
 
         Sort sort = new Sort(Sort.Direction.ASC, sortField);
 
-        PageRequest request = PageRequest.of(0, 25, sort);
+        PageRequest request = PageRequest.of(Integer.parseInt(pageIndex), 25, sort);
         return request;
     }
 
