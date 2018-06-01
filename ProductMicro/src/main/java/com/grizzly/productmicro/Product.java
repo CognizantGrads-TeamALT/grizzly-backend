@@ -13,18 +13,19 @@ public class Product {
     @Column(name="category_id")     private String categoryId;
     @Column(name="desc")            private String desc;
     @Column(name="price")           private Integer price;
+    @Column(name="enabled")         private Boolean enabled;
 
     public Product() {
         super();
     }
 
-    public Product(String name, String vendorId, String categoryId, String desc, Integer price) {
-
+    public Product(String name, String vendorId, String categoryId, String desc, Integer price, Boolean enabled) {
         setName(name);
         setVendorId(vendorId);
         setCategoryId(categoryId);
         setDesc(desc);
         setPrice(price);
+        setEnabled(enabled);
     }
 
     public String getProductId() {
@@ -73,5 +74,13 @@ public class Product {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

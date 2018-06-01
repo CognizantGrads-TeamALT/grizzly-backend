@@ -16,6 +16,7 @@ public class ProductDTO {
     private String categoryId;
     private String desc;
     private Integer price;
+    private Boolean enabled;
 
     public Product toEntity() {
         Product product = new Product();
@@ -25,6 +26,7 @@ public class ProductDTO {
         product.setCategoryId(categoryId);
         product.setDesc(desc);
         product.setPrice(price);
+        product.setEnabled(enabled);
         return product;
     }
 }

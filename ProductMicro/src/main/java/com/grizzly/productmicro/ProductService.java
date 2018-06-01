@@ -25,7 +25,7 @@ public class ProductService {
     * @return pageRequest to the method called
     */
     public PageRequest getPageRequest(String column_name) {
-        final String[] fields = {"productId", "name", "vendorId", "categoryId", "desc", "price"};
+        final String[] fields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "enabled"};
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
             sortField = column_name;
