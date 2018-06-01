@@ -83,7 +83,7 @@ public class ProductMicroApplicationTests {
         //set up
         Integer pageIndex = 0;
         String column_name = "invalid";
-        String expected = "vendorId: ASC";
+        String expected = "productId: ASC";
         PageRequest result;
         String resultString;
 
