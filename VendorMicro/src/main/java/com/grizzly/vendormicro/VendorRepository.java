@@ -16,5 +16,5 @@ public interface VendorRepository extends PagingAndSortingRepository<Vendor, Str
     List<Vendor> findByVendorIdOrName(@Param("vendorId") String vendorId, @Param("name") String name, Pageable pageable);
 
     @Query("SELECT v FROM vendor v WHERE v.vendorId = :vendorId")
-    List<Product> findByVendorIdVendorId(@Param("vendorId") Integer vendorId, Pageable pageable);
+    List<Vendor> findByVendorIdVendorId(@Param("vendorId") Integer vendorId, Pageable pageable);
 }
