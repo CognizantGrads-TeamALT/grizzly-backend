@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CategorymicroApplicationTests {
+public class CategoryMicroApplicationTests {
 	@Autowired
 	CategoryService testService;
 

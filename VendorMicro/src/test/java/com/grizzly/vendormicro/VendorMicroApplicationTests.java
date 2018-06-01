@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class VendormicroApplicationTests {
+public class VendorMicroApplicationTests {
 
     @Autowired
     VendorService testService;

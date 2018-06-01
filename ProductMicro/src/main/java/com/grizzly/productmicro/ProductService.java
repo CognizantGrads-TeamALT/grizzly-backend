@@ -44,7 +44,7 @@ public class ProductService {
      * @param search, the string to match to ID to filter the product by
      * @return ArrayList of Product objs whose names or IDs
      */
-    public ArrayList<Product> getSingle(String search) {
+    public ArrayList<Product> getSingle(Integer search) {
         Sort sort = new Sort(Sort.Direction.ASC, "productId");
         PageRequest request = PageRequest.of(0, 25, sort);
 

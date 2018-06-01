@@ -33,13 +33,13 @@ public class ProductController {
     }
 
     /**
-     * Return a list of products in the system filtered by a given search string on ID or name
-     * @param search, string to filter returned list on by ID or name
-     * @return the filtered products in a list
+     * Return a single product based on id
+     * @param id, product ID
+     * @return the product
      */
-    @RequestMapping("/get/{search}")
-    public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="search") String search) {
-        ArrayList<Product> products = productService.getFiltered(search);
+    @RequestMapping("/get/{id}")
+    public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="id") Integer id) {
+        ArrayList<Product> products = productService.getSingle(id);
 
         // no products found
         if (products == null || products.isEmpty()) {

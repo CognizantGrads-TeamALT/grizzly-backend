@@ -37,6 +37,21 @@ public class VendorService {
         PageRequest request = PageRequest.of(0, 25, sort);
         return request;
     }
+
+    /**
+     * Get a single item from product id.
+     * @param id, the string to match to ID to filter the product by
+     * @return ArrayList of Product objs whose names or IDs
+     */
+    public ArrayList<Vendor> getSingle(Integer id) {
+        Sort sort = new Sort(Sort.Direction.ASC, "vendorId");
+        PageRequest request = PageRequest.of(0, 25, sort);
+
+        return makeListFromIterable(
+                vendorRepository.findByVendorId(id, request)
+        );
+    }
+
     /**
      * Get a filtered list of vendors, based on a given search string to match to name or ID.
      * @param search, the string to match to name or ID to filter the vendors by
