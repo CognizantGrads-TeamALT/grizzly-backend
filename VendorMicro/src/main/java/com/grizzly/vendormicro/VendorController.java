@@ -33,6 +33,23 @@ public class VendorController {
     }
 
     /**
+     * Return a single vendor based on id
+     * @param id, vendor ID
+     * @return the vendor
+     */
+    @RequestMapping("/get/{id}")
+    public ResponseEntity<ArrayList<Vendor>> getSingle(@PathVariable(value="id") Integer id) {
+        ArrayList<Vendor> vendors = vendorService.getSingle(id);
+
+        // no vendors found
+        if (vendors == null || vendors.isEmpty()) {
+            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
+    }
+
+    /**
      * Return a list of vendors in the system filtered by a given search string on ID or name
      * @param search, string to filter returned list on by ID or name
      * @return the filtered vendors in a list

@@ -16,7 +16,7 @@ public class Category {
         super();
     }
 
-    public Category(String name, String description ) {
+    public Category(String name, String description) {
         super();
 
         this.name = name;

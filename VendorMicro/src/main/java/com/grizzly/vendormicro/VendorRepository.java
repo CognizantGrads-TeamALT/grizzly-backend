@@ -13,5 +13,8 @@ import java.util.List;
 @Repository
 public interface VendorRepository extends PagingAndSortingRepository<Vendor, String> {
     @Query("SELECT v FROM vendor v WHERE v.vendorId = :vendorId OR v.name = :name")
-    List<Vendor> findByVendorIdOrName(@Param("vendorId") Integer vendorId, @Param("name") String name, Pageable pageable);
+    List<Vendor> findByVendorIdOrName(@Param("vendorId") String vendorId, @Param("name") String name, Pageable pageable);
+
+    @Query("SELECT v FROM vendor v WHERE v.vendorId = :vendorId")
+    List<Product> findByVendorIdVendorId(@Param("vendorId") Integer vendorId, Pageable pageable);
 }

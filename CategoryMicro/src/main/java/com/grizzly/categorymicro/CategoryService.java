@@ -90,7 +90,6 @@ public class CategoryService {
     @Transactional
     public void addCategory(String name, String description) {
         categoryRepository.save(new Category(name, description));
-
     }
 
     /**
@@ -100,7 +99,6 @@ public class CategoryService {
     public void deleteById(String deleteId) {
         categoryRepository.deleteById(deleteId);
     }
-
 
     /**
      * Get a filtered list of categories, based on a given search string to match to name .
