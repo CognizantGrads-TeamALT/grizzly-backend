@@ -20,7 +20,7 @@ public class CategoryController {
      * @return categories in a list
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Category>> get(@PathVariable(value="pageIndex") String pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity<ArrayList<Category>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Category> categories = categoryService.get(pageIndex, column_name);
 
         // if no categories found

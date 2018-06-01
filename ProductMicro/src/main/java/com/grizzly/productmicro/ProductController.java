@@ -17,19 +17,19 @@ public class ProductController {
     private ProductService productService;
 
     /**
-     * Return a list of all products in the system
+     * Return a list of all vendors in the system
      * @return products in a list
      */
-    @GetMapping("/all/{column_name}")
-    public ResponseEntity<ArrayList<Product>> getAll(@PathVariable(value="column_name") String column_name) {
-        ArrayList<Product> products = productService.getAll(column_name);
+    @GetMapping("/get/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Product>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<Product> vendors = productService.get(pageIndex, column_name);
 
-        // no products found
-        if (products == null || products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        // no vendors found
+        if (vendors == null || vendors.isEmpty()) {
+            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
     }
 
     /**
