@@ -72,7 +72,7 @@ public class VendorController {
      * @return HTTP status response only
      */
     @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
-    public ResponseEntity deleteVendor(@PathVariable(value="id") String id) {
+    public ResponseEntity deleteVendor(@PathVariable(value="id") Integer id) {
         try {
             vendorService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {

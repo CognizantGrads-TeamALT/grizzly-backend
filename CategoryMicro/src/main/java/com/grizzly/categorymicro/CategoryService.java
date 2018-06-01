@@ -39,7 +39,7 @@ public class CategoryService {
      * @param description, new description to overwrite the category's old one
      * @return the original category object; null if none was found
      */
-    public Category edit(String id, String name, String description) {
+    public Category edit(Integer id, String name, String description) {
         // find the existing category
         Category cat;
         try {
@@ -96,7 +96,7 @@ public class CategoryService {
      * Delete a vendor given an ID
      * @param deleteId, ID of the vendor to delete
      */
-    public void deleteById(String deleteId) {
+    public void deleteById(Integer deleteId) {
         categoryRepository.deleteById(deleteId);
     }
 

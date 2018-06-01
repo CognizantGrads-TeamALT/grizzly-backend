@@ -76,7 +76,7 @@ public class VendorService {
      * Delete a vendor given an ID
      * @param deleteId, ID of the vendor to delete
      */
-    public void deleteById(String deleteId) {
+    public void deleteById(Integer deleteId) {
         vendorRepository.deleteById(deleteId);
     }
 
