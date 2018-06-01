@@ -13,7 +13,6 @@ import org.springframework.web.util.NestedServletException;
 @RestController
 @RequestMapping("/vendor")
 public class VendorController {
-
     @Autowired
     private VendorService vendorService;
 
@@ -24,6 +23,23 @@ public class VendorController {
     @GetMapping("/all/{column_name}")
     public ResponseEntity<ArrayList<Vendor>> getAll(@PathVariable(value="column_name") String column_name) {
         ArrayList<Vendor> vendors = vendorService.getAll(column_name);
+
+        // no vendors found
+        if (vendors == null || vendors.isEmpty()) {
+            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
+    }
+
+    /**
+     * Return a single vendor based on id
+     * @param id, vendor ID
+     * @return the vendor
+     */
+    @RequestMapping("/get/{id}")
+    public ResponseEntity<ArrayList<Vendor>> getSingle(@PathVariable(value="id") Integer id) {
+        ArrayList<Vendor> vendors = vendorService.getSingle(id);
 
         // no vendors found
         if (vendors == null || vendors.isEmpty()) {
@@ -87,6 +103,4 @@ public class VendorController {
     public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);
     }
-
 }
-

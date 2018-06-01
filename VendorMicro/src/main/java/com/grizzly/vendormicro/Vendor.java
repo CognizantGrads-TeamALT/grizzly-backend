@@ -6,13 +6,13 @@ import javax.persistence.*;
 public class Vendor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="vendor_id") private String vendorId;
+    @Column(name="vendor_id")       private Integer vendorId;
 
-    @Column(name="name") private String name;
-    @Column(name="contact_num") private String contactNum;
-    @Column(name="website") private String website;
-    @Column(name="email") private String email;
-    @Column(name="bio") private String bio;
+    @Column(name="name")            private String name;
+    @Column(name="contact_num")     private String contactNum;
+    @Column(name="website")         private String website;
+    @Column(name="email")           private String email;
+    @Column(name="bio")             private String bio;
 
     public Vendor() {
         super();
@@ -28,11 +28,11 @@ public class Vendor {
         setBio(bio);
     }
 
-    public String getVendorId() {
+    public Integer getVendorId() {
         return vendorId;
     }
 
-    public void setVendorId(String vendorId) {
+    public void setVendorId(Integer vendorId) {
         this.vendorId = vendorId;
     }
 

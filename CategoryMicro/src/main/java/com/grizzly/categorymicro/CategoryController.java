@@ -8,13 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-
-
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/category")
 public class CategoryController {
-
     @Autowired
     private CategoryService categoryService;
 
@@ -24,9 +21,7 @@ public class CategoryController {
      */
     @GetMapping("/all/{column_name}")
     public ResponseEntity<ArrayList<Category>> getAll(@PathVariable(value="column_name") String column_name) {
-
         ArrayList<Category> categories = categoryService.getAll(column_name);
-
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
@@ -44,13 +39,26 @@ public class CategoryController {
     //}
 
     @PutMapping("/add")
-    public void addCategory(@RequestBody CategoryDTO categoryDTO)
-    {
+    public void addCategory(@RequestBody CategoryDTO categoryDTO) {
          categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
-
-
     }
 
+    /**
+     * Return a single category based on id
+     * @param id, category ID
+     * @return the category
+     */
+    @RequestMapping("/get/{id}")
+    public ResponseEntity<ArrayList<Category>> getSingle(@PathVariable(value="id") Integer id) {
+        ArrayList<Category> categories = categoryService.getSingle(id);
+
+        // no categories found
+        if (categories == null || categories.isEmpty()) {
+            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
 
     /**
      * Return a list of categories in the system filtered by a given search string on name
@@ -58,8 +66,7 @@ public class CategoryController {
      * @return the filtered categories in a list
      */
     @RequestMapping("/search/{search}")
-    public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search)
-    {
+    public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Category> categories = categoryService.getFiltered(search);
 
         // no categories found
@@ -71,8 +78,7 @@ public class CategoryController {
     }
 
     @GetMapping("/hello")
-    public ResponseEntity<String> hello()
-    {
+    public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);
     }
 
@@ -109,5 +115,4 @@ public class CategoryController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
-
 }

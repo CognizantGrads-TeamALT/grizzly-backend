@@ -6,9 +6,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class VendormicroApplication {
-
+public class VendorMicroApplication {
     public static void main(String[] args) {
-        SpringApplication.run(VendormicroApplication.class, args);
+        SpringApplication.run(VendorMicroApplication.class, args);
     }
 }

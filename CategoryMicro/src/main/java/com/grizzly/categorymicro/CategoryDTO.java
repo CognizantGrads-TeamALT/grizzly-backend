@@ -1,8 +1,7 @@
 package com.grizzly.categorymicro;
 
 public class CategoryDTO {
-
-    private String categoryId;
+    private Integer categoryId;
     private String name;
     private String description;
     private boolean enabled;
@@ -23,11 +22,11 @@ public class CategoryDTO {
         this.description = description;
     }
 
-    public String getCategoryId() {
+    public Integer getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
     }
 

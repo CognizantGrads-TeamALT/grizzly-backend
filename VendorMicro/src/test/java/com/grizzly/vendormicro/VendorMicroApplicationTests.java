@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class VendormicroApplicationTests {
+public class VendorMicroApplicationTests {
 
     @Autowired
     VendorService testService;
@@ -63,8 +63,7 @@ public class VendormicroApplicationTests {
     }
 
     @Test
-    public void getPageRequest_SortsByField()
-    {
+    public void getPageRequest_SortsByField() {
         //set up
         String column_name = "name";
         String expected = "name: ASC";
@@ -77,12 +76,10 @@ public class VendormicroApplicationTests {
 
         //verification
         assertEquals(expected, resultString);
-
     }
 
     @Test
-    public void getPageRequest_DefaultstoId()
-    {
+    public void getPageRequest_DefaultstoId() {
         //set up
         String column_name = "invalid";
         String expected = "vendorId: ASC";
@@ -95,9 +92,5 @@ public class VendormicroApplicationTests {
 
         //verification
         assertEquals(expected, resultString);
-
-
     }
-
-
 }
