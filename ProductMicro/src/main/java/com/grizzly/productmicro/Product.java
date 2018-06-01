@@ -6,11 +6,11 @@ import javax.persistence.*;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="product_id")      private String productId;
+    @Column(name="product_id")      private Integer productId;
 
     @Column(name="name")            private String name;
-    @Column(name="vendor_id")       private String vendorId;
-    @Column(name="category_id")     private String categoryId;
+    @Column(name="vendor_id")       private Integer vendorId;
+    @Column(name="category_id")     private Integer categoryId;
     @Column(name="desc")            private String desc;
     @Column(name="price")           private Integer price;
     @Column(name="enabled")         private Boolean enabled;
@@ -19,7 +19,9 @@ public class Product {
         super();
     }
 
-    public Product(String name, String vendorId, String categoryId, String desc, Integer price, Boolean enabled) {
+    public Product(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Boolean enabled) {
+        super();
+
         setName(name);
         setVendorId(vendorId);
         setCategoryId(categoryId);
@@ -28,11 +30,11 @@ public class Product {
         setEnabled(enabled);
     }
 
-    public String getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
@@ -44,19 +46,19 @@ public class Product {
         this.name = name;
     }
 
-    public String getVendorId() {
+    public Integer getVendorId() {
         return vendorId;
     }
 
-    public void setVendorId(String vendorId) {
+    public void setVendorId(Integer vendorId) {
         this.vendorId = vendorId;
     }
 
-    public String getCategoryId() {
+    public Integer getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
     }
 

@@ -13,7 +13,6 @@ import org.springframework.web.util.NestedServletException;
 @RestController
 @RequestMapping("/vendor")
 public class VendorController {
-
     @Autowired
     private VendorService vendorService;
 
@@ -87,6 +86,4 @@ public class VendorController {
     public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);
     }
-
 }
-
