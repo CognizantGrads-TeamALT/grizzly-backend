@@ -1,7 +1,25 @@
-INSERT INTO vendor(name,contact_num,website,email, bio)
-VALUES ('Bob','0456789219','www.bob.com','bob@website.com','This is Bob');
-INSERT INTO vendor(name,contact_num,website,email, bio)
-VALUES ('Jane','0456789219','www.Jane.com','Jane@website.com','This is Jane');
-INSERT INTO vendor(name,contact_num,website,email, bio)
-VALUES ('Bentley','0456789219','www.Bentley.com','Bentley@website.com','This is Bentley');
-
+insert into vendor (name, contact_num, website, email, bio) values ('Mayert, Hartmann and Mayert', '646 970 2189', 'https://arizona.edu', 'lillem0@mapquest.com', 'exploit innovative channels');
+insert into vendor (name, contact_num, website, email, bio) values ('Gerlach-Bayer', '425 334 9480', 'http://wsj.com', 'cflintoffe1@mysql.com', 'synthesize best-of-breed deliverables');
+insert into vendor (name, contact_num, website, email, bio) values ('Waelchi-Goyette', '961 191 7348', 'https://netvibes.com', 'hfrichley2@bizjournals.com', 'syndicate efficient users');
+insert into vendor (name, contact_num, website, email, bio) values ('Cole Group', '779 125 8642', 'https://businessinsider.com', 'jmonkton3@ihg.com', 'visualize proactive metrics');
+insert into vendor (name, contact_num, website, email, bio) values ('Walker, Wunsch and Grimes', '586 290 7027', 'http://google.fr', 'jdumbell4@51.la', 'seize distributed e-business');
+insert into vendor (name, contact_num, website, email, bio) values ('Dooley-Walsh', '274 632 8190', 'http://nih.gov', 'torwell5@auda.org.au', 'morph viral markets');
+insert into vendor (name, contact_num, website, email, bio) values ('O''Conner Group', '475 573 1059', 'https://diigo.com', 'jbisp6@mozilla.org', 'deliver rich applications');
+insert into vendor (name, contact_num, website, email, bio) values ('Cronin Group', '404 607 2817', 'http://dedecms.com', 'acatanheira7@gizmodo.com', 'reinvent synergistic e-markets');
+insert into vendor (name, contact_num, website, email, bio) values ('Predovic, King and Huels', '258 605 2764', 'https://comsenz.com', 'rsaynor8@whitehouse.gov', 'whiteboard back-end models');
+insert into vendor (name, contact_num, website, email, bio) values ('Eichmann-Hodkiewicz', '636 561 7079', 'http://simplemachines.org', 'jpover9@economist.com', 'syndicate back-end portals');
+insert into vendor (name, contact_num, website, email, bio) values ('Wehner, Ullrich and Reynolds', '957 353 6906', 'http://trellian.com', 'pmarqueta@google.com', 'reinvent user-centric markets');
+insert into vendor (name, contact_num, website, email, bio) values ('VonRueden, Mitchell and Bailey', '508 975 9618', 'http://aboutads.info', 'sborthb@alexa.com', 'aggregate killer supply-chains');
+insert into vendor (name, contact_num, website, email, bio) values ('Rau and Sons', '530 105 8877', 'https://gnu.org', 'aheppenspallc@blogger.com', 'recontextualize cutting-edge schemas');
+insert into vendor (name, contact_num, website, email, bio) values ('Franecki, Lindgren and Kub', '774 336 2430', 'http://admin.ch', 'ggamlend@nih.gov', 'deliver compelling convergence');
+insert into vendor (name, contact_num, website, email, bio) values ('Ullrich, Larson and Bogisich', '202 902 6927', 'https://cbsnews.com', 'nhellicare@com.com', 'streamline bricks-and-clicks partnerships');
+insert into vendor (name, contact_num, website, email, bio) values ('Hoppe Inc', '209 168 0457', 'https://gnu.org', 'wlarmetf@lycos.com', 'productize back-end niches');
+insert into vendor (name, contact_num, website, email, bio) values ('Bogan Group', '518 669 9023', 'https://joomla.org', 'jkaasmang@friendfeed.com', 'transition back-end e-services');
+insert into vendor (name, contact_num, website, email, bio) values ('Lebsack Inc', '173 692 0439', 'https://nasa.gov', 'khowsegoh@smugmug.com', 'strategize B2C infomediaries');
+insert into vendor (name, contact_num, website, email, bio) values ('Ratke, Dicki and Kassulke', '683 889 5329', 'http://twitter.com', 'lfattorei@so-net.ne.jp', 'syndicate proactive paradigms');
+insert into vendor (name, contact_num, website, email, bio) values ('Langosh, Klocko and Gutkowski', '698 994 4999', 'http://histats.com', 'hmilkehamj@independent.co.uk', 'incubate proactive synergies');
+insert into vendor (name, contact_num, website, email, bio) values ('Trantow-Heaney', '671 243 6907', 'https://cyberchimps.com', 'cassantek@tripod.com', 'disintermediate robust architectures');
+insert into vendor (name, contact_num, website, email, bio) values ('Koepp Inc', '618 332 7305', 'https://exblog.jp', 'ayakubovl@cam.ac.uk', 'generate web-enabled systems');
+insert into vendor (name, contact_num, website, email, bio) values ('Connelly, Botsford and D''Amore', '256 514 3434', 'https://squidoo.com', 'mgahanm@wired.com', 'enhance back-end ROI');
+insert into vendor (name, contact_num, website, email, bio) values ('Simonis Inc', '294 273 5891', 'http://engadget.com', 'mvideneevn@squarespace.com', 'extend dot-com channels');
+insert into vendor (name, contact_num, website, email, bio) values ('Mohr Group', '970 100 4367', 'http://cbc.ca', 'bmaylouro@reuters.com', 'syndicate next-generation metrics');
