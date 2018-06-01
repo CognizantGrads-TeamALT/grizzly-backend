@@ -101,6 +101,20 @@ public class CategoryService {
     }
 
     /**
+     * Get a single item from product id.
+     * @param id, the string to match to ID to filter the product by
+     * @return ArrayList of Category
+     */
+    public ArrayList<Category> getSingle(Integer id) {
+        Sort sort = new Sort(Sort.Direction.ASC, "categoryId");
+        PageRequest request = PageRequest.of(0, 25, sort);
+
+        return makeListFromIterable(
+                categoryRepository.findByProductId(id, request)
+        );
+    }
+
+    /**
      * Get a filtered list of categories, based on a given search string to match to name .
      * @param search, the string to match to name to filter the categories by
      * @return ArrayList of Category objs whose names
