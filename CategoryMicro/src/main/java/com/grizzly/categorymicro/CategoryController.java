@@ -89,7 +89,7 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @RequestMapping(value="/edit/{id}", method=RequestMethod.POST)
-    public ResponseEntity edit(@PathVariable(value="id") String id, @RequestBody CategoryDTO request) {
+    public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
         Category newCat = categoryService.edit(id, request.getName(), request.getDescription());
 
         // null if the ID did not map to an existing category
