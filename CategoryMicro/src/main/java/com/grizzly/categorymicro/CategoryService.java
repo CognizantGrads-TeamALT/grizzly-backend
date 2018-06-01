@@ -110,7 +110,7 @@ public class CategoryService {
         PageRequest request = PageRequest.of(0, 25, sort);
 
         return makeListFromIterable(
-                categoryRepository.findByProductId(id, request)
+                categoryRepository.findByCategoryId(id, request)
         );
     }
 
