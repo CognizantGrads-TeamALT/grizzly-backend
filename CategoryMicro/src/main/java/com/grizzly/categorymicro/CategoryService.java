@@ -120,10 +120,17 @@ public class CategoryService {
      * @return ArrayList of Category objs whose names
      */
     public ArrayList<Category> getFiltered(String search) {
-        Sort sort = new Sort(Sort.Direction.ASC, "name");
-        PageRequest request = PageRequest.of(0, 25, sort);
+        try {
+            Integer categoryId = Integer.parseInt(search);
 
-        return makeListFromIterable(
-                categoryRepository.findByCategoryIdOrName(search, search, request));
+            return getSingle(categoryId);
+        } catch(NumberFormatException e) {
+            Sort sort = new Sort(Sort.Direction.ASC, "categoryId");
+            PageRequest request = PageRequest.of(0, 25, sort);
+
+            return makeListFromIterable(
+                    categoryRepository.findByCategoryName(search, request)
+            );
+        }
     }
 }
