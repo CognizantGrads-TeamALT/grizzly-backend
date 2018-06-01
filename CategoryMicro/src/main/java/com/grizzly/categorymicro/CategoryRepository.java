@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public interface CategoryRepository extends PagingAndSortingRepository<Category, String> {
-    @Query("SELECT c FROM category c WHERE c.categoryId = :categoryId OR c.name = :name")
-    List<Category> findByCategoryIdOrName(@Param("categoryId") String categoryId, @Param("name") String name, Pageable pageable);
-
     @Query("SELECT c FROM category c WHERE c.categoryId = :categoryId")
     List<Category> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);
+
+    @Query("SELECT c FROM category c WHERE LOWER(c.name) LIKE LOWER(concat(concat('%',:name), '%'))")
+    List<Category> findByCategoryName(@Param("name") String name, Pageable pageable);
 }

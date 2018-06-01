@@ -58,12 +58,18 @@ public class VendorService {
      * @return ArrayList of Vendor objs whose names or IDs
      */
     public ArrayList<Vendor> getFiltered(String search) {
-        Sort sort = new Sort(Sort.Direction.ASC, "vendorId");
-        PageRequest request = PageRequest.of(0, 25, sort);
+        try {
+            Integer vendorId = Integer.parseInt(search);
 
-        return makeListFromIterable(
-                vendorRepository.findByVendorIdOrName(search, search, request)
-        );
+            return getSingle(vendorId);
+        } catch(NumberFormatException e) {
+            Sort sort = new Sort(Sort.Direction.ASC, "vendorId");
+            PageRequest request = PageRequest.of(0, 25, sort);
+
+            return makeListFromIterable(
+                    vendorRepository.findByVendorName(search, request)
+            );
+        }
     }
 
     /**
