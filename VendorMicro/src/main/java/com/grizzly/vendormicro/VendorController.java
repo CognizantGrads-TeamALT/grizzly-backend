@@ -21,7 +21,7 @@ public class VendorController {
      * @return vendors in a list
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Vendor>> get(@PathVariable(value="pageIndex") String pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity<ArrayList<Vendor>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Vendor> vendors = vendorService.get(pageIndex, column_name);
 
         // no vendors found

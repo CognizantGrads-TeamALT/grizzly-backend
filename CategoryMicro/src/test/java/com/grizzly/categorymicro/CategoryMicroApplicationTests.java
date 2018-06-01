@@ -69,7 +69,7 @@ public class CategoryMicroApplicationTests {
 	@Test
 	public void getPageRequest_DefaultstoId() {
 		//set up
-		String pageIndex = "0";
+		Integer pageIndex = 0;
 		String column_name = "invalid";
 		String expected = "categoryId: ASC";
 		PageRequest result;
