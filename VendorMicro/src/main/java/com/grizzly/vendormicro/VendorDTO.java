@@ -1,18 +1,18 @@
 package com.grizzly.vendormicro;
 
 public class VendorDTO {
-    private String vendorId;
+    private Integer vendorId;
     private String name;
     private String contactNum;
     private String website;
     private String email;
     private String bio;
 
-    public String getVendorId() {
+    public Integer getVendorId() {
         return vendorId;
     }
 
-    public void setVendorId(String vendorId) {
+    public void setVendorId(Integer vendorId) {
         this.vendorId = vendorId;
     }
 

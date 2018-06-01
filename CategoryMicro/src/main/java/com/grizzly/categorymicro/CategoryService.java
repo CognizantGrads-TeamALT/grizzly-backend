@@ -1,6 +1,5 @@
 package com.grizzly.categorymicro;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,7 +13,6 @@ import java.util.NoSuchElementException;
 
 @Service
 public class CategoryService {
-
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -29,12 +27,9 @@ public class CategoryService {
      * @return ArrayList of Category objs
      */
 
-    public ArrayList<Category> getAll(String column_name)
-    {
-
+    public ArrayList<Category> getAll(String column_name) {
        PageRequest request = getPageRequest(column_name);
         return makeListFromIterable(categoryRepository.findAll(request));
-
     }
 
     /**
@@ -77,28 +72,23 @@ public class CategoryService {
      * @param column_name, the fieldname in the database to sort the list
      * @return pageRequest to the method called
      */
-    public PageRequest getPageRequest(String column_name)
-    {
-        Sort sort;
-
-
+    public PageRequest getPageRequest(String column_name) {
         final String[] fields = {"categoryId", "name", "description", "enabled"};
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
             sortField = column_name;
         } else {
             sortField = "categoryId";
-
         }
-        sort = new Sort(Sort.Direction.ASC, sortField);
+
+        Sort sort = new Sort(Sort.Direction.ASC, sortField);
 
         PageRequest request = PageRequest.of(0, 25, sort);
         return request;
     }
 
     @Transactional
-    public void addCategory(String name, String description)
-    {
+    public void addCategory(String name, String description) {
         categoryRepository.save(new Category(name, description));
 
     }
@@ -117,8 +107,7 @@ public class CategoryService {
      * @param search, the string to match to name to filter the categories by
      * @return ArrayList of Category objs whose names
      */
-    public ArrayList<Category> getFiltered(String search)
-    {
+    public ArrayList<Category> getFiltered(String search) {
         Sort sort = new Sort(Sort.Direction.ASC, "name");
         PageRequest request = PageRequest.of(0, 25, sort);
 

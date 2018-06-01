@@ -20,6 +20,8 @@ public class Product {
     }
 
     public Product(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Boolean enabled) {
+        super();
+
         setName(name);
         setVendorId(vendorId);
         setCategoryId(categoryId);

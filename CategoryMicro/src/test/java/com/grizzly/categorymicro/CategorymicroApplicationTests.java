@@ -18,7 +18,6 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CategorymicroApplicationTests {
-
 	@Autowired
 	CategoryService testService;
 
@@ -68,8 +67,7 @@ public class CategorymicroApplicationTests {
 	}
 
 	@Test
-	public void getPageRequest_DefaultstoId()
-	{
+	public void getPageRequest_DefaultstoId() {
 		//set up
 		String column_name = "invalid";
 		String expected = "categoryId: ASC";
@@ -82,8 +80,6 @@ public class CategorymicroApplicationTests {
 
 		//verification
 		assertEquals(expected, resultString);
-
-
 	}
 
 	@Test
@@ -104,7 +100,6 @@ public class CategorymicroApplicationTests {
 		// verification
 		assertEquals(newName, newCat.getName());
 		assertEquals(newDescription, newCat.getDescription());
-
 	}
 
 	@Test
@@ -147,4 +142,3 @@ public class CategorymicroApplicationTests {
 		assertNull(newCat);
 	}
 }
-

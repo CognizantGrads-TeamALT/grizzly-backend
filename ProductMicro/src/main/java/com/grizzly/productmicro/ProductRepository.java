@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends PagingAndSortingRepository<Product, String> {
     @Query("SELECT p FROM product p WHERE p.productId = :productId OR p.name = :name")
-    List<Product> findByProductIdOrName(@Param("productId") String productId, @Param("name") String name, Pageable pageable);
+    List<Product> findByProductIdOrName(@Param("productId") Integer productId, @Param("name") String name, Pageable pageable);
 
     @Query("SELECT p FROM product p WHERE p.productId = :productId")
-    List<Product> findByProductId(@Param("productId") String productId, Pageable pageable);
+    List<Product> findByProductId(@Param("productId") Integer productId, Pageable pageable);
 }

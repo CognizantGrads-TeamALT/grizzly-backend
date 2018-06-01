@@ -8,13 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-
-
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/category")
 public class CategoryController {
-
     @Autowired
     private CategoryService categoryService;
 
@@ -44,13 +41,9 @@ public class CategoryController {
     //}
 
     @PutMapping("/add")
-    public void addCategory(@RequestBody CategoryDTO categoryDTO)
-    {
+    public void addCategory(@RequestBody CategoryDTO categoryDTO) {
          categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
-
-
     }
-
 
     /**
      * Return a list of categories in the system filtered by a given search string on name
@@ -58,8 +51,7 @@ public class CategoryController {
      * @return the filtered categories in a list
      */
     @RequestMapping("/search/{search}")
-    public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search)
-    {
+    public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Category> categories = categoryService.getFiltered(search);
 
         // no categories found
@@ -71,8 +63,7 @@ public class CategoryController {
     }
 
     @GetMapping("/hello")
-    public ResponseEntity<String> hello()
-    {
+    public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);
     }
 
@@ -109,5 +100,4 @@ public class CategoryController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
-
 }
