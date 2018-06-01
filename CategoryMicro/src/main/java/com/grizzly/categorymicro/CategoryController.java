@@ -105,7 +105,7 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
-    public ResponseEntity deleteCategory(@PathVariable(value="id") String id) {
+    public ResponseEntity deleteCategory(@PathVariable(value="id") Integer id) {
         try {
             categoryService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {

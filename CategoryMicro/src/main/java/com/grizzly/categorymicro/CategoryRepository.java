@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CategoryRepository extends PagingAndSortingRepository<Category, String> {
+public interface CategoryRepository extends PagingAndSortingRepository<Category, Integer> {
     @Query("SELECT c FROM category c WHERE c.categoryId = :categoryId")
     List<Category> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);
 
