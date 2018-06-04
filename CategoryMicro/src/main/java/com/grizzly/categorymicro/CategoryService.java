@@ -140,7 +140,7 @@ public class CategoryService {
      * @return HTTP status response only
      */
     public void incrementProductCount(int catID){
-
+        categoryRepository.incrementProductCount(catID);
 
     }
 }

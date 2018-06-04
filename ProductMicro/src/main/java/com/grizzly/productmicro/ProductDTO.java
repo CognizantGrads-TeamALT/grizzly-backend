@@ -29,4 +29,15 @@ public class ProductDTO {
         product.setEnabled(enabled);
         return product;
     }
+
+    public ProductDTO(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Boolean enabled) {
+        super();
+
+        this.name = name;
+        this.vendorId = vendorId;
+        this.categoryId = categoryId;
+        this.desc = desc;
+        this.price = price;
+        this.enabled = enabled;
+    }
 }
