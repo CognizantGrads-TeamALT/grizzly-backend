@@ -20,9 +20,9 @@ public class ProductController {
      * Return a list of all products in the system
      * @return products in a list
      */
-    @GetMapping("/all/{column_name}")
-    public ResponseEntity<ArrayList<Product>> getAll(@PathVariable(value="column_name") String column_name) {
-        ArrayList<Product> products = productService.getAll(column_name);
+    @GetMapping("/get/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Product>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<Product> products = productService.get(pageIndex, column_name);
 
         // no products found
         if (products == null || products.isEmpty()) {

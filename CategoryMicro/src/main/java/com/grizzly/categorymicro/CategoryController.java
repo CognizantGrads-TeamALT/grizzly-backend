@@ -19,9 +19,9 @@ public class CategoryController {
      * Return a list of all categories in the system
      * @return categories in a list
      */
-    @GetMapping("/all/{column_name}")
-    public ResponseEntity<ArrayList<Category>> getAll(@PathVariable(value="column_name") String column_name) {
-        ArrayList<Category> categories = categoryService.getAll(column_name);
+    @GetMapping("/get/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Category>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<Category> categories = categoryService.get(pageIndex, column_name);
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
@@ -89,7 +89,7 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @RequestMapping(value="/edit/{id}", method=RequestMethod.POST)
-    public ResponseEntity edit(@PathVariable(value="id") String id, @RequestBody CategoryDTO request) {
+    public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
         Category newCat = categoryService.edit(id, request.getName(), request.getDescription());
 
         // null if the ID did not map to an existing category
@@ -105,7 +105,7 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
-    public ResponseEntity deleteCategory(@PathVariable(value="id") String id) {
+    public ResponseEntity deleteCategory(@PathVariable(value="id") Integer id) {
         try {
             categoryService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {

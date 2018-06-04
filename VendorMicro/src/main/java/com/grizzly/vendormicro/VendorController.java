@@ -20,9 +20,9 @@ public class VendorController {
      * Return a list of all vendors in the system
      * @return vendors in a list
      */
-    @GetMapping("/all/{column_name}")
-    public ResponseEntity<ArrayList<Vendor>> getAll(@PathVariable(value="column_name") String column_name) {
-        ArrayList<Vendor> vendors = vendorService.getAll(column_name);
+    @GetMapping("/get/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Vendor>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<Vendor> vendors = vendorService.get(pageIndex, column_name);
 
         // no vendors found
         if (vendors == null || vendors.isEmpty()) {
@@ -72,7 +72,7 @@ public class VendorController {
      * @return HTTP status response only
      */
     @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
-    public ResponseEntity deleteVendor(@PathVariable(value="id") String id) {
+    public ResponseEntity deleteVendor(@PathVariable(value="id") Integer id) {
         try {
             vendorService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {

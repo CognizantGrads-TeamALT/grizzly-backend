@@ -69,13 +69,14 @@ public class CategoryMicroApplicationTests {
 	@Test
 	public void getPageRequest_DefaultstoId() {
 		//set up
+		Integer pageIndex = 0;
 		String column_name = "invalid";
 		String expected = "categoryId: ASC";
 		PageRequest result;
 		String resultString;
 
 		//execution
-		result = testService.getPageRequest(column_name);
+		result = testService.getPageRequest(pageIndex, column_name);
 		resultString = result.getSort().toString();
 
 		//verification
@@ -90,12 +91,12 @@ public class CategoryMicroApplicationTests {
 		Category testCat = new Category("old", "old desc");
 
 		CategoryRepository mockRepo = mock(CategoryRepository.class);
-		when(mockRepo.findById(anyString())).thenReturn(Optional.of(testCat));
+		when(mockRepo.findById(anyInt())).thenReturn(Optional.of(testCat));
 		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.edit("id", newName, newDescription);
+		Category newCat = mockService.edit(1, newName, newDescription);
 
 		// verification
 		assertEquals(newName, newCat.getName());
@@ -110,12 +111,12 @@ public class CategoryMicroApplicationTests {
 		Category testCat = new Category("old", "old desc");
 
 		CategoryRepository mockRepo = mock(CategoryRepository.class);
-		when(mockRepo.findById(anyString())).thenReturn(Optional.of(testCat));
+		when(mockRepo.findById(anyInt())).thenReturn(Optional.of(testCat));
 		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.edit("id", newName, newDescription);
+		Category newCat = mockService.edit(1, newName, newDescription);
 
 		// verification
 		assertEquals(newName, newCat.getName());
@@ -131,12 +132,12 @@ public class CategoryMicroApplicationTests {
 		Category testCat = new Category("old", "old desc");
 
 		CategoryRepository mockRepo = mock(CategoryRepository.class);
-		when(mockRepo.findById(anyString())).thenReturn(Optional.empty());
+		when(mockRepo.findById(anyInt())).thenReturn(Optional.empty());
 		when(mockRepo.save(any(Category.class))).thenReturn(testCat);
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.edit("id", newName, newDescription);
+		Category newCat = mockService.edit(1, newName, newDescription);
 
 		// verification
 		assertNull(newCat);

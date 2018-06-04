@@ -17,10 +17,9 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-
-    public ArrayList<Product> getAll(String column_name) {
-       PageRequest request = getPageRequest(column_name);
-       return makeListFromIterable(productRepository.findAll(request));
+    public ArrayList<Product> get(Integer pageIndex, String column_name) {
+        PageRequest request = getPageRequest(pageIndex, column_name);
+        return makeListFromIterable(productRepository.findAll(request));
     }
 
     /**
@@ -28,7 +27,7 @@ public class ProductService {
     * @param column_name, the fieldname in the database to sort the list
     * @return pageRequest to the method called
     */
-    public PageRequest getPageRequest(String column_name) {
+    public PageRequest getPageRequest(Integer pageIndex, String column_name) {
         final String[] fields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "enabled"};
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
@@ -39,7 +38,7 @@ public class ProductService {
 
         Sort sort = new Sort(Sort.Direction.ASC, sortField);
 
-        PageRequest request = PageRequest.of(0, 25, sort);
+        PageRequest request = PageRequest.of(pageIndex, 25, sort);
         return request;
     }
 
