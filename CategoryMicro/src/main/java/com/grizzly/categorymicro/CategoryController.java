@@ -115,4 +115,22 @@ public class CategoryController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
+    /**
+     * Update a productCount when a product is added
+     * @param catId, ID of the Category to increment count
+     * @return HTTP status response only
+     */
+    @PostMapping(value="/updateCount/{catID}")
+    public ResponseEntity incrementProductCount(@PathVariable(value="catID") String catID){
+        try{
+            categoryService.incrementProductCount(Integer.parseInt(catID));
+        }catch(NumberFormatException e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
+
+    }
 }

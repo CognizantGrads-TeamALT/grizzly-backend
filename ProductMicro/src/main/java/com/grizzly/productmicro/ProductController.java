@@ -89,7 +89,8 @@ public class ProductController {
      * @return the newly created product
      */
     @RequestMapping(value="/add", method=RequestMethod.PUT)
-    public ResponseEntity<Product> addProduct(@RequestBody ProductDTO newProduct) {
+    public ResponseEntity<Product> addProduct(/*@RequestBody ProductDTO newProduct*/) {
+        ProductDTO newProduct = new ProductDTO("test prod", 1, 1, "test desc", 5, true);
         Product created = productService.add(newProduct.toEntity());
 
         if (created == null) {

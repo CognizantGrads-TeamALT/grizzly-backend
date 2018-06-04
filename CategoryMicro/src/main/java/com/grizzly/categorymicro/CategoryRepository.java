@@ -3,10 +3,12 @@ package com.grizzly.categorymicro;
 //import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 //import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,4 +19,9 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
 
     @Query("SELECT c FROM category c WHERE LOWER(c.name) LIKE LOWER(concat(concat('%',:name), '%'))")
     List<Category> findByCategoryName(@Param("name") String name, Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE category c SET c.productCount = c.productCount + 1")
+    void incrementProductCount(@Param("catID") Integer catID);
 }

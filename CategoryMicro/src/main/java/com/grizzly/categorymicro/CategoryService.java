@@ -133,4 +133,14 @@ public class CategoryService {
             );
         }
     }
+
+    /**
+     * Update a productCount when a product is added
+     * @param catID, ID of the Category to increment count
+     * @return HTTP status response only
+     */
+    public void incrementProductCount(int catID){
+        categoryRepository.incrementProductCount(catID);
+
+    }
 }

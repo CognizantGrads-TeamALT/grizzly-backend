@@ -5,6 +5,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -80,6 +84,26 @@ public class ProductService {
      */
     public Product add(Product newProduct) {
         Product created = productRepository.save(newProduct);
+        try{
+            URL url = new URL("http://localhost:10001/" +
+                                "category/updateCount/1");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            int status = con.getResponseCode();
+            System.out.println("STATUS PRINT: " + Integer.toString(status));
+        }
+        catch (MalformedURLException e){
+            System.out.println("STATUS PRINT malformed");
+            return null;
+        }
+        catch (IOException e){
+            System.out.println("STATUS PRINT ioexception");
+            return null;
+        }
+
+
+
+
         return created;
     }
 

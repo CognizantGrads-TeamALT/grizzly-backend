@@ -11,6 +11,7 @@ public class Category {
     @Column(name="name")            private String name;
     @Column(name="description")     private String description;
     @Column(name="enabled")         private boolean enabled;
+    @Column(name="product_count")   private int productCount;
 
     public Category() {
         super();
@@ -19,9 +20,11 @@ public class Category {
     public Category(String name, String description) {
         super();
 
+
         this.name = name;
         this.description = description;
         this.enabled = true;
+        this.productCount = 0;
     }
 
     public Integer getCategoryId() {
@@ -54,5 +57,13 @@ public class Category {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public int getProductCount() {
+        return productCount;
+    }
+
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
     }
 }
