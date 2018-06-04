@@ -64,13 +64,14 @@ public class ProductMicroApplicationTests {
     @Test
     public void getPageRequest_SortsByField() {
         //set up
+        Integer pageIndex = 0;
         String column_name = "name";
         String expected = "name: ASC";
         PageRequest result;
         String resultString;
 
         //execution
-        result = testService.getPageRequest(column_name);
+        result = testService.getPageRequest(pageIndex, column_name);
         resultString = result.getSort().toString();
 
         //verification
@@ -80,13 +81,14 @@ public class ProductMicroApplicationTests {
     @Test
     public void getPageRequest_DefaultstoId() {
         //set up
+        Integer pageIndex = 0;
         String column_name = "invalid";
         String expected = "productId: ASC";
         PageRequest result;
         String resultString;
 
         //execution
-        result = testService.getPageRequest(column_name);
+        result = testService.getPageRequest(pageIndex, column_name);
         resultString = result.getSort().toString();
 
         //verification

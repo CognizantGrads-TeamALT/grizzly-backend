@@ -27,8 +27,8 @@ public class CategoryService {
      * @return ArrayList of Category objs
      */
 
-    public ArrayList<Category> getAll(String column_name) {
-       PageRequest request = getPageRequest(column_name);
+    public ArrayList<Category> get(Integer pageIndex, String column_name) {
+       PageRequest request = getPageRequest(pageIndex, column_name);
         return makeListFromIterable(categoryRepository.findAll(request));
     }
 
@@ -39,7 +39,7 @@ public class CategoryService {
      * @param description, new description to overwrite the category's old one
      * @return the original category object; null if none was found
      */
-    public Category edit(String id, String name, String description) {
+    public Category edit(Integer id, String name, String description) {
         // find the existing category
         Category cat;
         try {
@@ -72,7 +72,7 @@ public class CategoryService {
      * @param column_name, the fieldname in the database to sort the list
      * @return pageRequest to the method called
      */
-    public PageRequest getPageRequest(String column_name) {
+    public PageRequest getPageRequest(Integer pageIndex, String column_name) {
         final String[] fields = {"categoryId", "name", "description", "enabled"};
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
@@ -83,7 +83,7 @@ public class CategoryService {
 
         Sort sort = new Sort(Sort.Direction.ASC, sortField);
 
-        PageRequest request = PageRequest.of(0, 25, sort);
+        PageRequest request = PageRequest.of(pageIndex, 25, sort);
         return request;
     }
 
@@ -96,7 +96,7 @@ public class CategoryService {
      * Delete a vendor given an ID
      * @param deleteId, ID of the vendor to delete
      */
-    public void deleteById(String deleteId) {
+    public void deleteById(Integer deleteId) {
         categoryRepository.deleteById(deleteId);
     }
 

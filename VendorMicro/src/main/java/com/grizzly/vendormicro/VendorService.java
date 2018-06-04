@@ -13,8 +13,8 @@ public class VendorService {
     @Autowired
     private VendorRepository vendorRepository;
 
-    public ArrayList<Vendor> getAll(String column_name) {
-        PageRequest request = getPageRequest(column_name);
+    public ArrayList<Vendor> get(Integer pageIndex, String column_name) {
+        PageRequest request = getPageRequest(pageIndex, column_name);
         return makeListFromIterable(vendorRepository.findAll(request));
     }
 
@@ -22,8 +22,8 @@ public class VendorService {
      * Utility function to generate a pagerequest to tell the database how to page and sort a query
      * @param column_name, the fieldname in the database to sort the list
      * @return pageRequest to the method called
-    */
-    public PageRequest getPageRequest(String column_name) {
+     */
+    public PageRequest getPageRequest(Integer pageIndex, String column_name) {
         final String[] fields = {"vendorId", "name", "contactNum", "website", "email", "bio"};
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
@@ -34,7 +34,7 @@ public class VendorService {
 
         Sort sort = new Sort(Sort.Direction.ASC, sortField);
 
-        PageRequest request = PageRequest.of(0, 25, sort);
+        PageRequest request = PageRequest.of(pageIndex, 25, sort);
         return request;
     }
 
@@ -76,7 +76,7 @@ public class VendorService {
      * Delete a vendor given an ID
      * @param deleteId, ID of the vendor to delete
      */
-    public void deleteById(String deleteId) {
+    public void deleteById(Integer deleteId) {
         vendorRepository.deleteById(deleteId);
     }
 
