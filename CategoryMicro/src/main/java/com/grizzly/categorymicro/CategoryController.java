@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -100,6 +101,24 @@ public class CategoryController {
     }
 
     /**
+     * Get a list of vendors based on vendor IDs
+     * @param ids, The list of Vendor ids that are to be fetched
+     * @return the matching vendors in a list
+     */
+    @PostMapping("/batchFetch/{ids}")
+    public ResponseEntity<ArrayList<Category>> getBatch(@PathVariable(value="ids") String ids) {
+        String[] request = ids.split(",");
+        ArrayList<Category> categories = categoryService.getBatchbyId(Arrays.asList(request));
+
+        // no vendors found
+        if (categories == null || categories.isEmpty()) {
+            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
+    /**
      * Delete a vendor based on a given ID
      * @param id, ID of the vendor to delete
      * @return HTTP status response only
@@ -119,7 +138,7 @@ public class CategoryController {
 
     /**
      * Update a productCount when a product is added
-     * @param catId, ID of the Category to increment count
+     * @param catID, ID of the Category to increment count
      * @return HTTP status response only
      */
     @PostMapping(value="/updateCount/{catID}")

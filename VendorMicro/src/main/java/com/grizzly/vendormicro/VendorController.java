@@ -1,6 +1,8 @@
 package com.grizzly.vendormicro;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -57,6 +59,23 @@ public class VendorController {
     @RequestMapping("/search/{search}")
     public ResponseEntity<ArrayList<Vendor>> getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Vendor> vendors = vendorService.getFiltered(search);
+
+        // no vendors found
+        if (vendors == null || vendors.isEmpty()) {
+            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
+    }
+    /**
+     * Get a list of vendors based on vendor IDs
+     * @param ids, The list of Vendor ids that are to be fetched
+     * @return the matching vendors in a list
+     */
+    @PostMapping("/batchFetch/{ids}")
+    public ResponseEntity<ArrayList<Vendor>> getBatch(@PathVariable(value="ids") String ids) {
+        String[] request = ids.split(",");
+        ArrayList<Vendor> vendors = vendorService.getBatchbyId(Arrays.asList(request));
 
         // no vendors found
         if (vendors == null || vendors.isEmpty()) {

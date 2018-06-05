@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class VendorService {
@@ -103,5 +104,19 @@ public class VendorService {
         }
 
         return list;
+    }
+
+    /**
+     * Get a list of vendors based on vendor IDs
+     * @param ids, The list of Vendor ids that are to be fetched
+     * @return ArrayList of Vendor objs whose IDs match ids
+     */
+    public ArrayList<Vendor> getBatchbyId(List<String> ids) {
+        List<Integer> ints = new ArrayList<Integer>();
+
+        for(String id: ids){
+            ints.add(Integer.parseInt(id));
+        }
+        return makeListFromIterable(vendorRepository.findByVendorIdIn(ints));
     }
 }

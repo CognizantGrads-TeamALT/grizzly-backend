@@ -17,4 +17,9 @@ public interface VendorRepository extends PagingAndSortingRepository<Vendor, Int
 
     @Query("SELECT v FROM vendor v WHERE LOWER(v.name) LIKE LOWER(concat(concat('%',:name), '%'))")
     List<Vendor> findByVendorName(@Param("name") String name, Pageable pageable);
+
+    //@Query("SELECT v FROM vendor v WHERE v.vendorId in (vendIds)")
+    //List<Vendor> batchFetchByProdIdList(@Param("Ids") List<String> vendIds);
+
+    List<Vendor> findByVendorIdIn(List<Integer> vendIds);
 }

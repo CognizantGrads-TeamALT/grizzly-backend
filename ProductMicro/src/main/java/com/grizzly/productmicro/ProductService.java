@@ -85,19 +85,16 @@ public class ProductService {
     public Product add(Product newProduct) {
         Product created = productRepository.save(newProduct);
         try{
-            URL url = new URL("alt.ausgrads.academy/8765/categorymicro/" +
+            URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
                                 "category/updateCount/" + created.getCategoryId());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             int status = con.getResponseCode();
-
         }
         catch (MalformedURLException e){
-
             return null;
         }
         catch (IOException e){
-
             return null;
         }
 

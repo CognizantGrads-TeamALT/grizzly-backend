@@ -37,7 +37,7 @@ public class ProductController {
      * @param id, product ID
      * @return the product
      */
-    @RequestMapping("/get/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="id") Integer id) {
         ArrayList<Product> products = productService.getSingle(id);
 
@@ -54,7 +54,7 @@ public class ProductController {
      * @param search, string to filter returned list on by ID or name
      * @return the filtered products in a list
      */
-    @RequestMapping("/search/{search}")
+    @GetMapping("/search/{search}")
     public ResponseEntity<ArrayList<Product>> getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Product> products = productService.getFiltered(search);
 
@@ -71,7 +71,7 @@ public class ProductController {
      * @param id, ID of the product to delete
      * @return HTTP status response only
      */
-    @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteProduct(@PathVariable(value="id") String id) {
         try {
             productService.deleteById(id);
@@ -88,7 +88,7 @@ public class ProductController {
      * @param newProduct, the new product to store in the database
      * @return the newly created product
      */
-    @RequestMapping(value="/add", method=RequestMethod.PUT)
+    @PutMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody ProductDTO newProduct) {
         Product created = productService.add(newProduct.toEntity());
 
