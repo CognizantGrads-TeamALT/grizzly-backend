@@ -104,27 +104,26 @@ public class CategoryService {
     /**
      * Get a single item from product id.
      * @param id, the string to match to ID to filter the product by
-     * @return ArrayList of Category
+     * @return Category
      */
-    public ArrayList<Category> getSingle(Integer id) {
-        Sort sort = new Sort(Sort.Direction.ASC, "categoryId");
-        PageRequest request = PageRequest.of(0, 25, sort);
-
-        return makeListFromIterable(
-                categoryRepository.findByCategoryId(id, request)
-        );
+    public Category getSingle(Integer id) {
+        return categoryRepository.findById(id).get();
     }
 
     /**
      * Get a filtered list of categories, based on a given search string to match to name .
      * @param search, the string to match to name to filter the categories by
-     * @return ArrayList of Category objs whose names
+     * @return ArrayList of Category objs whose names match
      */
     public ArrayList<Category> getFiltered(String search) {
         try {
             Integer categoryId = Integer.parseInt(search);
 
-            return getSingle(categoryId);
+            // To meet the specifications of spitting out an ArrayList...
+            ArrayList<Category> category = new ArrayList<>();
+            category.add(getSingle(categoryId));
+
+            return category;
         } catch(NumberFormatException e) {
             Sort sort = new Sort(Sort.Direction.ASC, "categoryId");
             PageRequest request = PageRequest.of(0, 25, sort);
