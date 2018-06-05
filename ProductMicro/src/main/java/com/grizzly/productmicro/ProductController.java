@@ -55,7 +55,7 @@ public class ProductController {
      * @param productdto, the new boolean
      * @return HTTP status response only
      */
-    @PostMapping("/setBlock/{id}/")
+    @PostMapping("/setBlock/{id}")
     public ResponseEntity<Product> edit(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
         Product product = productService.setEnabled(id, request.getEnabled());
 
