@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
@@ -84,24 +85,41 @@ public class ProductService {
      */
     public Product add(Product newProduct) {
         Product created = productRepository.save(newProduct);
-        try{
+        try {
             URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
                                 "category/updateCount/" + created.getCategoryId());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             int status = con.getResponseCode();
-        }
-        catch (MalformedURLException e){
+        } catch (MalformedURLException e) {
+            return null;
+        } catch (IOException e){
             return null;
         }
-        catch (IOException e){
-            return null;
-        }
-
-
-
 
         return created;
+    }
+
+    /**
+     * Update an existing product (based on a given ID)
+     * @param id, ID of the category to update
+     * @param newBool, new status enabled/disabled of product
+     */
+    public Product setEnabled(Integer id, Boolean newBool) {
+        // find the existing product
+        Product product;
+        try {
+            product = productRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+
+        // make changes
+        product.setEnabled(newBool);
+
+        // save the updated category
+        productRepository.save(product);
+        return product;
     }
 
     /**
