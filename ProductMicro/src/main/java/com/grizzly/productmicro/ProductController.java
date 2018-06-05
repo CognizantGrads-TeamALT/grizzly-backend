@@ -72,7 +72,7 @@ public class ProductController {
      * @return HTTP status response only
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteProduct(@PathVariable(value="id") String id) {
+    public ResponseEntity deleteProduct(@PathVariable(value="id") Integer id) {
         try {
             productService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {

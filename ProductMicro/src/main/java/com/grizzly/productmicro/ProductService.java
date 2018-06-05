@@ -108,7 +108,7 @@ public class ProductService {
      * Delete a product given an ID
      * @param deleteId, ID of the product to delete
      */
-    public void deleteById(String deleteId) {
+    public void deleteById(Integer deleteId) {
         productRepository.deleteById(deleteId);
     }
 
