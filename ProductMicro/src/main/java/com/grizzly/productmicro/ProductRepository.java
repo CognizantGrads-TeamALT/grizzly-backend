@@ -11,10 +11,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends PagingAndSortingRepository<Product, String> {
+public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {
     @Query("SELECT p FROM product p WHERE p.productId = :productId")
     List<Product> findByProductId(@Param("productId") Integer productId, Pageable pageable);
 
     @Query("SELECT p FROM product p WHERE LOWER(p.name) LIKE LOWER(concat(concat('%',:name), '%'))")
     List<Product> findByProductName(@Param("name") String name, Pageable pageable);
+
+    @Query("SELECT p FROM product p WHERE p.categoryId = :categoryId")
+    List<Product> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);
 }

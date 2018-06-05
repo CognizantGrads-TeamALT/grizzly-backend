@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -55,15 +56,15 @@ public class CategoryController {
      * @return the category
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<ArrayList<Category>> getSingle(@PathVariable(value="id") Integer id) {
-        ArrayList<Category> categories = categoryService.getSingle(id);
+    public ResponseEntity<Category> getSingle(@PathVariable(value="id") Integer id) {
+        Category category = categoryService.getSingle(id);
 
         // no categories found
-        if (categories == null || categories.isEmpty()) {
-            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+        if (category == null) {
+            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     /**
@@ -95,14 +96,33 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @PostMapping("/edit/{id}")
-    public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
-        Category newCat = categoryService.edit(id, request.getName(), request.getDescription());
+    public ResponseEntity<Category> edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
+        Category category = categoryService.edit(id, request.getName(), request.getDescription());
 
         // null if the ID did not map to an existing category
-        if (newCat == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        if (category == null) {
+            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity(HttpStatus.OK);
+
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+
+    /**
+     * Get a list of vendors based on vendor IDs
+     * @param ids, The list of Vendor ids that are to be fetched
+     * @return the matching vendors in a list
+     */
+    @PostMapping("/batchFetch/{ids}")
+    public ResponseEntity<ArrayList<Category>> getBatch(@PathVariable(value="ids") String ids) {
+        String[] request = ids.split(",");
+        ArrayList<Category> categories = categoryService.getBatchbyId(Arrays.asList(request));
+
+        // no vendors found
+        if (categories == null || categories.isEmpty()) {
+            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     /**
@@ -115,7 +135,7 @@ public class CategoryController {
         try {
             categoryService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            // this ID didn't match any vendors
+            // this ID didn't match any category
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 

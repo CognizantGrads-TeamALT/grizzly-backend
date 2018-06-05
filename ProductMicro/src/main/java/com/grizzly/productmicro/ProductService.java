@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
@@ -84,32 +85,60 @@ public class ProductService {
      */
     public Product add(Product newProduct) {
         Product created = productRepository.save(newProduct);
-        try{
+        try {
             URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
                                 "category/updateCount/" + created.getCategoryId());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             int status = con.getResponseCode();
-        }
-        catch (MalformedURLException e){
+        } catch (MalformedURLException e) {
+            return null;
+        } catch (IOException e){
             return null;
         }
-        catch (IOException e){
-            return null;
-        }
-
-
-
 
         return created;
+    }
+
+    /**
+     * Update an existing product (based on a given ID)
+     * @param id, ID of the category to update
+     * @param newBool, new status enabled/disabled of product
+     */
+    public Product setEnabled(Integer id, Boolean newBool) {
+        // find the existing product
+        Product product;
+        try {
+            product = productRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+
+        // make changes
+        product.setEnabled(newBool);
+
+        // save the updated category
+        productRepository.save(product);
+        return product;
     }
 
     /**
      * Delete a product given an ID
      * @param deleteId, ID of the product to delete
      */
-    public void deleteById(String deleteId) {
+    public void deleteById(Integer deleteId) {
         productRepository.deleteById(deleteId);
+    }
+
+    /**
+     * Get all products (given pagination and sorting) for a given category
+     * @param catId, ID of the category to filter by
+     * @param pageIndex, index of the page of results to retrieve from the database
+     * @param column_name, name of the product field to sort the results by
+     * @return list of products in the category
+     */
+    public ArrayList<Product> getByCategory(Integer catId, Integer pageIndex, String column_name) {
+        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name)));
     }
 
     /**
