@@ -113,6 +113,17 @@ public class ProductService {
     }
 
     /**
+     * Get all products (given pagination and sorting) for a given category
+     * @param catId, ID of the category to filter by
+     * @param pageIndex, index of the page of results to retrieve from the database
+     * @param column_name, name of the product field to sort the results by
+     * @return list of products in the category
+     */
+    public ArrayList<Product> getByCategory(Integer catId, Integer pageIndex, String column_name) {
+        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name)));
+    }
+
+    /**
      * Make an ArrayList of Objects based on a passed-in Iterable
      * @param iter An Iterable of Objects
      * @return An ArrayList made from the Iterable
