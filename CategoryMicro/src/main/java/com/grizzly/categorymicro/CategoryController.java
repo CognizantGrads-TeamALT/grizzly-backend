@@ -39,8 +39,14 @@ public class CategoryController {
     //}
 
     @PutMapping("/add")
-    public void addCategory(@RequestBody CategoryDTO categoryDTO) {
-         categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
+    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryDTO) {
+        Category created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
+
+        if (created == null) {
+            return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     /**

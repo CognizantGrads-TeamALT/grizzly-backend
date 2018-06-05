@@ -88,8 +88,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public void addCategory(String name, String description) {
-        categoryRepository.save(new Category(name, description));
+    public Category addCategory(String name, String description) {
+        Category created = categoryRepository.save(new Category(name, description));
+        return created;
     }
 
     /**
