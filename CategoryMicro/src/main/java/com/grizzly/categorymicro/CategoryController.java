@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -103,6 +104,24 @@ public class CategoryController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * Get a list of vendors based on vendor IDs
+     * @param ids, The list of Vendor ids that are to be fetched
+     * @return the matching vendors in a list
+     */
+    @PostMapping("/batchFetch/{ids}")
+    public ResponseEntity<ArrayList<Category>> getBatch(@PathVariable(value="ids") String ids) {
+        String[] request = ids.split(",");
+        ArrayList<Category> categories = categoryService.getBatchbyId(Arrays.asList(request));
+
+        // no vendors found
+        if (categories == null || categories.isEmpty()) {
+            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     /**

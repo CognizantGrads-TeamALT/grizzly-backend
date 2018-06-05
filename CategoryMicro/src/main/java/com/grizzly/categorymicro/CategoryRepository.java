@@ -24,4 +24,7 @@ public interface CategoryRepository extends PagingAndSortingRepository<Category,
     @Modifying
     @Query("UPDATE category c SET c.productCount = c.productCount + 1")
     void incrementProductCount(@Param("catID") Integer catID);
+
+
+    List<Category> findByCategoryIdIn(List<Integer> catIds);
 }

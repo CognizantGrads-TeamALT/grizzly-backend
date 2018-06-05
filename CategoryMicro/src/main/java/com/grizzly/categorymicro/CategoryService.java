@@ -9,6 +9,7 @@ import javax.validation.constraints.Null;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -133,6 +134,19 @@ public class CategoryService {
                     categoryRepository.findByCategoryName(search, request)
             );
         }
+    }
+    /**
+     * Get a list of vendors based on vendor IDs
+     * @param ids, The list of Vendor ids that are to be fetched
+     * @return ArrayList of Vendor objs whose IDs match ids
+     */
+    public ArrayList<Category> getBatchbyId(List<String> ids) {
+        List<Integer> ints = new ArrayList<Integer>();
+
+        for(String id: ids){
+            ints.add(Integer.parseInt(id));
+        }
+        return makeListFromIterable(categoryRepository.findByCategoryIdIn(ints));
     }
 
     /**
