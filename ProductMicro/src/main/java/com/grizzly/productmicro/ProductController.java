@@ -50,6 +50,24 @@ public class ProductController {
     }
 
     /**
+     * Update a given product (by ID), enabling/disabling the item
+     * @param id, ID of the product to update
+     * @param enabled, the new boolean
+     * @return HTTP status response only
+     */
+    @PostMapping("/setBlock/{id}/{boolean}")
+    public ResponseEntity<Product> edit(@PathVariable(value="id") Integer id, @PathVariable(value="enabled") Boolean newStatus) {
+        Product product = productService.setEnabled(id, newStatus);
+
+        // null if the ID did not map to an existing category
+        if (product == null) {
+            return new ResponseEntity<>(product, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    /**
      * Return a list of products in the system filtered by a given search string on ID or name
      * @param search, string to filter returned list on by ID or name
      * @return the filtered products in a list
