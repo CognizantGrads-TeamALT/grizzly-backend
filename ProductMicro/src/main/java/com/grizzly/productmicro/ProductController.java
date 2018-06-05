@@ -72,7 +72,7 @@ public class ProductController {
      * @return HTTP status response only
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteProduct(@PathVariable(value="id") String id) {
+    public ResponseEntity deleteProduct(@PathVariable(value="id") Integer id) {
         try {
             productService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -97,6 +97,26 @@ public class ProductController {
         }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
+    /**
+     * Get all products that are in a given category, paginated and sorted
+     * @param catId, ID of the category to filter by
+     * @param pageIndex, index of the page of results to fetch
+     * @param column_name, name of the product field we are sorting by (defaults to product ID)
+     * @return list of products in the given category
+     */
+    @GetMapping("/bycategory/{catId}/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Product>> getByCategory(@PathVariable(value="catId") Integer catId,
+                                                          @PathVariable(value="pageIndex") Integer pageIndex,
+                                                          @PathVariable(value="column_name") String column_name) {
+        ArrayList<Product> prods = productService.getByCategory(catId, pageIndex, column_name);
+
+        if (prods == null || prods.isEmpty()) {
+            return new ResponseEntity<>(prods, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(prods, HttpStatus.OK);
     }
 
     @GetMapping("/hello")

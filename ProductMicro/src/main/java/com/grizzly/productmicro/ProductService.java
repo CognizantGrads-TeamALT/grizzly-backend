@@ -108,8 +108,19 @@ public class ProductService {
      * Delete a product given an ID
      * @param deleteId, ID of the product to delete
      */
-    public void deleteById(String deleteId) {
+    public void deleteById(Integer deleteId) {
         productRepository.deleteById(deleteId);
+    }
+
+    /**
+     * Get all products (given pagination and sorting) for a given category
+     * @param catId, ID of the category to filter by
+     * @param pageIndex, index of the page of results to retrieve from the database
+     * @param column_name, name of the product field to sort the results by
+     * @return list of products in the category
+     */
+    public ArrayList<Product> getByCategory(Integer catId, Integer pageIndex, String column_name) {
+        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name)));
     }
 
     /**

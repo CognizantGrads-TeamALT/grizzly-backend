@@ -40,8 +40,14 @@ public class CategoryController {
     //}
 
     @PutMapping("/add")
-    public void addCategory(@RequestBody CategoryDTO categoryDTO) {
-         categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
+    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryDTO) {
+        Category created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
+
+        if (created == null) {
+            return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     /**
@@ -49,7 +55,7 @@ public class CategoryController {
      * @param id, category ID
      * @return the category
      */
-    @RequestMapping("/get/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<ArrayList<Category>> getSingle(@PathVariable(value="id") Integer id) {
         ArrayList<Category> categories = categoryService.getSingle(id);
 
@@ -66,7 +72,7 @@ public class CategoryController {
      * @param search, string to filter returned list on by name
      * @return the filtered categories in a list
      */
-    @RequestMapping("/search/{search}")
+    @GetMapping("/search/{search}")
     public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Category> categories = categoryService.getFiltered(search);
 
@@ -89,7 +95,7 @@ public class CategoryController {
      * @param request, the new category to overwrite old one
      * @return HTTP status response only
      */
-    @RequestMapping(value="/edit/{id}", method=RequestMethod.POST)
+    @PostMapping("/edit/{id}")
     public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
         Category newCat = categoryService.edit(id, request.getName(), request.getDescription());
 
@@ -123,7 +129,7 @@ public class CategoryController {
      * @param id, ID of the vendor to delete
      * @return HTTP status response only
      */
-    @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteCategory(@PathVariable(value="id") Integer id) {
         try {
             categoryService.deleteById(id);

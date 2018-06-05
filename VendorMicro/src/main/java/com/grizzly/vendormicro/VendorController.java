@@ -39,7 +39,7 @@ public class VendorController {
      * @param id, vendor ID
      * @return the vendor
      */
-    @RequestMapping("/get/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<ArrayList<Vendor>> getSingle(@PathVariable(value="id") Integer id) {
         ArrayList<Vendor> vendors = vendorService.getSingle(id);
 
@@ -56,7 +56,7 @@ public class VendorController {
      * @param search, string to filter returned list on by ID or name
      * @return the filtered vendors in a list
      */
-    @RequestMapping("/search/{search}")
+    @GetMapping("/search/{search}")
     public ResponseEntity<ArrayList<Vendor>> getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Vendor> vendors = vendorService.getFiltered(search);
 
@@ -90,7 +90,7 @@ public class VendorController {
      * @param id, ID of the vendor to delete
      * @return HTTP status response only
      */
-    @RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity deleteVendor(@PathVariable(value="id") Integer id) {
         try {
             vendorService.deleteById(id);
