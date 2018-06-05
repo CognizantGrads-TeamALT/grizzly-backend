@@ -52,12 +52,12 @@ public class ProductController {
     /**
      * Update a given product (by ID), enabling/disabling the item
      * @param id, ID of the product to update
-     * @param enabled, the new boolean
+     * @param productdto, the new boolean
      * @return HTTP status response only
      */
-    @PostMapping("/setBlock/{id}/{boolean}")
-    public ResponseEntity<Product> edit(@PathVariable(value="id") Integer id, @PathVariable(value="enabled") Boolean newStatus) {
-        Product product = productService.setEnabled(id, newStatus);
+    @PostMapping("/setBlock/{id}/")
+    public ResponseEntity<Product> edit(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
+        Product product = productService.setEnabled(id, request.getEnabled());
 
         // null if the ID did not map to an existing category
         if (product == null) {
