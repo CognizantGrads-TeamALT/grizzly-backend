@@ -72,7 +72,7 @@ public class VendorController {
      * @param ids, The list of Vendor ids that are to be fetched
      * @return the matching vendors in a list
      */
-    @PostMapping("/batchFetch/{ids}")
+    @GetMapping("/batchFetch/{ids}")
     public ResponseEntity<ArrayList<Vendor>> getBatch(@PathVariable(value="ids") String ids) {
         String[] request = ids.split(",");
         ArrayList<Vendor> vendors = vendorService.getBatchbyId(Arrays.asList(request));
