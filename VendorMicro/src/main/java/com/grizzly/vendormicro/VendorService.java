@@ -91,7 +91,7 @@ public class VendorService {
         // make changes
         vendor.setEnabled(newBool);
 
-        // save the updated category
+        // save the updated vendor
         vendorRepository.save(vendor);
         return vendor;
     }
