@@ -68,6 +68,24 @@ public class CategoryController {
     }
 
     /**
+     * Update a given category (by ID), enabling/disabling the item
+     * @param id, ID of the category to update
+     * @param categorydto, the new boolean
+     * @return HTTP status response only
+     */
+    @PostMapping("/setBlock/{id}")
+    public ResponseEntity<Category> setBlock(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
+        Category category = categoryService.setEnabled(id, request.getEnabled());
+
+        // null if the ID did not map to an existing category
+        if (category == null) {
+            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+
+    /**
      * Return a list of categories in the system filtered by a given search string on name
      * @param search, string to filter returned list on by name
      * @return the filtered categories in a list

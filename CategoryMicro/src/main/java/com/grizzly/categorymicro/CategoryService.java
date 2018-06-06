@@ -95,6 +95,28 @@ public class CategoryService {
     }
 
     /**
+     * Update an existing category (based on a given ID)
+     * @param id, ID of the category to update
+     * @param newBool, new status enabled/disabled of category
+     */
+    public Category setEnabled(Integer id, Boolean newBool) {
+        // find the existing category
+        Category category;
+        try {
+            category = categoryRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+
+        // make changes
+        category.setEnabled(newBool);
+
+        // save the updated category
+        categoryRepository.save(category);
+        return category;
+    }
+
+    /**
      * Delete a vendor given an ID
      * @param deleteId, ID of the vendor to delete
      */

@@ -7,6 +7,7 @@ public class VendorDTO {
     private String website;
     private String email;
     private String bio;
+    private Boolean enabled;
 
     public Integer getVendorId() {
         return vendorId;
@@ -56,8 +57,16 @@ public class VendorDTO {
         this.bio = bio;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean bio) {
+        this.enabled = enabled;
+    }
+
     public Vendor toEntity() {
-        Vendor vendor = new Vendor(this.name, this.contactNum, this.website, this.email, this.bio);
+        Vendor vendor = new Vendor(this.name, this.contactNum, this.website, this.email, this.bio, this.enabled);
         return vendor;
     }
 }

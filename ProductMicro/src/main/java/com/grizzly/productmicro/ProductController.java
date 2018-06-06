@@ -56,7 +56,7 @@ public class ProductController {
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
-    public ResponseEntity<Product> edit(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
+    public ResponseEntity<Product> setBlock(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
         Product product = productService.setEnabled(id, request.getEnabled());
 
         // null if the ID did not map to an existing category
