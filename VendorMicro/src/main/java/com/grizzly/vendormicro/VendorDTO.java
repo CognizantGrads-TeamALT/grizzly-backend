@@ -61,7 +61,7 @@ public class VendorDTO {
         return enabled;
     }
 
-    public void setEnabled(Boolean bio) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
