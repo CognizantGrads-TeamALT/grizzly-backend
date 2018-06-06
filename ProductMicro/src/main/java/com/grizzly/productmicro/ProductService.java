@@ -102,7 +102,7 @@ public class ProductService {
 
     /**
      * Update an existing product (based on a given ID)
-     * @param id, ID of the category to update
+     * @param id, ID of the product to update
      * @param newBool, new status enabled/disabled of product
      */
     public Product setEnabled(Integer id, Boolean newBool) {
@@ -117,7 +117,7 @@ public class ProductService {
         // make changes
         product.setEnabled(newBool);
 
-        // save the updated category
+        // save the updated product
         productRepository.save(product);
         return product;
     }

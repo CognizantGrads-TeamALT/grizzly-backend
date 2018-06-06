@@ -13,12 +13,13 @@ public class Vendor {
     @Column(name="website")         private String website;
     @Column(name="email")           private String email;
     @Column(name="bio")             private String bio;
+    @Column(name="enabled")         private Boolean enabled;
 
     public Vendor() {
         super();
     }
 
-    public Vendor(String name, String contactNum, String website, String email, String bio) {
+    public Vendor(String name, String contactNum, String website, String email, String bio, Boolean enabled) {
         super();
 
         setName(name);
@@ -26,6 +27,7 @@ public class Vendor {
         setWebsite(website);
         setEmail(email);
         setBio(bio);
+        setEnabled(enabled);
     }
 
     public Integer getVendorId() {
@@ -74,5 +76,13 @@ public class Vendor {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

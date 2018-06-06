@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class VendorService {
@@ -71,6 +72,28 @@ public class VendorService {
                     vendorRepository.findByVendorName(search, request)
             );
         }
+    }
+
+    /**
+     * Update an existing vendor (based on a given ID)
+     * @param id, ID of the vendor to update
+     * @param newBool, new status enabled/disabled of vendor
+     */
+    public Vendor setEnabled(Integer id, Boolean newBool) {
+        // find the existing vendor
+        Vendor vendor;
+        try {
+            vendor = vendorRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+
+        // make changes
+        vendor.setEnabled(newBool);
+
+        // save the updated vendor
+        vendorRepository.save(vendor);
+        return vendor;
     }
 
     /**

@@ -20,7 +20,6 @@ public class Category {
     public Category(String name, String description) {
         super();
 
-
         this.name = name;
         this.description = description;
         this.enabled = true;
@@ -65,5 +64,13 @@ public class Category {
 
     public void setProductCount(int productCount) {
         this.productCount = productCount;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }
