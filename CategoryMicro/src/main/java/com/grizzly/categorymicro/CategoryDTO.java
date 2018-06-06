@@ -30,7 +30,7 @@ public class CategoryDTO {
         this.categoryId = categoryId;
     }
 
-    public boolean isEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
