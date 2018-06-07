@@ -1,4 +1,4 @@
-package com.grizzly.authmicro;
+package com.grizzly.usermicro;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
