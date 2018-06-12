@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.grizzly.vendormicro.errorhandling.ApiError;
+import com.grizzly.grizlibrary.errorhandling.ApiError;
 import com.grizzly.vendormicro.errorhandling.RestExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

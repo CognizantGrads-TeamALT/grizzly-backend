@@ -1,5 +1,6 @@
 package com.grizzly.vendormicro.errorhandling;
 
+import com.grizzly.grizlibrary.errorhandling.ApiError;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;

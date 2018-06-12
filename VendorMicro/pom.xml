@@ -79,7 +79,7 @@
         <dependency>
             <groupId>com.grizzly</groupId>
             <artifactId>grizlibrary</artifactId>
-            <version>LATEST</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

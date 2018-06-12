@@ -14,22 +14,22 @@ public class ApiError {
     private String debugMessage; // a message for logging/debugging
     private List<ApiSubError> subErrors; // sub-errors when multiple errors occurred in one call (eg. multiple validation errors)
 
-    ApiError() {
+    public ApiError() {
         timestamp = LocalDateTime.now();
     }
 
-    ApiError(HttpStatus status) {
+    public ApiError(HttpStatus status) {
         this();
         this.status = status;
     }
 
-    ApiError(HttpStatus status, Throwable e) {
+    public ApiError(HttpStatus status, Throwable e) {
         this(status);
         this.message = "Unexpected error.";
         this.debugMessage = e.getLocalizedMessage();
     }
 
-    ApiError(HttpStatus status, Throwable e, String message) {
+    public ApiError(HttpStatus status, Throwable e, String message) {
         this(status, e);
         this.message = message;
     }
