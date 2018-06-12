@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.grizzly</groupId>
-    <artifactId>vendormicro</artifactId>
+    <artifactId>grizlibrary</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>vendormicro</name>
+    <name>grizlibrary</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
@@ -75,11 +75,6 @@
             <artifactId>lombok</artifactId>
             <version>1.16.22</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.grizzly</groupId>
-            <artifactId>grizlibrary</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
