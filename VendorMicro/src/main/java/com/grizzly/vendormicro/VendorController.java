@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.grizzly.vendormicro.errorhandling.ApiError;
+import com.grizzly.vendormicro.errorhandling.RestExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,9 @@ public class VendorController {
 
         // no vendors found in this page
         if (vendors == null || vendors.isEmpty()) {
-            return new ResponseEntity("No vendors were found.\npageIndex: " + pageIndex + "\ncolumn_name: " + column_name, HttpStatus.NOT_FOUND);
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                                                "No vendors were found.",
+                                            "pageIndex: " + pageIndex + "\ncolumn_name: " + column_name));
         }
 
         return new ResponseEntity(vendors, HttpStatus.OK);
@@ -49,12 +53,16 @@ public class VendorController {
         }
         // ID was entered into SQL null
         catch(IllegalArgumentException e) {
-            return new ResponseEntity("ID was passed to the database null. Received id via HTTP: " + id, HttpStatus.BAD_REQUEST);
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "A null vendor ID was received.",
+                    "id: " + id));
         }
 
         // the vendor wasn't found
         if (vendors == null || vendors.isEmpty()) {
-            return new ResponseEntity("No vendor was found. id: " + id, HttpStatus.NOT_FOUND);
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No vendor was found.",
+                    "id: " + id));
         }
 
         return new ResponseEntity(vendors, HttpStatus.OK);
@@ -66,19 +74,23 @@ public class VendorController {
      * @return the filtered vendors in a list
      */
     @GetMapping("/search/{search}")
-    public ResponseEntity<ArrayList<Vendor>> getFiltered(@PathVariable(value="search") String search) {
+    public ResponseEntity getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Vendor> vendors = new ArrayList<Vendor>();
         try {
             vendors = vendorService.getFiltered(search);
         }
         // search was entered into SQL null
         catch(IllegalArgumentException e) {
-            return new ResponseEntity("Search was passed to the database null. Received search via HTTP: " + search, HttpStatus.BAD_REQUEST);
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "A null search string was received.",
+                    "search: " + search));
         }
 
         // no vendors found
         if (vendors == null || vendors.isEmpty()) {
-            return new ResponseEntity("No vendors were found. search: " + search, HttpStatus.NOT_FOUND);
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No vendors were found.",
+                    "search: " + search));
         }
 
         return new ResponseEntity(vendors, HttpStatus.OK);
