@@ -52,7 +52,7 @@ public class ProductController {
     /**
      * Update a given product (by ID), enabling/disabling the item
      * @param id, ID of the product to update
-     * @param productdto, the new boolean
+     * @param ProductDTO, the new boolean
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
@@ -65,6 +65,27 @@ public class ProductController {
         }
 
         return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    /**
+     * Disable all products by vendor ID
+     * @param id, ID of the product to update
+     * @return HTTP status response only
+     */
+    @PostMapping("/setBlockByVendor/{id}")
+    public ResponseEntity<ArrayList<Product>> setBlock(@PathVariable(value="id") Integer id) {
+        ArrayList<Product> products = productService.getByVendor(id);
+
+        // null if the ID did not map to an existing category
+        if (products == null) {
+            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        }
+
+        for (Product product : products) {
+            productService.setEnabled(id, false);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     /**

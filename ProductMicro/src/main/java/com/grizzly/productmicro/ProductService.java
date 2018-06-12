@@ -142,6 +142,15 @@ public class ProductService {
     }
 
     /**
+     * Get all products with vendorid
+     * @param vendorId, ID of the category to filter by
+     * @return list of products in the category
+     */
+    public ArrayList<Product> getByVendor(Integer vendorId) {
+        return makeListFromIterable(productRepository.findByVendorId(vendorId));
+    }
+
+    /**
      * Make an ArrayList of Objects based on a passed-in Iterable
      * @param iter An Iterable of Objects
      * @return An ArrayList made from the Iterable
