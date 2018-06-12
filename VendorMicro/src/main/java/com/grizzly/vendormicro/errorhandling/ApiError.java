@@ -26,7 +26,7 @@ public class ApiError {
 
     ApiError(HttpStatus status, Throwable e) {
         this(status);
-        this.message = "Unexpected error.";
+        this.message = "Vendor: Unexpected error.";
         this.debugMessage = e.getLocalizedMessage();
     }
 
