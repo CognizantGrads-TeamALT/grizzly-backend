@@ -29,7 +29,7 @@ public class ProductService {
     * @return pageRequest to the method called
     */
     public PageRequest getPageRequest(Integer pageIndex, String column_name) {
-        final String[] fields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "enabled"};
+        final String[] fields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "rating", "enabled"};
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
             sortField = column_name;

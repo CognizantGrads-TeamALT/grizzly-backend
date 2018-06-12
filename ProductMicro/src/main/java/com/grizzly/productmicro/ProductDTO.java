@@ -24,12 +24,12 @@ public class ProductDTO {
     public Product toEntity() {
         Product product = new Product();
         product.setProductId(productId);
-
         product.setName(name);
         product.setVendorId(vendorId);
         product.setCategoryId(categoryId);
         product.setDesc(desc);
         product.setPrice(price);
+        product.setRating(rating);
         product.setEnabled(enabled);
         return product;
     }
