@@ -145,7 +145,9 @@ public class ProductService {
      * Disable all products with the vendorId
      * @param vendorId, ID of the vendor
      */
-    public void disableByVendorId(Integer vendorId) { productRepository.disableByVendorId(vendorId); }
+    public void disableByVendorId(Integer vendorId) {
+        productRepository.disableByVendorId(vendorId);
+    }
 
     /**
      * Make an ArrayList of Objects based on a passed-in Iterable
