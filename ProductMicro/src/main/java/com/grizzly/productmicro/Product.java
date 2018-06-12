@@ -13,13 +13,14 @@ public class Product {
     @Column(name="category_id")     private Integer categoryId;
     @Column(name="desc")            private String desc;
     @Column(name="price")           private Integer price;
+    @Column(name="rating")          private Integer rating;
     @Column(name="enabled")         private Boolean enabled;
 
     public Product() {
         super();
     }
 
-    public Product(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Boolean enabled) {
+    public Product(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Integer rating, Boolean enabled) {
         super();
 
         setName(name);
@@ -27,6 +28,7 @@ public class Product {
         setCategoryId(categoryId);
         setDesc(desc);
         setPrice(price);
+        setRating(rating);
         setEnabled(enabled);
     }
 
@@ -76,6 +78,14 @@ public class Product {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 
     public Boolean getEnabled() {
