@@ -52,7 +52,7 @@ public class ProductController {
     /**
      * Update a given product (by ID), enabling/disabling the item
      * @param id, ID of the product to update
-     * @param productdto, the new boolean
+     * @param ProductDTO, the new boolean
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
@@ -65,6 +65,23 @@ public class ProductController {
         }
 
         return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    /**
+     * Disable all products by vendor ID
+     * @param id, ID of the product to update
+     * @return HTTP status response only
+     */
+    @PostMapping("/setBlockByVendor/{id}")
+    public ResponseEntity setBlockByVendor(@PathVariable(value="id") Integer id) {
+        try {
+            productService.disableByVendorId(id);
+        } catch (EmptyResultDataAccessException e) {
+            // this ID didn't match any products
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     /**
