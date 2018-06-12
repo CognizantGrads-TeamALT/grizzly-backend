@@ -1,6 +1,7 @@
 package com.grizzly.productmicro;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +17,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
     @Query("SELECT p FROM product p WHERE LOWER(p.name) LIKE LOWER(concat(concat('%',:name), '%'))")
     List<Product> findByProductName(@Param("name") String name, Pageable pageable);
 
+    @Modifying
     @Query("UPDATE product p SET enabled = false, vendorId = 0 WHERE p.vendorId = :vendorId")
     List<Product> disableByVendorId(@Param("vendorId") Integer vendorId);
 
