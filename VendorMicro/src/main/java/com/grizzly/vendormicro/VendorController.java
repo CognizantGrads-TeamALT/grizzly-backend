@@ -97,20 +97,31 @@ public class VendorController {
     }
     /**
      * Get a list of vendors based on vendor IDs
-     * @param ids, The list of Vendor ids that are to be fetched
+     * @param ids, The comma-separated string-list of Vendor ids that are to be fetched
      * @return the matching vendors in a list
      */
     @GetMapping("/batchFetch/{ids}")
-    public ResponseEntity<ArrayList<Vendor>> getBatch(@PathVariable(value="ids") String ids) {
+    public ResponseEntity getBatch(@PathVariable(value="ids") String ids) {
         String[] request = ids.split(",");
-        ArrayList<Vendor> vendors = vendorService.getBatchbyId(Arrays.asList(request));
+        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
+        try {
+            vendors = vendorService.getBatchbyId(Arrays.asList(request));
+        }
+        // ids were entered into SQL null
+        catch (IllegalArgumentException e) {
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "A null set of IDs was received.",
+                    "ids: " + ids));
+        }
 
         // no vendors found
         if (vendors == null || vendors.isEmpty()) {
-            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No vendors were found.",
+                    "ids: " + ids));
         }
 
-        return new ResponseEntity<>(vendors, HttpStatus.OK);
+        return new ResponseEntity(vendors, HttpStatus.OK);
     }
 
     /**
@@ -122,9 +133,12 @@ public class VendorController {
     public ResponseEntity deleteVendor(@PathVariable(value="id") Integer id) {
         try {
             vendorService.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            // this ID didn't match any vendors
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        // this ID didn't match any vendors
+        catch (EmptyResultDataAccessException e) {
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No vendor was found to delete.",
+                    "id: " + id));
         }
 
         return new ResponseEntity(HttpStatus.OK);
@@ -137,15 +151,26 @@ public class VendorController {
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
-    public ResponseEntity<Vendor> setBlock(@PathVariable(value="id") Integer id, @RequestBody VendorDTO request) {
-        Vendor vendor = vendorService.setEnabled(id, request.getEnabled());
+    public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody VendorDTO request) {
+        Vendor vendor;
+        try {
+            vendor = vendorService.setEnabled(id, request.getEnabled());
+        }
+        // id was entered into SQL null
+        catch (IllegalArgumentException e) {
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "A null vendor ID was received.",
+                    "id: " + id));
+        }
 
         // null if the ID did not map to an existing vendor
         if (vendor == null) {
-            return new ResponseEntity<>(vendor, HttpStatus.NOT_FOUND);
+            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No vendor was found to update.",
+                    "id: " + id));
         }
 
-        return new ResponseEntity<>(vendor, HttpStatus.OK);
+        return new ResponseEntity(vendor, HttpStatus.OK);
     }
 
     /**
@@ -156,10 +181,6 @@ public class VendorController {
     @PutMapping("/add")
     public ResponseEntity<Vendor> addVendor(@RequestBody VendorDTO newVendor) {
         Vendor created = vendorService.add(newVendor.toEntity());
-
-        if (created == null) {
-            return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
-        }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
