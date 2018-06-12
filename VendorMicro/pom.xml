@@ -76,6 +76,11 @@
             <version>1.16.22</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.grizzly</groupId>
+            <artifactId>grizlibrary</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
