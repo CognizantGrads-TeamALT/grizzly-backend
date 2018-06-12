@@ -74,7 +74,7 @@ public class ProductService {
             imageDTO[i] = image;
         }
         ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
-                product.getDesc(), product.getPrice(), product.getEnabled(), imageDTO);
+                product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
         productDTO.setProductId(product.getProductId());
         ArrayList<ProductDTO> productDTOArrayList = new ArrayList<>();
         productDTOArrayList.add(productDTO);

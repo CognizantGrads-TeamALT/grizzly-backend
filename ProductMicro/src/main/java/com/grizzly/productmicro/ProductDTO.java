@@ -25,10 +25,19 @@ public class ProductDTO {
 
 
     public Product toEntity() {
-        return new Product(this.name, this.vendorId, this.categoryId, this.desc, this.price, this.enabled);
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setName(name);
+        product.setVendorId(vendorId);
+        product.setCategoryId(categoryId);
+        product.setDesc(desc);
+        product.setPrice(price);
+        product.setRating(rating);
+        product.setEnabled(enabled);
+        return product;
     }
 
-    public ProductDTO(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Boolean enabled, ImageDTO[] imageDTO) {
+    public ProductDTO(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Integer rating, Boolean enabled, ImageDTO[] imageDTO) {
         super();
 
         this.name = name;
