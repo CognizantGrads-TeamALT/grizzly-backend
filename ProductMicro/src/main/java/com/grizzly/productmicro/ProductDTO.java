@@ -16,11 +16,15 @@ public class ProductDTO {
     private Integer categoryId;
     private String desc;
     private Integer price;
+    private Integer rating;
     private Boolean enabled;
+
+
 
     public Product toEntity() {
         Product product = new Product();
         product.setProductId(productId);
+
         product.setName(name);
         product.setVendorId(vendorId);
         product.setCategoryId(categoryId);
@@ -30,7 +34,7 @@ public class ProductDTO {
         return product;
     }
 
-    public ProductDTO(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Boolean enabled) {
+    public ProductDTO(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Integer rating, Boolean enabled) {
         super();
 
         this.name = name;
@@ -38,6 +42,7 @@ public class ProductDTO {
         this.categoryId = categoryId;
         this.desc = desc;
         this.price = price;
+        this.rating = rating;
         this.enabled = enabled;
     }
 
@@ -84,6 +89,10 @@ public class ProductDTO {
     public Integer getPrice() {
         return price;
     }
+
+    public Integer getRating() { return rating; }
+
+    public void setRating(Integer rating) { this.rating = rating; }
 
     public void setPrice(Integer price) {
         this.price = price;
