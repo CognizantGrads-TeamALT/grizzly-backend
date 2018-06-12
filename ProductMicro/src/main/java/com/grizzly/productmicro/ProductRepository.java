@@ -16,8 +16,8 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
     @Query("SELECT p FROM product p WHERE LOWER(p.name) LIKE LOWER(concat(concat('%',:name), '%'))")
     List<Product> findByProductName(@Param("name") String name, Pageable pageable);
 
-    @Query("SELECT p FROM product p WHERE p.vendorId = :vendorId")
-    List<Product> findByVendorId(@Param("vendorId") Integer vendorId);
+    @Query("UPDATE product p SET enabled = false WHERE p.vendorId = :vendorId")
+    List<Product> disableByVendorId(@Param("vendorId") Integer vendorId);
 
     @Query("SELECT p FROM product p WHERE p.categoryId = :categoryId")
     List<Product> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);

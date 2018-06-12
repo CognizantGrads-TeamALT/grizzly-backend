@@ -142,13 +142,10 @@ public class ProductService {
     }
 
     /**
-     * Get all products with vendorid
-     * @param vendorId, ID of the category to filter by
-     * @return list of products in the category
+     * Disable all products with the vendorId
+     * @param vendorId, ID of the vendor
      */
-    public ArrayList<Product> getByVendor(Integer vendorId) {
-        return makeListFromIterable(productRepository.findByVendorId(vendorId));
-    }
+    public void disableByVendorId(Integer vendorId) { productRepository.disableByVendorId(vendorId); }
 
     /**
      * Make an ArrayList of Objects based on a passed-in Iterable
