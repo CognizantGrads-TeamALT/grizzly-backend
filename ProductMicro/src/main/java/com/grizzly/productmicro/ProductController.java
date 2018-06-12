@@ -50,9 +50,26 @@ public class ProductController {
     }
 
     /**
+     * Return a single product with imgs based on id
+     * @param id, product ID
+     * @return the product with imgs
+     */
+    @GetMapping("/getDetails/{id}")
+    public ResponseEntity<ArrayList<ProductDTO>> getSingleWithImgs(@PathVariable(value="id") Integer id) {
+        ArrayList<ProductDTO> products = productService.getSingleWithImgs(id);
+
+        // no products found
+        if (products == null || products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
      * Update a given product (by ID), enabling/disabling the item
      * @param id, ID of the product to update
-     * @param productdto, the new boolean
+     * @param request, the new boolean
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
@@ -108,7 +125,7 @@ public class ProductController {
      */
     @PutMapping("/add")
     public ResponseEntity<Product> addProduct(@RequestBody ProductDTO newProduct) {
-        Product created = productService.add(newProduct.toEntity());
+        Product created = productService.add(newProduct);
 
         if (created == null) {
             return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
