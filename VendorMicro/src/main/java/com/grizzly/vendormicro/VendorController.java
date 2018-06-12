@@ -20,18 +20,20 @@ public class VendorController {
 
     /**
      * Return a list of all vendors in the system
+     * @param pageIndex, index of the page of results to get (of size 25)
+     * @param column_name, Vendor column to sort the results by. If doesn't match any column name, defaults to vendor ID
      * @return vendors in a list
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Vendor>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Vendor> vendors = vendorService.get(pageIndex, column_name);
 
-        // no vendors found
+        // no vendors found in this page (users shouldn't see error unless system has no vendors)
         if (vendors == null || vendors.isEmpty()) {
-            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+            return new ResponseEntity("No vendors were found. Please try again in a few minutes.", HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(vendors, HttpStatus.OK);
+        return new ResponseEntity(vendors, HttpStatus.OK);
     }
 
     /**
