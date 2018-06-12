@@ -18,8 +18,11 @@ public class ProductDTO {
     private Integer categoryId;
     private String desc;
     private Integer price;
+    private Integer rating;
     private Boolean enabled;
     private ImageDTO[] imageDTO;
+
+
 
     public Product toEntity() {
         return new Product(this.name, this.vendorId, this.categoryId, this.desc, this.price, this.enabled);
@@ -33,6 +36,7 @@ public class ProductDTO {
         this.categoryId = categoryId;
         this.desc = desc;
         this.price = price;
+        this.rating = rating;
         this.enabled = enabled;
         this.imageDTO = imageDTO;
     }

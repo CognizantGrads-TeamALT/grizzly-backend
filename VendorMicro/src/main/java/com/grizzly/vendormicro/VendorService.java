@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
+import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
+
 @Service
 public class VendorService {
     @Autowired
@@ -18,26 +21,6 @@ public class VendorService {
     public ArrayList<Vendor> get(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name);
         return makeListFromIterable(vendorRepository.findAll(request));
-    }
-
-    /**
-     * Utility function to generate a pagerequest to tell the database how to page and sort a query
-     * @param column_name, the fieldname in the database to sort the list
-     * @return pageRequest to the method called
-     */
-    public PageRequest getPageRequest(Integer pageIndex, String column_name) {
-        final String[] fields = {"vendorId", "name", "contactNum", "website", "email", "bio"};
-        String sortField;
-        if (Arrays.asList(fields).contains(column_name)) {
-            sortField = column_name;
-        } else {
-            sortField = "vendorId";
-        }
-
-        Sort sort = new Sort(Sort.Direction.ASC, sortField);
-
-        PageRequest request = PageRequest.of(pageIndex, 25, sort);
-        return request;
     }
 
     /**
@@ -112,21 +95,6 @@ public class VendorService {
     public Vendor add(Vendor newVendor) {
         Vendor created = vendorRepository.save(newVendor);
         return created;
-    }
-
-    /**
-     * Make an ArrayList of Objects based on a passed-in Iterable
-     * @param iter An Iterable of Objects
-     * @return An ArrayList made from the Iterable
-     */
-    public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {
-        ArrayList<T> list = new ArrayList<T>();
-
-        for(T item: iter) {
-            list.add(item);
-        }
-
-        return list;
     }
 
     /**

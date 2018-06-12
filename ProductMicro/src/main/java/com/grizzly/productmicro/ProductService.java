@@ -37,7 +37,7 @@ public class ProductService {
     * @return pageRequest to the method called
     */
     public PageRequest getPageRequest(Integer pageIndex, String column_name) {
-        final String[] fields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "enabled"};
+        final String[] fields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "rating", "enabled"};
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
             sortField = column_name;
@@ -183,6 +183,14 @@ public class ProductService {
      */
     public ArrayList<Product> getByCategory(Integer catId, Integer pageIndex, String column_name) {
         return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name)));
+    }
+
+    /**
+     * Disable all products with the vendorId
+     * @param vendorId, ID of the vendor
+     */
+    public void disableByVendorId(Integer vendorId) {
+        productRepository.disableByVendorId(vendorId);
     }
 
     /**
