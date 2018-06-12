@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,9 +18,10 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
     @Query("SELECT p FROM product p WHERE LOWER(p.name) LIKE LOWER(concat(concat('%',:name), '%'))")
     List<Product> findByProductName(@Param("name") String name, Pageable pageable);
 
+    @Transactional
     @Modifying
     @Query("UPDATE product p SET enabled = false, vendorId = 0 WHERE p.vendorId = :vendorId")
-    List<Product> disableByVendorId(@Param("vendorId") Integer vendorId);
+    void disableByVendorId(@Param("vendorId") Integer vendorId);
 
     @Query("SELECT p FROM product p WHERE p.categoryId = :categoryId")
     List<Product> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);
