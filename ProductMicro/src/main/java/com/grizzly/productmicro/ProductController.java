@@ -73,19 +73,19 @@ public class ProductController {
      * @return HTTP status response only
      */
     @PostMapping("/setBlockByVendor/{id}")
-    public ResponseEntity<ArrayList<Product>> setBlock(@PathVariable(value="id") Integer id) {
+    public ResponseEntity setBlock(@PathVariable(value="id") Integer id) {
         ArrayList<Product> products = productService.getByVendor(id);
 
         // null if the ID did not map to an existing category
         if (products == null) {
-            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         for (Product product : products) {
             productService.setEnabled(id, false);
         }
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     /**
