@@ -28,9 +28,9 @@ public class VendorController {
     public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Vendor> vendors = vendorService.get(pageIndex, column_name);
 
-        // no vendors found in this page (users shouldn't see error unless system has no vendors)
+        // no vendors found in this page
         if (vendors == null || vendors.isEmpty()) {
-            return new ResponseEntity("No vendors were found. Please try again in a few minutes.", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("No vendors were found.\npageIndex: " + pageIndex + "\ncolumn_name: " + column_name, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity(vendors, HttpStatus.OK);
@@ -42,15 +42,22 @@ public class VendorController {
      * @return the vendor
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<ArrayList<Vendor>> getSingle(@PathVariable(value="id") Integer id) {
-        ArrayList<Vendor> vendors = vendorService.getSingle(id);
-
-        // no vendors found
-        if (vendors == null || vendors.isEmpty()) {
-            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+    public ResponseEntity getSingle(@PathVariable(value="id") Integer id) {
+        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
+        try {
+            vendors = vendorService.getSingle(id);
+        }
+        // ID was entered into SQL null
+        catch(IllegalArgumentException e) {
+            return new ResponseEntity("ID was passed to the database null. Received id via HTTP: " + id, HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(vendors, HttpStatus.OK);
+        // the vendor wasn't found
+        if (vendors == null || vendors.isEmpty()) {
+            return new ResponseEntity("No vendor was found. id: " + id, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(vendors, HttpStatus.OK);
     }
 
     /**
@@ -60,14 +67,21 @@ public class VendorController {
      */
     @GetMapping("/search/{search}")
     public ResponseEntity<ArrayList<Vendor>> getFiltered(@PathVariable(value="search") String search) {
-        ArrayList<Vendor> vendors = vendorService.getFiltered(search);
+        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
+        try {
+            vendors = vendorService.getFiltered(search);
+        }
+        // search was entered into SQL null
+        catch(IllegalArgumentException e) {
+            return new ResponseEntity("Search was passed to the database null. Received search via HTTP: " + search, HttpStatus.BAD_REQUEST);
+        }
 
         // no vendors found
         if (vendors == null || vendors.isEmpty()) {
-            return new ResponseEntity<>(vendors, HttpStatus.NOT_FOUND);
+            return new ResponseEntity("No vendors were found. search: " + search, HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(vendors, HttpStatus.OK);
+        return new ResponseEntity(vendors, HttpStatus.OK);
     }
     /**
      * Get a list of vendors based on vendor IDs
@@ -107,7 +121,7 @@ public class VendorController {
     /**
      * Update a given vendor (by ID), enabling/disabling the item
      * @param id, ID of the vendor to update
-     * @param vendordto, the new boolean
+     * @param request, the new boolean
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
