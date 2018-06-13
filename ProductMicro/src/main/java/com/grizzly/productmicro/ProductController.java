@@ -94,7 +94,7 @@ public class ProductController {
      * @return HTTP status response only
      */
     @PostMapping("/setBlockByVendor/{id}")
-    public ResponseEntity setBlockByVendor(@PathVariable(value="id") Integer id) {
+    public ResponseEntity<Object> setBlockByVendor(@PathVariable(value="id") Integer id) {
         try {
             productService.disableByVendorId(id);
         } catch (EmptyResultDataAccessException e) {
@@ -102,7 +102,7 @@ public class ProductController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     /**
