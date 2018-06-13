@@ -130,7 +130,7 @@ public class VendorController {
      * @return HTTP status response only
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteVendor(@PathVariable(value="id") Integer id) {
+    public ResponseEntity deleteVendor(@PathVariable(value="id") Integer id) {
         try {
             vendorService.deleteById(id);
         }
