@@ -1,5 +1,9 @@
 package com.grizzly.productmicro;
 
+import com.grizzly.productmicro.image.Image;
+import com.grizzly.productmicro.image.ImageDTO;
+import com.grizzly.productmicro.image.ImageRepository;
+import com.grizzly.productmicro.image.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -11,12 +15,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
     public ArrayList<Product> get(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name);
@@ -41,6 +49,36 @@ public class ProductService {
 
         PageRequest request = PageRequest.of(pageIndex, 25, sort);
         return request;
+    }
+
+    /**
+     * Get a single item from product id.
+     * @param productId, the string to match to ID to filter the product by
+     * @return ArrayList of Products with Imgs
+     */
+    public ArrayList<ProductDTO> getSingleWithImgs(Integer productId) {
+        ArrayList<Product> found = getSingle(productId);
+        Product product = found.get(0);
+        Integer pId = product.getProductId();
+        List<Image> images = imageRepository.findByProductId(pId);
+        ImageDTO[] imageDTO = new ImageDTO[images.size()];
+        for (int i =0; i < images.size(); i++)
+        {
+            String imgName = images.get(i).getImage_url();
+            String base64Image = ImageUtils.readFromFile(pId, imgName );
+            ImageDTO image = new ImageDTO();
+            image.setImgName(imgName);
+            String base64String = "data:image/" + imgName.substring(imgName.lastIndexOf(".") + 1) + ";name="
+                + imgName + ";base64," + base64Image;
+            image.setBase64Image(base64String);
+            imageDTO[i] = image;
+        }
+        ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
+                product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
+        productDTO.setProductId(product.getProductId());
+        ArrayList<ProductDTO> productDTOArrayList = new ArrayList<>();
+        productDTOArrayList.add(productDTO);
+        return productDTOArrayList;
     }
 
     /**
@@ -83,8 +121,14 @@ public class ProductService {
      * @param newProduct, the entity of the new product to save
      * @return the added product object
      */
-    public Product add(Product newProduct) {
-        Product created = productRepository.save(newProduct);
+    public Product add(ProductDTO newProduct) {
+        Product created = productRepository.save(newProduct.toEntity());
+        for (int i =0; i < newProduct.getImageDTO().length; i++)
+        {
+            String name = newProduct.getImageDTO()[i].getImgName();
+            ImageUtils.writeToFile(newProduct.getImageDTO()[i].getBase64Image(), created.getProductId(), name );
+            imageRepository.save(new Image(created.getProductId(),name ));
+        }
         try {
             URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
                                 "category/updateCount/" + created.getCategoryId());

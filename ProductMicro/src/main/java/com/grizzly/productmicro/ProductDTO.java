@@ -1,5 +1,6 @@
 package com.grizzly.productmicro;
 
+import com.grizzly.productmicro.image.ImageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
+
     private Integer productId;
     private String name;
     private Integer vendorId;
@@ -18,6 +20,7 @@ public class ProductDTO {
     private Integer price;
     private Integer rating;
     private Boolean enabled;
+    private ImageDTO[] imageDTO;
 
 
 
@@ -34,7 +37,7 @@ public class ProductDTO {
         return product;
     }
 
-    public ProductDTO(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Integer rating, Boolean enabled) {
+    public ProductDTO(String name, Integer vendorId, Integer categoryId, String desc, Integer price, Integer rating, Boolean enabled, ImageDTO[] imageDTO) {
         super();
 
         this.name = name;
@@ -44,65 +47,7 @@ public class ProductDTO {
         this.price = price;
         this.rating = rating;
         this.enabled = enabled;
+        this.imageDTO = imageDTO;
     }
 
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getVendorId() {
-        return vendorId;
-    }
-
-    public void setVendorId(Integer vendorId) {
-        this.vendorId = vendorId;
-    }
-
-    public Integer getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public Integer getRating() { return rating; }
-
-    public void setRating(Integer rating) { this.rating = rating; }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
 }
