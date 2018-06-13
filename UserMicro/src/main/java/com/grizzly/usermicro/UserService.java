@@ -16,7 +16,7 @@ public class UserService {
     private AdminRepository adminRepository;
 
     /**
-     * Get a single item from user id.
+     * Get a single item from customer id.
      * @param search, the string to match to ID to filter the user by
      * @return ArrayList of User objs whose names or IDs
      */
