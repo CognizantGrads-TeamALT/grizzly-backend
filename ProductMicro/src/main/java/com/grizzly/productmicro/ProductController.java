@@ -102,7 +102,7 @@ public class ProductController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     /**
