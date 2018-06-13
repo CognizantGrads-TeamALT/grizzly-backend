@@ -45,22 +45,27 @@ public class ImageUtils {
 
     public static void writeToFile(String base64Image, Integer productId, String name) {
 
-
         // Check If Directory Already Exists Or Not?
+
         String path = "product_img/" + productId;
-        Path dirPathObj = Paths.get(path);
-        boolean dirExists = Files.exists(dirPathObj);
-        if(dirExists) {
-            System.out.println("! Directory Already Exists !");
-        } else {
-            try {
-                // Creating The New Directory Structure
-                Files.createDirectories(dirPathObj);
-                System.out.println("! New Directory Successfully Created !");
-            } catch (IOException ioExceptionObj) {
-                System.out.println("Problem occurred While Creating The Directory Structure= " + ioExceptionObj.getMessage());
+        try {
+            Path dirPathObj = Paths.get(path);
+            boolean dirExists = Files.exists(dirPathObj);
+            if(dirExists) {
+                System.out.println("! Directory Already Exists !");
+            } else {
+                try {
+                    // Creating The New Directory Structure
+                    Files.createDirectories(dirPathObj);
+                    System.out.println("! New Directory Successfully Created !");
+                } catch (IOException ioExceptionObj) {
+                    System.out.println("Problem occurred While Creating The Directory Structure= " + ioExceptionObj.getMessage());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         //Specify the file path
         String newPath = path + "/" + name;
@@ -76,7 +81,8 @@ public class ImageUtils {
 
             //Write to file
             File outputFile = new File(newPath);
-            ImageIO.write(image, ext, outputFile);
+            throw new NullPointerException("Test exception. image: " + image + "; ext: " + ext + "; outputFile: " + outputFile);
+            //ImageIO.write(image, ext, outputFile);
 
         } catch (FileNotFoundException e) {
             System.out.println("Image not found" + e);
