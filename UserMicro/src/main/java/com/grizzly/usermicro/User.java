@@ -1,8 +1,9 @@
 package com.grizzly.usermicro;
 
+
 import javax.persistence.*;
 
-@Entity(name="user")
+@MappedSuperclass
 public class User {
     // For creating the variables
 
@@ -14,20 +15,17 @@ public class User {
     @Column(name="contact_num")     private String contact_num;
     @Column(name="email")           private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="user_group")      private UserGroup userGroup;
 
     public User() {
         super();
     }
 
-    public User(String name, String contact_num, String email, UserGroup userGroup) {
+    public User(String name, String contact_num, String email) {
         super();
 
         setName(name);
         setContact_num(contact_num);
         setEmail(email);
-        setUserGroup(userGroup);
     }
 
     public String getUserId() {
@@ -62,11 +60,4 @@ public class User {
         this.email = email;
     }
 
-    public UserGroup getUserGroup() {
-        return userGroup;
-    }
-
-    public void setUserGroup(UserGroup userGroup) {
-        this.userGroup = userGroup;
-    }
 }

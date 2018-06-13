@@ -14,13 +14,47 @@ public class UserController {
     private UserService userService;
 
     /**
-     * Return a single user based on id
+     * Return a single admin user based on id
      * @param id, user ID
      * @return the user
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<ArrayList<User>> getSingle(@PathVariable(value="id") String id) {
-        ArrayList<User> users = userService.getSingle(id);
+    public ResponseEntity<ArrayList<Admin>> getSingleUserAdmin(@PathVariable(value="id") String id) {
+        ArrayList<Admin> users = userService.getSingleUserAdmin(id);
+
+        // no users found
+        if (users == null || users.isEmpty()) {
+            return new ResponseEntity<>(users, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    /**
+     * Return a single admin user based on id
+     * @param id, user ID
+     * @return the user
+     */
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ArrayList<Vendor>> getSingleUserVendor(@PathVariable(value="id") String id) {
+        ArrayList<Vendor> users = userService.getSingleUserVendor(id);
+
+        // no users found
+        if (users == null || users.isEmpty()) {
+            return new ResponseEntity<>(users, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    /**
+     * Return a single admin user based on id
+     * @param id, user ID
+     * @return the user
+     */
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ArrayList<Customer>> getSingleUserCustomer(@PathVariable(value="id") String id) {
+        ArrayList<Customer> users = userService.getSingleUserCustomer(id);
 
         // no users found
         if (users == null || users.isEmpty()) {
