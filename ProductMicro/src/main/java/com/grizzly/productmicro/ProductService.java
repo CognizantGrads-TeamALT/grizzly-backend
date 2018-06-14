@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
+import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
 
 @Service
 public class ProductService {
@@ -29,28 +30,8 @@ public class ProductService {
     private ImageRepository imageRepository;
 
     public ArrayList<Product> get(Integer pageIndex, String column_name) {
-        PageRequest request = getPageRequest(pageIndex, column_name);
+        PageRequest request = getPageRequest(pageIndex, column_name, "product");
         return makeListFromIterable(productRepository.findAll(request));
-    }
-
-    /**
-    * Utility function to generate a pagerequest to tell the database how to page and sort a query
-    * @param column_name, the fieldname in the database to sort the list
-    * @return pageRequest to the method called
-    */
-    public PageRequest getPageRequest(Integer pageIndex, String column_name) {
-        final String[] fields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "rating", "enabled"};
-        String sortField;
-        if (Arrays.asList(fields).contains(column_name)) {
-            sortField = column_name;
-        } else {
-            sortField = "productId";
-        }
-
-        Sort sort = new Sort(Sort.Direction.ASC, sortField);
-
-        PageRequest request = PageRequest.of(pageIndex, 25, sort);
-        return request;
     }
 
     /**
@@ -89,9 +70,7 @@ public class ProductService {
      * @return ArrayList of Product objs whose names or IDs
      */
     public ArrayList<Product> getSingle(Integer search) {
-        Sort sort = new Sort(Sort.Direction.ASC, "productId");
-        PageRequest request = PageRequest.of(0, 25, sort);
-
+        PageRequest request = getPageRequest(0, "productId", "product");
         return makeListFromIterable(
                 productRepository.findByProductId(search, request)
         );
@@ -109,9 +88,7 @@ public class ProductService {
             return getSingle(productId);
         } catch(NumberFormatException e) {
             System.out.println("High..." + search);
-            Sort sort = new Sort(Sort.Direction.ASC, "productId");
-            PageRequest request = PageRequest.of(0, 25, sort);
-
+            PageRequest request = getPageRequest(0, "productId", "product");
             return makeListFromIterable(
                     productRepository.findByProductName(search, request)
             );
@@ -184,7 +161,7 @@ public class ProductService {
      * @return list of products in the category
      */
     public ArrayList<Product> getByCategory(Integer catId, Integer pageIndex, String column_name) {
-        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name)));
+        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name, "product")));
     }
 
     /**

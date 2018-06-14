@@ -10,22 +10,39 @@ import java.util.Arrays;
 
 public class Helper {
 
+    private static final String[] vendorFields = {"vendorId", "name", "contactNum", "website", "email", "bio"};
+    private static final String[] productFields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "rating", "enabled"};
+
     /**
      * Utility function to generate a pagerequest to tell the database how to page and sort a query
      * @param column_name, the fieldname in the database to sort the list
-     * @return pageRequest to the method called
+     * @param table, the name of the table which this PageRequest will operate on
+     * @return pageRequest to the method called, null if an unrecognised table is provided
      */
-    public static PageRequest getPageRequest(Integer pageIndex, String column_name) {
-        final String[] fields = {"vendorId", "name", "contactNum", "website", "email", "bio"};
+    public static PageRequest getPageRequest(Integer pageIndex, String column_name, String table) {
+        String[] fields = {};
+        switch (table) {
+            case "vendor":
+                fields = vendorFields;
+                break;
+            case "product":
+                fields = productFields;
+                break;
+            default:
+                final String[] validTables = {"vendor", "product"};
+                throw new IllegalArgumentException("The provided table name (" + table + ") is invalid. Valid ones are: " + validTables.toString() + ".");
+        }
+
+
         String sortField;
         if (Arrays.asList(fields).contains(column_name)) {
             sortField = column_name;
-        } else {
-            sortField = "vendorId";
+        }
+        else {
+            sortField = fields[0];
         }
 
         Sort sort = new Sort(Sort.Direction.ASC, sortField);
-
         PageRequest request = PageRequest.of(pageIndex, 25, sort);
         return request;
     }
