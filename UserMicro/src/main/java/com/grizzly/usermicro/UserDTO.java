@@ -5,17 +5,15 @@ public class UserDTO {
     private String name;
     private String contact_num;
     private String email;
-    private UserGroup userGroup;
 
     public UserDTO() {
     }
 
-    public UserDTO(String userId, String name, String contact_num, String email, UserGroup userGroup) {
+    public UserDTO(String userId, String name, String contact_num, String email) {
         this.userId = userId;
         this.name = name;
         this.contact_num = contact_num;
         this.email = email;
-        this.userGroup = userGroup;
     }
 
     public User toEntity() {
@@ -23,7 +21,6 @@ public class UserDTO {
         user.setName(name);
         user.setContact_num(contact_num);
         user.setEmail(email);
-        user.setUserGroup(userGroup);
         return user;
     }
 
@@ -59,11 +56,4 @@ public class UserDTO {
         this.email = email;
     }
 
-    public UserGroup getUserGroup() {
-        return userGroup;
-    }
-
-    public void setUserGroup(UserGroup userGroup) {
-        this.userGroup = userGroup;
-    }
 }
