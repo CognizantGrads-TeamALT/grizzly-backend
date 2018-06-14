@@ -81,19 +81,19 @@ public class ProductService {
         return productDTOArrayList;
     }
 
-    /**
-     * Get a single item from product id.
-     * @param search, the string to match to ID to filter the product by
-     * @return ArrayList of Product objs whose names or IDs
-     */
-    public ArrayList<Product> getSingle(Integer search) {
-        Sort sort = new Sort(Sort.Direction.ASC, "productId");
-        PageRequest request = PageRequest.of(0, 25, sort);
-
-        return makeListFromIterable(
-                productRepository.findByProductId(search, request)
-        );
-    }
+//    /**
+//     * Get a single item from product id.
+//     * @param search, the string to match to ID to filter the product by
+//     * @return ArrayList of Product objs whose names or IDs
+//     */
+//    public ArrayList<Product> getSingle(Integer search) {
+//        Sort sort = new Sort(Sort.Direction.ASC, "productId");
+//        PageRequest request = PageRequest.of(0, 25, sort);
+//
+//        return makeListFromIterable(
+//                productRepository.findByProductId(search, request)
+//        );
+//    }
 
     /**
      * Get a filtered list of products, based on a given search string to match to name or ID.
@@ -191,6 +191,40 @@ public class ProductService {
      */
     public void disableByVendorId(Integer vendorId) {
         productRepository.disableByVendorId(vendorId);
+    }
+
+
+    /**
+     * Update an existing product (based on a given ID) with a new parameters
+     * @param  ID, vendorID, price, imageDTO, rating, enabled of the product to update
+     * @param name, new name to overwrite the product's old one
+     * @param description, new description to overwrite the product's old one
+     * @return the original product object; null if none was found
+     *
+     */
+    public Product edit(Integer id, String name, String desc, Integer vendorID, Integer price, ImageDTO imageDTO, Integer rating, Boolean enabled) {
+        // find the existing product
+        Product prod;
+        try {
+            prod = productRepository.findByProductId(id).get();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+
+        // make the changes to the product
+        prod.setID(id);
+        prod.setName(name);
+        prod.setDescription(desc);
+        prod.setVendorID(vendorID);
+        prod.setPrice(price);
+        prod.setImageDTO(imageDTO);
+        prod.setRating(rating);
+        prod.setEnabled(enabled);
+
+
+        // save the updated product
+      productRepository.save(prod);
+        return prod;
     }
 
     /**

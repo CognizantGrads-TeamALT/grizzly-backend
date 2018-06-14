@@ -32,22 +32,22 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    /**
-     * Return a single product based on id
-     * @param id, product ID
-     * @return the product
-     */
-    @GetMapping("/get/{id}")
-    public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="id") Integer id) {
-        ArrayList<Product> products = productService.getSingle(id);
-
-        // no products found
-        if (products == null || products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
+//    /**
+//     * Return a single product based on id
+//     * @param id, product ID
+//     * @return the product
+//     */
+//    @GetMapping("/get/{id}")
+//    public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="id") Integer id) {
+//        ArrayList<Product> products = productService.getSingle(id);
+//
+//        // no products found
+//        if (products == null || products.isEmpty()) {
+//            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+//        }
+//
+//        return new ResponseEntity<>(products, HttpStatus.OK);
+//    }
 
     /**
      * Return a single product with imgs based on id
@@ -170,6 +170,25 @@ public class ProductController {
 
         return new ResponseEntity<>(prods, HttpStatus.OK);
     }
+
+    /**
+     * Edit product
+     * @param id
+     * @param request
+     * @return
+     */
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<Product> edit(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
+        Product product = productService.edit(id, request.getName(), request.getDesc());
+
+        // null if the ID did not map to an existing product
+        if (product == null) {
+            return new ResponseEntity<>(product, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
 
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
