@@ -12,7 +12,9 @@ import java.util.ArrayList;
 public class UserService {
     @Autowired
     private VendorRepository vendorRepository;
+    @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
     private AdminRepository adminRepository;
 
     /**

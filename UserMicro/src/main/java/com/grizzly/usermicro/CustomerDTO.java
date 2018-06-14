@@ -7,14 +7,12 @@ public class CustomerDTO {
     public CustomerDTO() {
     }
 
-    public CustomerDTO(String userId, String address) {
-        this.userId = userId;
+    public CustomerDTO(String address) {
         this.address = address;
     }
 
     public Customer toEntity() {
         Customer customer = new Customer();
-        customer.setUserId(userId);
         customer.setAddress(address);
         return customer;
     }
