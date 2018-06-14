@@ -196,10 +196,20 @@ public class ProductService {
 
     /**
      * Disable all products with the vendorId
+     * Set local vendorId to 0
      * @param vendorId, ID of the vendor
      */
     public void disableByVendorId(Integer vendorId) {
         productRepository.disableByVendorId(vendorId);
+    }
+
+    /**
+     * Disable all products with the categoryId
+     * Set local categoryId to 0
+     * @param categoryId, ID of the category
+     */
+    public void disableByCategoryId(Integer categoryId) {
+        productRepository.disableByCategoryId(categoryId);
     }
 
     /**
