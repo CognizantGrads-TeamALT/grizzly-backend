@@ -9,6 +9,7 @@ public class AdminDTO {
     }
 
     public AdminDTO(String userId, String job_position, String office) {
+        this.userId = userId;
         this.job_position = job_position;
         this.office = office;
     }
