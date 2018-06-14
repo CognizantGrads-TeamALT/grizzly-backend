@@ -14,6 +14,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ImageUtils {
+
+    public static  void deleteImage(Integer productId, String imageName) {
+        String path = "/opt/deployed/product_img/" + productId + "/" + imageName;
+        File file = new File(path);
+
+        //delete if exists
+        try {
+            boolean success = Files.deleteIfExists(file.toPath());
+            System.out.println("Delete status: " + success);
+        } catch (IOException | SecurityException e) {
+            System.err.println(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static String readFromFile(Integer productId, String imageName) {
         String imageString = null;
         String path = "/opt/deployed/product_img/" + productId + "/" + imageName;
