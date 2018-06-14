@@ -16,8 +16,7 @@ import java.util.Set;
 public class ImageUtils {
     public static String readFromFile(Integer productId, String imageName) {
         String imageString = null;
-        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        String path = currentPath + "/product_img/" + productId + "/" + imageName;
+        String path = "/opt/deployed/product_img/" + productId + "/" + imageName;
         File file = new File(path);
         try {
 
@@ -48,8 +47,7 @@ public class ImageUtils {
         fullPermission.add(PosixFilePermission.OTHERS_READ);
         fullPermission.add(PosixFilePermission.OTHERS_WRITE);
 
-        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        String path = currentPath + "/product_img/" + productId;
+        String path = "/opt/deployed/product_img/" + productId;
 
         try {
             // Check If Directory Already Exists Or Not?
