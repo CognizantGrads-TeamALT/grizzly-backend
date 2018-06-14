@@ -2,11 +2,15 @@ package com.grizzly.productmicro;
 
 import java.util.ArrayList;
 
+import com.grizzly.grizlibrary.errorhandling.ApiError;
+import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Null;
 //import org.springframework.web.util.NestedServletException;
 
 @CrossOrigin(origins = "*")
@@ -32,22 +36,22 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-//    /**
-//     * Return a single product based on id
-//     * @param id, product ID
-//     * @return the product
-//     */
-//    @GetMapping("/get/{id}")
-//    public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="id") Integer id) {
-//        ArrayList<Product> products = productService.getSingle(id);
-//
-//        // no products found
-//        if (products == null || products.isEmpty()) {
-//            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
-//        }
-//
-//        return new ResponseEntity<>(products, HttpStatus.OK);
-//    }
+    /**
+     * Return a single product based on id
+     * @param id, product ID
+     * @return the product
+     */
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="id") Integer id) {
+        ArrayList<Product> products = productService.getSingle(id);
+
+        // no products found
+        if (products == null || products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 
     /**
      * Return a single product with imgs based on id
@@ -69,7 +73,7 @@ public class ProductController {
     /**
      * Update a given product (by ID), enabling/disabling the item
      * @param id, ID of the product to update
-     * @param ProductDTO, the new boolean
+     * @param request, the new boolean
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
@@ -98,7 +102,7 @@ public class ProductController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     /**
@@ -141,14 +145,19 @@ public class ProductController {
      * @return the newly created product
      */
     @PutMapping("/add")
-    public ResponseEntity<Product> addProduct(@RequestBody ProductDTO newProduct) {
-        Product created = productService.add(newProduct);
-
-        if (created == null) {
-            return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
+    public ResponseEntity addProduct(@RequestBody ProductDTO newProduct) {
+        Product created;
+        try {
+            created = productService.add(newProduct);
+        }
+        // saving image to file failed (TODO: or something else?)
+        catch (NullPointerException e) {
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "A null pointer exception occurred while writing image to file.",
+                    e.getLocalizedMessage()));
         }
 
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        return new ResponseEntity(created, HttpStatus.CREATED);
     }
 
     /**
@@ -172,14 +181,13 @@ public class ProductController {
     }
 
     /**
-     * Edit product
-     * @param id
+     * View a detailed product,edit and saved in the database
      * @param request
      * @return
      */
     @PostMapping("/edit/{id}")
-    public ResponseEntity<Product> edit(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
-        Product product = productService.edit(id, request.getName(), request.getDesc());
+    public ResponseEntity<Product> edit(@RequestBody ProductDTO request) {
+        Product product = productService.edit(request);
 
         // null if the ID did not map to an existing product
         if (product == null) {
