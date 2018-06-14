@@ -30,7 +30,7 @@ public class ProductController {
 
         // no products found
         if (products == null || products.isEmpty()) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "Not products were found.", "pageIndex: " + pageIndex + "; column_name: " + column_name));
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No products were found.", "pageIndex: " + pageIndex + "; column_name: " + column_name));
         }
 
         return new ResponseEntity(products, HttpStatus.OK);
@@ -47,7 +47,7 @@ public class ProductController {
 
         // no product found
         if (products == null || products.isEmpty()) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "Not product was found.", "id: " + id));
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No product was found.", "id: " + id));
         }
 
         return new ResponseEntity(products, HttpStatus.OK);
@@ -64,7 +64,7 @@ public class ProductController {
 
         // no product found
         if (products == null || products.isEmpty()) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "Not product was found.", "id: " + id));
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No product was found.", "id: " + id));
         }
 
         return new ResponseEntity<>(products, HttpStatus.OK);
