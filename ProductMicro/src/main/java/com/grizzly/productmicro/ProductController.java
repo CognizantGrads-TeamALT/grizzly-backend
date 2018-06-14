@@ -199,6 +199,24 @@ public class ProductController {
         return new ResponseEntity<>(prods, HttpStatus.OK);
     }
 
+    /**
+     * View a detailed product,edit and saved in the database
+     * @param request
+     * @return
+     */
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<Product> edit(@RequestBody ProductDTO request) {
+        Product product = productService.edit(request);
+
+        // null if the ID did not map to an existing product
+        if (product == null) {
+            return new ResponseEntity<>(product, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);

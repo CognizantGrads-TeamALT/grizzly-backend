@@ -121,4 +121,5 @@ public class ProductDTO {
     public void setImageDTO(ImageDTO[] imageDTO) {
         this.imageDTO = imageDTO;
     }
+
 }
