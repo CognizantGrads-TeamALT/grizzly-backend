@@ -90,6 +90,7 @@ public class ProductController {
 
     /**
      * Disable all products by vendor ID
+     * Also resets vendorId to 0.
      * @param id, ID of the product to update
      * @return HTTP status response only
      */
@@ -97,6 +98,24 @@ public class ProductController {
     public ResponseEntity setBlockByVendor(@PathVariable(value="id") Integer id) {
         try {
             productService.disableByVendorId(id);
+        } catch (EmptyResultDataAccessException e) {
+            // this ID didn't match any products
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(id, HttpStatus.OK);
+    }
+
+    /**
+     * Disable all products by vendor ID
+     * Also resets vendorId to 0.
+     * @param id, ID of the product to update
+     * @return HTTP status response only
+     */
+    @PostMapping("/setBlockByCategory/{id}")
+    public ResponseEntity setBlockByCategory(@PathVariable(value="id") Integer id) {
+        try {
+            productService.disableByCategoryId(id);
         } catch (EmptyResultDataAccessException e) {
             // this ID didn't match any products
             return new ResponseEntity(HttpStatus.NOT_FOUND);
