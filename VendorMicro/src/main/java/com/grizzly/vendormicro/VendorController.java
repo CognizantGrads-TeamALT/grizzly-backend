@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.NestedServletException;
 
+import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/vendor")
@@ -32,7 +34,7 @@ public class VendorController {
 
         // no vendors found in this page
         if (vendors == null || vendors.isEmpty()) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
                                                 "No vendors were found.",
                                             "pageIndex: " + pageIndex + "\ncolumn_name: " + column_name));
         }
@@ -53,14 +55,14 @@ public class VendorController {
         }
         // ID was entered into SQL null
         catch(IllegalArgumentException e) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
                     "A null vendor ID was received.",
                     "id: " + id));
         }
 
         // the vendor wasn't found
         if (vendors == null || vendors.isEmpty()) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
                     "No vendor was found.",
                     "id: " + id));
         }
@@ -81,14 +83,14 @@ public class VendorController {
         }
         // search was entered into SQL null
         catch(IllegalArgumentException e) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
                     "A null search string was received.",
                     "search: " + search));
         }
 
         // no vendors found
         if (vendors == null || vendors.isEmpty()) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
                     "No vendors were found.",
                     "search: " + search));
         }
@@ -109,14 +111,14 @@ public class VendorController {
         }
         // ids were entered into SQL null
         catch (IllegalArgumentException e) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
                     "A null set of IDs was received.",
                     "ids: " + ids));
         }
 
         // no vendors found
         if (vendors == null || vendors.isEmpty()) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
                     "No vendors were found.",
                     "ids: " + ids));
         }
@@ -136,7 +138,7 @@ public class VendorController {
         }
         // this ID didn't match any vendors
         catch (EmptyResultDataAccessException e) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
                     "No vendor was found to delete.",
                     "id: " + id));
         }
@@ -158,14 +160,14 @@ public class VendorController {
         }
         // id was entered into SQL null
         catch (IllegalArgumentException e) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
                     "A null vendor ID was received.",
                     "id: " + id));
         }
 
         // null if the ID did not map to an existing vendor
         if (vendor == null) {
-            return RestExceptionHandler.buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
                     "No vendor was found to update.",
                     "id: " + id));
         }

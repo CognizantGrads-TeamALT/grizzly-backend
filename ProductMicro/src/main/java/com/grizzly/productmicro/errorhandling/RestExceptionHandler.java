@@ -1,4 +1,4 @@
-package com.grizzly.vendormicro.errorhandling;
+package com.grizzly.productmicro.errorhandling;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import org.springframework.core.Ordered;
@@ -23,6 +23,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String error = "Malformed JSON request";
+        return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, e, error));
+    }
+
+    /**
+     * Globally handles IllegalArgumentExceptions thrown
+     */
+    protected ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String error = "Information passed to the system was invalid.";
         return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, e, error));
     }
 }
