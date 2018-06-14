@@ -7,7 +7,8 @@ public class CustomerDTO {
     public CustomerDTO() {
     }
 
-    public CustomerDTO(String address) {
+    public CustomerDTO(String userId, String address) {
+        this.userId = userId;
         this.address = address;
     }
 
