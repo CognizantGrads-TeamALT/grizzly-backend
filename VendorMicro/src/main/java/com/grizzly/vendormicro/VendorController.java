@@ -167,7 +167,7 @@ public class VendorController {
 
         // null if the ID did not map to an existing vendor
         if (vendor == null) {
-            returnbuildResponse(new ApiError(HttpStatus.NOT_FOUND,
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
                     "No vendor was found to update.",
                     "id: " + id));
         }
