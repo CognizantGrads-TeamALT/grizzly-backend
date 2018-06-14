@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends PagingAndSortingRepository<User, String> {
-    @Query(value = "SELECT u FROM user u WHERE u.userId = :userId", nativeQuery = true)
-    List<User> findByUser(@Param("userId") String userId, Pageable pageable);
+public interface CustomerRepository extends PagingAndSortingRepository<Customer, String> {
+    @Query("SELECT u FROM customer u WHERE u.userId = :userId")
+    List<Customer> findByUserCustomerId(@Param("userId") String userId, Pageable pageable);
 }

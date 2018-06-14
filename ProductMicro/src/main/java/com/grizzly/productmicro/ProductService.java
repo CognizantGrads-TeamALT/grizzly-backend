@@ -70,9 +70,8 @@ public class ProductService {
      * @return ArrayList of Product objs whose names or IDs
      */
     public ArrayList<Product> getSingle(Integer search) {
-        PageRequest request = getPageRequest(0, "productId", "product");
         return makeListFromIterable(
-                productRepository.findByProductId(search, request)
+                productRepository.findByProductId(search)
         );
     }
 
@@ -150,7 +149,16 @@ public class ProductService {
      * @param deleteId, ID of the product to delete
      */
     public void deleteById(Integer deleteId) {
+
         productRepository.deleteById(deleteId);
+
+        // Delete imgs
+        List<Image> images = imageRepository.findByProductId(deleteId);
+        for(Image img : images) {
+            ImageUtils.deleteImage(deleteId, img.getImage_url());
+        }
+        imageRepository.deleteAll(images);
+
     }
 
     /**
@@ -171,6 +179,35 @@ public class ProductService {
      */
     public void disableByVendorId(Integer vendorId) {
         productRepository.disableByVendorId(vendorId);
+    }
+
+
+    /**
+     * Update an existing product (based on a given ID) with a new parameters
+     * @param  request, productId, categoryId, vendorID, price, imageDTO, rating, enabled of the product to update
+     * @return the original product object; null if none was found
+     *
+     */
+    public Product edit(ProductDTO request) {
+        // find the existing product
+        Product prod;
+        try {
+            prod = productRepository.findByProductId(request.getProductId()).get(0);
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+
+        // make the changes to the product
+        prod.setName(request.getName());
+        prod.setDesc(request.getDesc());
+        prod.setVendorId(request.getVendorId());
+        prod.setPrice(request.getPrice());
+        prod.setRating(request.getRating());
+        prod.setEnabled(request.getEnabled());
+
+        // save the updated product
+      productRepository.save(prod);
+        return prod;
     }
 
     /**
