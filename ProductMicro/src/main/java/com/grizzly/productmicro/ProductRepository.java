@@ -23,6 +23,11 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
     @Query("UPDATE product p SET enabled = false, vendorId = 0 WHERE p.vendorId = :vendorId")
     void disableByVendorId(@Param("vendorId") Integer vendorId);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE product p SET enabled = false, categoryId = 0 WHERE p.categoryId = :categoryId")
+    void disableByCategoryId(@Param("categoryId") Integer categoryId);
+
     @Query("SELECT p FROM product p WHERE p.categoryId = :categoryId")
     List<Product> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);
 }
