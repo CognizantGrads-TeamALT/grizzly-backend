@@ -13,11 +13,11 @@ import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 
-
 public class ImageUtils {
     public static String readFromFile(Integer productId, String imageName) {
         String imageString = null;
-        String path = "product_img/" + productId + "/" + imageName;
+        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+        String path = currentPath + "/product_img/" + productId + "/" + imageName;
         File file = new File(path);
         try {
 
@@ -31,7 +31,6 @@ public class ImageUtils {
         }
         return imageString;
     }
-
 
     public static void writeToFile(String base64Image, Integer productId, String name) {
 
@@ -49,7 +48,8 @@ public class ImageUtils {
         fullPermission.add(PosixFilePermission.OTHERS_READ);
         fullPermission.add(PosixFilePermission.OTHERS_WRITE);
 
-        String path = "product_img/" + productId;
+        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+        String path = currentPath + "/product_img/" + productId;
 
         try {
             // Check If Directory Already Exists Or Not?
@@ -64,7 +64,6 @@ public class ImageUtils {
                     // Creating The New Directory Structure
                     Files.createDirectories(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
                     Files.setPosixFilePermissions(dirPathObj, fullPermission);
-//                    Files.createDirectories(dirPathObj);
                     System.out.println("! New Directory Successfully Created !");
                 } catch (IOException ioExceptionObj) {
                     System.out.println("Problem occurred While Creating The Directory Structure= " + ioExceptionObj.getMessage());
@@ -76,7 +75,6 @@ public class ImageUtils {
 
         //Specify the file path
         String newPath = path + "/" + name;
-
         try {
             // Converting a Base64 String into Image byte array
             byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
@@ -84,8 +82,6 @@ public class ImageUtils {
             Files.createFile(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
             Files.setPosixFilePermissions(dirPathObj, fullPermission);
             Files.write(dirPathObj, imageByteArray);
-
-            System.out.println("Done!");
 
         } catch (FileNotFoundException e) {
             System.out.println("Image not found" + e);
