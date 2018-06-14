@@ -1,6 +1,9 @@
 spring:
   application:
     name: apigatewayserver
+spring:
+  jmx:
+    enabled: false
 server:
   port: 8765
 zuul:
