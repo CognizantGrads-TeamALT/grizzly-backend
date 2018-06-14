@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 // TOASK: What dat v
 @Service
@@ -16,6 +17,43 @@ public class UserService {
     private CustomerRepository customerRepository;
     @Autowired
     private AdminRepository adminRepository;
+
+    public ArrayList<Customer> getAllCustomers(Integer pageIndex, String column_name) {
+        PageRequest request = getPageRequest(pageIndex, column_name);
+        return makeListFromIterable(customerRepository.findAll(request));
+    }
+
+
+    public ArrayList<Vendor> getAllVendors(Integer pageIndex, String column_name) {
+        PageRequest request = getPageRequest(pageIndex, column_name);
+        return makeListFromIterable(vendorRepository.findAll(request));
+    }
+
+
+    public ArrayList<Admin> getAllAdmins(Integer pageIndex, String column_name) {
+        PageRequest request = getPageRequest(pageIndex, column_name);
+        return makeListFromIterable(adminRepository.findAll(request));
+    }
+
+    /**
+     * Utility function to generate a pagerequest to tell the database how to page and sort a query
+     * @param column_name, the fieldname in the database to sort the list
+     * @return pageRequest to the method called
+     */
+    public PageRequest getPageRequest(Integer pageIndex, String column_name) {
+        final String[] fields = {"userId", "name", "contact_num", "email"};
+        String sortField;
+        if (Arrays.asList(fields).contains(column_name)) {
+            sortField = column_name;
+        } else {
+            sortField = "userId";
+        }
+
+        Sort sort = new Sort(Sort.Direction.ASC, sortField);
+
+        PageRequest request = PageRequest.of(pageIndex, 25, sort);
+        return request;
+    }
 
     /**
      * Get a single item from customer id.

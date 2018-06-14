@@ -14,6 +14,54 @@ public class UserController {
     private UserService userService;
 
     /**
+     * Return a list of all Admins in the system
+     * @return Admins in a list
+     */
+    @GetMapping("/get/vendor/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Vendor>> getAllVendors(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<Vendor> products = userService.getAllVendors(pageIndex, column_name);
+
+        // no products found
+        if (products == null || products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
+     * Return a list of all Admins in the system
+     * @return Admins in a list
+     */
+    @GetMapping("/get/customer/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Customer>> getAllCustomers(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<Customer> products = userService.getAllCustomers(pageIndex, column_name);
+
+        // no products found
+        if (products == null || products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
+     * Return a list of all Admins in the system
+     * @return Admins in a list
+     */
+    @GetMapping("/get/admin/{pageIndex}/{column_name}")
+    public ResponseEntity<ArrayList<Admin>> getAllAdmins(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<Admin> products = userService.getAllAdmins(pageIndex, column_name);
+
+        // no products found
+        if (products == null || products.isEmpty()) {
+            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
      * Return a single admin user based on id
      * @param id, user ID
      * @return the user
