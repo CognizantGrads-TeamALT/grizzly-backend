@@ -5,16 +5,16 @@ public class VendorDTO {
     private String address;
     private String website;
     private String about;
-    private String productPortfolio;
+    private String product_portfolio;
 
     public VendorDTO() {
     }
 
-    public VendorDTO(String address, String website, String about, String productPortfolio) {
+    public VendorDTO(String address, String website, String about, String product_portfolio) {
         this.address = address;
         this.website = website;
         this.about = about;
-        this.productPortfolio = productPortfolio;
+        this.product_portfolio = product_portfolio;
     }
 
     public Vendor toEntity() {
@@ -22,7 +22,7 @@ public class VendorDTO {
         vendor.setAddress(address);
         vendor.setWebsite(website);
         vendor.setAbout(about);
-        vendor.setProductPortfolio(productPortfolio);
+        vendor.setProductPortfolio(product_portfolio);
         return vendor;
     }
 
@@ -59,10 +59,10 @@ public class VendorDTO {
     }
 
     public String getProductPortfolio() {
-        return productPortfolio;
+        return product_portfolio;
     }
 
-    public void setProductPortfolio(String productPortfolio) {
-        this.productPortfolio = productPortfolio;
+    public void setProductPortfolio(String product_portfolio) {
+        this.product_portfolio = product_portfolio;
     }
 }

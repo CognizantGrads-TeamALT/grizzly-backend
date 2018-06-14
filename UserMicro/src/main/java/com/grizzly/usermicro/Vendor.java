@@ -3,6 +3,7 @@ package com.grizzly.usermicro;
 import javax.persistence.*;
 
 @Entity(name="vendor")
+@Table(name = "vendor")
 public class Vendor extends User {
 
 
@@ -10,6 +11,11 @@ public class Vendor extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")      private String userId;
 
+    @AttributeOverrides({
+            @AttributeOverride(name="name", column=@Column(name="name")),
+            @AttributeOverride(name="contact_num", column=@Column(name="contact_num")),
+            @AttributeOverride(name="email", column=@Column(name="email"))
+    })
     @Column(name="address")      private String address;
     @Column(name="website")      private String website;
     @Column(name="about")        private String about;
@@ -20,13 +26,13 @@ public class Vendor extends User {
         super();
     }
 
-    public Vendor(String address, String website, String about, String productPortfolio) {
-        super();
+    public Vendor(String name, String contact_num, String email, String address, String website, String about, String product_portfolio) {
+        super(name, contact_num, email);
 
         setAddress(address);
         setWebsite(website);
         setAbout(about);
-        setProductPortfolio(productPortfolio);
+        setProductPortfolio(product_portfolio);
     }
 
     public String getUserId() {

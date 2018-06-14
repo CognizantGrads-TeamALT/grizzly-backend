@@ -3,6 +3,7 @@ package com.grizzly.usermicro;
 import javax.persistence.*;
 
 @Entity(name="admin")
+@Table(name = "admin")
 public class Admin extends User {
     // For creating the variables
 
@@ -10,7 +11,12 @@ public class Admin extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")      private String userId;
 
-    @Column(name="position")     private String position;
+    @AttributeOverrides({
+            @AttributeOverride(name="name", column=@Column(name="name")),
+            @AttributeOverride(name="contact_num", column=@Column(name="contact_num")),
+            @AttributeOverride(name="email", column=@Column(name="email"))
+    })
+    @Column(name="job_position")     private String jobPosition;
     @Column(name="office")       private String office;
 
 
@@ -18,10 +24,10 @@ public class Admin extends User {
         super();
     }
 
-    public Admin(String position, String office) {
-        super();
+    public Admin(String name, String contact_num, String email, String job_position, String office) {
+        super(name, contact_num, email);
 
-        setPosition(position);
+        setJobPosition(job_position);
         setOffice(office);
     }
 
@@ -33,12 +39,12 @@ public class Admin extends User {
         this.userId = userId;
     }
 
-    public String getPosition() {
-        return position;
+    public String getJobPosition() {
+        return jobPosition;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setJobPosition(String jobPosition) {
+        this.jobPosition = jobPosition;
     }
 
     public String getOffice() {

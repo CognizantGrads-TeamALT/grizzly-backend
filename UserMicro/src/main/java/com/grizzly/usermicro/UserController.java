@@ -18,7 +18,7 @@ public class UserController {
      * @param id, user ID
      * @return the user
      */
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/admin/{id}")
     public ResponseEntity<ArrayList<Admin>> getSingleUserAdmin(@PathVariable(value="id") String id) {
         ArrayList<Admin> users = userService.getSingleUserAdmin(id);
 
@@ -31,11 +31,11 @@ public class UserController {
     }
 
     /**
-     * Return a single admin user based on id
+     * Return a single vendor user based on id
      * @param id, user ID
      * @return the user
      */
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/vendor/{id}")
     public ResponseEntity<ArrayList<Vendor>> getSingleUserVendor(@PathVariable(value="id") String id) {
         ArrayList<Vendor> users = userService.getSingleUserVendor(id);
 
@@ -48,11 +48,11 @@ public class UserController {
     }
 
     /**
-     * Return a single admin user based on id
+     * Return a single customer user based on id
      * @param id, user ID
      * @return the user
      */
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/customer/{id}")
     public ResponseEntity<ArrayList<Customer>> getSingleUserCustomer(@PathVariable(value="id") String id) {
         ArrayList<Customer> users = userService.getSingleUserCustomer(id);
 

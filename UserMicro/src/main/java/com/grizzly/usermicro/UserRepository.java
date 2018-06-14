@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends PagingAndSortingRepository<User, String> {
-    @Query("SELECT u FROM user u WHERE u.userId = :userId")
-    List<User> findByUserId(@Param("userId") String userId, Pageable pageable);
+    @Query(value = "SELECT u FROM user u WHERE u.userId = :userId", nativeQuery = true)
+    List<User> findByUser(@Param("userId") String userId, Pageable pageable);
 }
