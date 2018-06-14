@@ -171,7 +171,16 @@ public class ProductService {
      * @param deleteId, ID of the product to delete
      */
     public void deleteById(Integer deleteId) {
+
         productRepository.deleteById(deleteId);
+
+        // Delete imgs
+        List<Image> images = imageRepository.findByProductId(deleteId);
+        for(Image img : images) {
+            ImageUtils.deleteImage(deleteId, img.getImage_url());
+        }
+        imageRepository.deleteAll(images);
+
     }
 
     /**
