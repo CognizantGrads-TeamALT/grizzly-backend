@@ -66,12 +66,13 @@ public class GrizLibraryApplicationTests {
         //set up
         Integer pageIndex = 0;
         String column_name = "name";
+        String table = "vendor";
         String expected = "name: ASC";
         PageRequest result;
         String resultString;
 
         //execution
-        result = helper.getPageRequest(pageIndex, column_name);
+        result = helper.getPageRequest(pageIndex, column_name, table);
         resultString = result.getSort().toString();
 
         //verification
@@ -83,15 +84,27 @@ public class GrizLibraryApplicationTests {
         //set up
         Integer pageIndex = 0;
         String column_name = "invalid";
+        String table = "vendor";
         String expected = "vendorId: ASC";
         PageRequest result;
         String resultString;
 
         //execution
-        result = helper.getPageRequest(pageIndex, column_name);
+        result = helper.getPageRequest(pageIndex, column_name, table);
         resultString = result.getSort().toString();
 
         //verification
         assertEquals(expected, resultString);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void getPageRequest_ThrowsIAExceptionWithBadTable() {
+        // set up
+        Integer pageIndex = 0;
+        String column_name = "invalid";
+        String table = "invalid";
+
+        // execution
+        helper.getPageRequest(pageIndex, column_name, table);
     }
 }
