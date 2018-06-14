@@ -25,15 +25,15 @@ public class ProductController {
      * @return products in a list
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Product>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Product> products = productService.get(pageIndex, column_name);
 
         // no products found
         if (products == null || products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "Not products were found.", "pageIndex: " + pageIndex + "; column_name: " + column_name));
         }
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity(products, HttpStatus.OK);
     }
 
     /**
@@ -42,15 +42,15 @@ public class ProductController {
      * @return the product
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<ArrayList<Product>> getSingle(@PathVariable(value="id") Integer id) {
+    public ResponseEntity getSingle(@PathVariable(value="id") Integer id) {
         ArrayList<Product> products = productService.getSingle(id);
 
-        // no products found
+        // no product found
         if (products == null || products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "Not product was found.", "id: " + id));
         }
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity(products, HttpStatus.OK);
     }
 
     /**
@@ -59,12 +59,12 @@ public class ProductController {
      * @return the product with imgs
      */
     @GetMapping("/getDetails/{id}")
-    public ResponseEntity<ArrayList<ProductDTO>> getSingleWithImgs(@PathVariable(value="id") Integer id) {
+    public ResponseEntity getSingleWithImgs(@PathVariable(value="id") Integer id) {
         ArrayList<ProductDTO> products = productService.getSingleWithImgs(id);
 
-        // no products found
+        // no product found
         if (products == null || products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "Not product was found.", "id: " + id));
         }
 
         return new ResponseEntity<>(products, HttpStatus.OK);
@@ -77,15 +77,15 @@ public class ProductController {
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
-    public ResponseEntity<Product> setBlock(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
+    public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
         Product product = productService.setEnabled(id, request.getEnabled());
 
         // null if the ID did not map to an existing category
         if (product == null) {
-            return new ResponseEntity<>(product, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "The product to block was not found.", "id: " + id + "; new block status: " + request.getEnabled()));
         }
 
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity(product, HttpStatus.OK);
     }
 
     /**
@@ -98,9 +98,10 @@ public class ProductController {
     public ResponseEntity setBlockByVendor(@PathVariable(value="id") Integer id) {
         try {
             productService.disableByVendorId(id);
-        } catch (EmptyResultDataAccessException e) {
-            // this ID didn't match any products
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        // this ID didn't match any vendors
+        catch (EmptyResultDataAccessException e) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "The vendor to block products of was not found.", "id: " + id + "; exception msg: " + e.getLocalizedMessage()));
         }
 
         return new ResponseEntity(id, HttpStatus.OK);
@@ -116,9 +117,10 @@ public class ProductController {
     public ResponseEntity setBlockByCategory(@PathVariable(value="id") Integer id) {
         try {
             productService.disableByCategoryId(id);
-        } catch (EmptyResultDataAccessException e) {
-            // this ID didn't match any products
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        // this ID didn't match any categories
+        catch (EmptyResultDataAccessException e) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "The category to block products of was not found.", "id: " + id + "; exception msg: " + e.getLocalizedMessage()));
         }
 
         return new ResponseEntity(id, HttpStatus.OK);
@@ -130,15 +132,15 @@ public class ProductController {
      * @return the filtered products in a list
      */
     @GetMapping("/search/{search}")
-    public ResponseEntity<ArrayList<Product>> getFiltered(@PathVariable(value="search") String search) {
+    public ResponseEntity getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Product> products = productService.getFiltered(search);
 
         // no products found
         if (products == null || products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No products were found.", "search: " + search));
         }
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity(products, HttpStatus.OK);
     }
 
     /**
@@ -150,9 +152,12 @@ public class ProductController {
     public ResponseEntity deleteProduct(@PathVariable(value="id") Integer id) {
         try {
             productService.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            // this ID didn't match any products
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        // this ID didn't match any products
+        catch (EmptyResultDataAccessException e) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No product was found.",
+                    "id: " + id + "; exception msg: " + e.getLocalizedMessage()));
         }
 
         return new ResponseEntity(HttpStatus.OK);
@@ -187,16 +192,18 @@ public class ProductController {
      * @return list of products in the given category
      */
     @GetMapping("/bycategory/{catId}/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Product>> getByCategory(@PathVariable(value="catId") Integer catId,
+    public ResponseEntity getByCategory(@PathVariable(value="catId") Integer catId,
                                                           @PathVariable(value="pageIndex") Integer pageIndex,
                                                           @PathVariable(value="column_name") String column_name) {
         ArrayList<Product> prods = productService.getByCategory(catId, pageIndex, column_name);
 
         if (prods == null || prods.isEmpty()) {
-            return new ResponseEntity<>(prods, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "No products were found.",
+                    "catId: " + catId + "; pageIndex: " + pageIndex + "; column_name: " + column_name));
         }
 
-        return new ResponseEntity<>(prods, HttpStatus.OK);
+        return new ResponseEntity(prods, HttpStatus.OK);
     }
 
     @GetMapping("/hello")

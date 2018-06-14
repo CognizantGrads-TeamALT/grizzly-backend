@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
+
 @Service
 public class ProductService {
     @Autowired
@@ -203,18 +205,4 @@ public class ProductService {
         productRepository.disableByCategoryId(categoryId);
     }
 
-    /**
-     * Make an ArrayList of Objects based on a passed-in Iterable
-     * @param iter An Iterable of Objects
-     * @return An ArrayList made from the Iterable
-     */
-    public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {
-        ArrayList<T> list = new ArrayList<T>();
-
-        for(T item: iter) {
-            list.add(item);
-        }
-
-        return list;
-    }
 }
