@@ -7,7 +7,7 @@ import java.util.Random;
 
 
 @RestController
-public class HelloController {
+public class AuthController {
 
     @RequestMapping("/")
     public String index() {
