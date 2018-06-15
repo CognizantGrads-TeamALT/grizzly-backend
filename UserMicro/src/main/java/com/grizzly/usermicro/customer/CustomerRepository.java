@@ -1,4 +1,4 @@
-package com.grizzly.usermicro;
+package com.grizzly.usermicro.customer;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.domain.Pageable;

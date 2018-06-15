@@ -1,4 +1,4 @@
-package com.grizzly.usermicro;
+package com.grizzly.usermicro.vendor;
 
 public class VendorDTO {
     private String userId;
