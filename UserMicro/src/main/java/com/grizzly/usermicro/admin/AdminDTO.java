@@ -1,4 +1,4 @@
-package com.grizzly.usermicro;
+package com.grizzly.usermicro.admin;
 
 public class AdminDTO {
     private String userId;

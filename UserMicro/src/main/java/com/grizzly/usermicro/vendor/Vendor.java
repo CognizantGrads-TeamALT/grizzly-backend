@@ -1,4 +1,6 @@
-package com.grizzly.usermicro;
+package com.grizzly.usermicro.vendor;
+
+import com.grizzly.usermicro.user.User;
 
 import javax.persistence.*;
 
