@@ -5,14 +5,17 @@ import com.grizzly.productmicro.image.ImageDTO;
 import com.grizzly.productmicro.image.ImageRepository;
 import com.grizzly.productmicro.image.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,9 +32,34 @@ public class ProductService {
     @Autowired
     private ImageRepository imageRepository;
 
-    public ArrayList<Product> get(Integer pageIndex, String column_name) {
+    public ArrayList<ProductDTO> get(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name, "product");
-        return makeListFromIterable(productRepository.findAll(request));
+
+        Page<Product> products = productRepository.findAll(request);
+
+        ArrayList<ProductDTO> result = new ArrayList<>();
+        for (Product product : products) {
+            List<Image> images = imageRepository.findByProductId(product.getProductId());
+
+            ImageDTO[] imageDTO = new ImageDTO[images.size()];
+
+            for (int i = 0; i < images.size(); i++) {
+                String imgName = images.get(i).getImage_url();
+
+                ImageDTO image = new ImageDTO();
+                image.setImgName(imgName);
+
+                imageDTO[i] = image;
+            }
+
+            ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
+                    product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
+            productDTO.setProductId(product.getProductId());
+
+            result.add(productDTO);
+        }
+
+        return result;
     }
 
     /**
@@ -39,29 +67,43 @@ public class ProductService {
      * @param productId, the string to match to ID to filter the product by
      * @return ArrayList of Products with Imgs
      */
-    public ArrayList<ProductDTO> getSingleWithImgs(Integer productId) {
-        ArrayList<Product> found = getSingle(productId);
-        Product product = found.get(0);
-        Integer pId = product.getProductId();
-        List<Image> images = imageRepository.findByProductId(pId);
+    public ProductDTO getSingleWithImgs(Integer productId) {
+        Product product = getSingle(productId).get(0);
+
+        List<Image> images = imageRepository.findByProductId(productId);
+
         ImageDTO[] imageDTO = new ImageDTO[images.size()];
-        for (int i =0; i < images.size(); i++)
-        {
+
+        for (int i = 0; i < images.size(); i++) {
             String imgName = images.get(i).getImage_url();
-            String base64Image = ImageUtils.readFromFile(pId, imgName );
+
             ImageDTO image = new ImageDTO();
             image.setImgName(imgName);
-            String base64String = "data:image/" + imgName.substring(imgName.lastIndexOf(".") + 1) + ";name="
-                + imgName + ";base64," + base64Image;
-            image.setBase64Image(base64String);
+
             imageDTO[i] = image;
         }
+
         ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
                 product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
         productDTO.setProductId(product.getProductId());
-        ArrayList<ProductDTO> productDTOArrayList = new ArrayList<>();
-        productDTOArrayList.add(productDTO);
-        return productDTOArrayList;
+
+        return productDTO;
+    }
+
+    public ImageDTO getImageFromProduct(Integer productId, String fileName) {
+        Image image = imageRepository.findByProductIdAndName(productId, fileName);
+
+        String imageName = image.getImage_url();
+        String base64Image = ImageUtils.readFromFile(productId, imageName);
+
+        ImageDTO response = new ImageDTO();
+        response.setImgName(image.getImage_url());
+
+        String base64String = "data:image/" + imageName.substring(imageName.lastIndexOf(".") + 1)
+                + ";base64," + base64Image;
+        response.setBase64Image(base64String);
+
+        return response;
     }
 
     /**
@@ -101,11 +143,26 @@ public class ProductService {
      */
     public Product add(ProductDTO newProduct) {
         Product created = productRepository.save(newProduct.toEntity());
-        for (int i =0; i < newProduct.getImageDTO().length; i++)
-        {
-            String name = newProduct.getImageDTO()[i].getImgName();
-            ImageUtils.writeToFile(newProduct.getImageDTO()[i].getBase64Image(), created.getProductId(), name );
-            imageRepository.save(new Image(created.getProductId(),name ));
+
+        ImageDTO[] imageDTO = newProduct.getImageDTO();
+        for (int i = 0; i < imageDTO.length; i++) {
+            String ogName = imageDTO[i].getImgName();
+            String content = imageDTO[i].getBase64Image();
+
+            try {
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                md.update(content.getBytes());
+                byte[] digest = md.digest();
+                String newName = DatatypeConverter
+                        .printHexBinary(digest).toUpperCase();
+
+                newName += ogName.substring(ogName.lastIndexOf(".") + 1);
+
+                ImageUtils.writeToFile(content, created.getProductId(), newName);
+                imageRepository.save(new Image(created.getProductId(), newName));
+            } catch (Exception e) {
+                return null;
+            }
         }
         try {
             URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
@@ -149,16 +206,14 @@ public class ProductService {
      * @param deleteId, ID of the product to delete
      */
     public void deleteById(Integer deleteId) {
-
         productRepository.deleteById(deleteId);
 
         // Delete imgs
         List<Image> images = imageRepository.findByProductId(deleteId);
-        for(Image img : images) {
+        for (Image img : images)
             ImageUtils.deleteImage(deleteId, img.getImage_url());
-        }
-        imageRepository.deleteAll(images);
 
+        imageRepository.deleteAll(images);
     }
 
     /**
