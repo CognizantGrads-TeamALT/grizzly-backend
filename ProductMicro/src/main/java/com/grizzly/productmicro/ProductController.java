@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
+
+import com.grizzly.productmicro.image.Image;
+import com.grizzly.productmicro.image.ImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -60,14 +63,30 @@ public class ProductController {
      */
     @GetMapping("/getDetails/{id}")
     public ResponseEntity getSingleWithImgs(@PathVariable(value="id") Integer id) {
-        ArrayList<ProductDTO> products = productService.getSingleWithImgs(id);
+        ProductDTO product = productService.getSingleWithImgs(id);
 
         // no product found
-        if (products == null || products.isEmpty()) {
+        if (product == null) {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No product was found.", "id: " + id));
         }
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    /**
+     * Return a single image from a product
+     * @param id, product ID, string filename
+     * @return the product with imgs
+     */
+    @GetMapping("/getImage/{id}/{filename}")
+    public ResponseEntity getSingleImage(@PathVariable(value="id") Integer id, @PathVariable(value="filename") String fileName) {
+        ImageDTO image = productService.getImageFromProduct(id, fileName);
+
+        if (image == null) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "id: " + id + " " + "filename: " + fileName));
+        }
+
+        return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
     /**
