@@ -5,6 +5,7 @@ import com.grizzly.productmicro.image.ImageDTO;
 import com.grizzly.productmicro.image.ImageRepository;
 import com.grizzly.productmicro.image.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,34 @@ public class ProductService {
     @Autowired
     private ImageRepository imageRepository;
 
-    public ArrayList<Product> get(Integer pageIndex, String column_name) {
+    public ArrayList<ProductDTO> get(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name, "product");
-        return makeListFromIterable(productRepository.findAll(request));
+
+        Page<Product> products = productRepository.findAll(request);
+
+        ArrayList<ProductDTO> result = new ArrayList<>();
+        for (Product product : products) {
+            List<Image> images = imageRepository.findByProductId(product.getProductId());
+
+            ImageDTO[] imageDTO = new ImageDTO[images.size()];
+
+            for (int i = 0; i < images.size(); i++) {
+                String imgName = images.get(i).getImage_url();
+
+                ImageDTO image = new ImageDTO();
+                image.setImgName(imgName);
+
+                imageDTO[i] = image;
+            }
+
+            ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
+                    product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
+            productDTO.setProductId(product.getProductId());
+
+            result.add(productDTO);
+        }
+
+        return result;
     }
 
     /**
@@ -117,18 +143,23 @@ public class ProductService {
      */
     public Product add(ProductDTO newProduct) {
         Product created = productRepository.save(newProduct.toEntity());
-        for (int i = 0; i < newProduct.getImageDTO().length; i++) {
-            String content = newProduct.getImageDTO()[i].getBase64Image();
+
+        ImageDTO[] imageDTO = newProduct.getImageDTO();
+        for (int i = 0; i < imageDTO.length; i++) {
+            String ogName = imageDTO[i].getImgName();
+            String content = imageDTO[i].getBase64Image();
 
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 md.update(content.getBytes());
                 byte[] digest = md.digest();
-                String myHash = DatatypeConverter
+                String newName = DatatypeConverter
                         .printHexBinary(digest).toUpperCase();
 
-                ImageUtils.writeToFile(content, created.getProductId(), myHash);
-                imageRepository.save(new Image(created.getProductId(), myHash));
+                newName += ogName.substring(ogName.lastIndexOf(".") + 1);
+
+                ImageUtils.writeToFile(content, created.getProductId(), newName);
+                imageRepository.save(new Image(created.getProductId(), newName));
             } catch (Exception e) {
                 return null;
             }

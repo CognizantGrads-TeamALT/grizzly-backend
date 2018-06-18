@@ -27,7 +27,7 @@ public class ProductController {
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
     public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
-        ArrayList<Product> products = productService.get(pageIndex, column_name);
+        ArrayList<ProductDTO> products = productService.get(pageIndex, column_name);
 
         // no products found
         if (products == null || products.isEmpty()) {
