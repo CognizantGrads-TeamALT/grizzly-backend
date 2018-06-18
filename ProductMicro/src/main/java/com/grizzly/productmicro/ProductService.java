@@ -50,12 +50,10 @@ public class ProductService {
 
         for (int i = 0; i < images.size(); i++) {
             String imgName = images.get(i).getImage_url();
-            //String base64Image = ImageUtils.readFromFile(productId, imgName);
+
             ImageDTO image = new ImageDTO();
             image.setImgName(imgName);
-            //String base64String = "data:image/" + imgName.substring(imgName.lastIndexOf(".") + 1)
-            //        + ";base64," + base64Image;
-            //image.setBase64Image(base64String);
+
             imageDTO[i] = image;
         }
 
@@ -181,7 +179,7 @@ public class ProductService {
 
         // Delete imgs
         List<Image> images = imageRepository.findByProductId(deleteId);
-        for(Image img : images)
+        for (Image img : images)
             ImageUtils.deleteImage(deleteId, img.getImage_url());
 
         imageRepository.deleteAll(images);
