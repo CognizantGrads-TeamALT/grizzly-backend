@@ -17,7 +17,11 @@ zuul:
 eureka:
   instance:
     preferIpAddress: true
+    registryFetchIntervalSeconds: 1
+    leaseRenewalIntervalInSeconds: 2
+    leaseExpirationDurationInSeconds: 5
   client:
+    initialInstanceInfoReplicationIntervalSeconds: 5
     registerWithEureka: true
     fetchRegistry: true
     service-url:
