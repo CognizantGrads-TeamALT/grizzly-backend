@@ -117,18 +117,23 @@ public class ProductService {
      */
     public Product add(ProductDTO newProduct) {
         Product created = productRepository.save(newProduct.toEntity());
-        for (int i = 0; i < newProduct.getImageDTO().length; i++) {
-            String content = newProduct.getImageDTO()[i].getBase64Image();
+
+        ImageDTO[] imageDTO = newProduct.getImageDTO();
+        for (int i = 0; i < imageDTO.length; i++) {
+            String ogName = imageDTO[i].getImgName();
+            String content = imageDTO[i].getBase64Image();
 
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 md.update(content.getBytes());
                 byte[] digest = md.digest();
-                String myHash = DatatypeConverter
+                String newName = DatatypeConverter
                         .printHexBinary(digest).toUpperCase();
 
-                ImageUtils.writeToFile(content, created.getProductId(), myHash);
-                imageRepository.save(new Image(created.getProductId(), myHash));
+                newName += ogName.substring(ogName.lastIndexOf(".") + 1);
+
+                ImageUtils.writeToFile(content, created.getProductId(), newName);
+                imageRepository.save(new Image(created.getProductId(), newName));
             } catch (Exception e) {
                 return null;
             }
