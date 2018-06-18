@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 
-import com.grizzly.productmicro.image.Image;
 import com.grizzly.productmicro.image.ImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
