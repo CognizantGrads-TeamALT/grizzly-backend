@@ -19,7 +19,7 @@ public class VendorService {
     private VendorRepository vendorRepository;
 
     public ArrayList<Vendor> get(Integer pageIndex, String column_name) {
-        PageRequest request = getPageRequest(pageIndex, column_name, "vendor");
+        PageRequest request = getPageRequest(pageIndex, column_name, "vendor", 25);
         return makeListFromIterable(vendorRepository.findAll(request));
     }
 
@@ -29,7 +29,7 @@ public class VendorService {
      * @return ArrayList of Product objs whose names or IDs
      */
     public ArrayList<Vendor> getSingle(Integer id) {
-        PageRequest request = getPageRequest(0, "vendorId", "vendor");
+        PageRequest request = getPageRequest(0, "vendorId", "vendor", 25);
 
         return makeListFromIterable(
                 vendorRepository.findByVendorId(id, request)
@@ -47,7 +47,7 @@ public class VendorService {
 
             return getSingle(vendorId);
         } catch(NumberFormatException e) {
-            PageRequest request = getPageRequest(0, "vendorId", "vendor");
+            PageRequest request = getPageRequest(0, "vendorId", "vendor", 25);
             return makeListFromIterable(
                     vendorRepository.findByVendorName(search, request)
             );

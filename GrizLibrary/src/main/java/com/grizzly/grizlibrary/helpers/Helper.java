@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 public class Helper {
 
+    // If a field can be used as a sort anchor, it needs to be in here.
     private static final String[] vendorFields = {"vendorId", "name", "contactNum", "website", "email", "bio"};
     private static final String[] productFields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "rating", "enabled"};
     private static final String[] categoryFields = {"categoryId", "name", "description"};
@@ -17,9 +18,10 @@ public class Helper {
      * Utility function to generate a pagerequest to tell the database how to page and sort a query
      * @param column_name, the fieldname in the database to sort the list
      * @param table, the name of the table which this PageRequest will operate on
+     * @param pageSize, the number of items on each page
      * @return pageRequest to the method called, null if an unrecognised table is provided
      */
-    public static PageRequest getPageRequest(Integer pageIndex, String column_name, String table) {
+    public static PageRequest getPageRequest(Integer pageIndex, String column_name, String table, Integer pageSize) {
         String[] fields = {};
         switch (table) {
             case "vendor":
@@ -46,7 +48,7 @@ public class Helper {
         }
 
         Sort sort = new Sort(Sort.Direction.ASC, sortField);
-        PageRequest request = PageRequest.of(pageIndex, 25, sort);
+        PageRequest request = PageRequest.of(pageIndex, pageSize, sort);
         return request;
     }
 

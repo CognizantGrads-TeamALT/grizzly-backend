@@ -5,6 +5,7 @@ import com.grizzly.productmicro.image.ImageDTO;
 import com.grizzly.productmicro.image.ImageRepository;
 import com.grizzly.productmicro.image.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,34 @@ public class ProductService {
     @Autowired
     private ImageRepository imageRepository;
 
-    public ArrayList<Product> get(Integer pageIndex, String column_name) {
-        PageRequest request = getPageRequest(pageIndex, column_name, "product");
-        return makeListFromIterable(productRepository.findAll(request));
+    public ArrayList<ProductDTO> get(Integer pageIndex, String column_name) {
+        PageRequest request = getPageRequest(pageIndex, column_name, "product", 25);
+
+        Page<Product> products = productRepository.findAll(request);
+
+        ArrayList<ProductDTO> result = new ArrayList<>();
+        for (Product product : products) {
+            List<Image> images = imageRepository.findByProductId(product.getProductId());
+
+            ImageDTO[] imageDTO = new ImageDTO[images.size()];
+
+            for (int i = 0; i < images.size(); i++) {
+                String imgName = images.get(i).getImage_url();
+
+                ImageDTO image = new ImageDTO();
+                image.setImgName(imgName);
+
+                imageDTO[i] = image;
+            }
+
+            ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
+                    product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
+            productDTO.setProductId(product.getProductId());
+
+            result.add(productDTO);
+        }
+
+        return result;
     }
 
     /**
@@ -94,16 +120,16 @@ public class ProductService {
     /**
      * Get a filtered list of products, based on a given search string to match to name or ID.
      * @param search, the string to match to name or ID to filter the products by
+     * @param pageIndex, the index of the page of results to return (starts at 0)
      * @return ArrayList of Product objs whose names or IDs
      */
-    public ArrayList<Product> getFiltered(String search) {
+    public ArrayList<Product> getFiltered(String search, Integer pageIndex) {
         try {
             Integer productId = Integer.parseInt(search);
 
             return getSingle(productId);
         } catch(NumberFormatException e) {
-            System.out.println("High..." + search);
-            PageRequest request = getPageRequest(0, "productId", "product");
+            PageRequest request = getPageRequest(pageIndex, "productId", "product", 30);
             return makeListFromIterable(
                     productRepository.findByProductName(search, request)
             );
@@ -117,18 +143,23 @@ public class ProductService {
      */
     public Product add(ProductDTO newProduct) {
         Product created = productRepository.save(newProduct.toEntity());
-        for (int i = 0; i < newProduct.getImageDTO().length; i++) {
-            String content = newProduct.getImageDTO()[i].getBase64Image();
+
+        ImageDTO[] imageDTO = newProduct.getImageDTO();
+        for (int i = 0; i < imageDTO.length; i++) {
+            String ogName = imageDTO[i].getImgName();
+            String content = imageDTO[i].getBase64Image();
 
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 md.update(content.getBytes());
                 byte[] digest = md.digest();
-                String myHash = DatatypeConverter
+                String newName = DatatypeConverter
                         .printHexBinary(digest).toUpperCase();
 
-                ImageUtils.writeToFile(content, created.getProductId(), myHash);
-                imageRepository.save(new Image(created.getProductId(), myHash));
+                newName += ogName.substring(ogName.lastIndexOf(".") + 1);
+
+                ImageUtils.writeToFile(content, created.getProductId(), newName);
+                imageRepository.save(new Image(created.getProductId(), newName));
             } catch (Exception e) {
                 return null;
             }
@@ -193,7 +224,7 @@ public class ProductService {
      * @return list of products in the category
      */
     public ArrayList<Product> getByCategory(Integer catId, Integer pageIndex, String column_name) {
-        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name, "product")));
+        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name, "product", 25)));
     }
 
     /**
