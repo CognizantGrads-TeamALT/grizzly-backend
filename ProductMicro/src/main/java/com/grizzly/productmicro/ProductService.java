@@ -33,7 +33,7 @@ public class ProductService {
     private ImageRepository imageRepository;
 
     public ArrayList<ProductDTO> get(Integer pageIndex, String column_name) {
-        PageRequest request = getPageRequest(pageIndex, column_name, "product");
+        PageRequest request = getPageRequest(pageIndex, column_name, "product", 25);
 
         Page<Product> products = productRepository.findAll(request);
 
@@ -120,16 +120,16 @@ public class ProductService {
     /**
      * Get a filtered list of products, based on a given search string to match to name or ID.
      * @param search, the string to match to name or ID to filter the products by
+     * @param pageIndex, the index of the page of results to return (starts at 0)
      * @return ArrayList of Product objs whose names or IDs
      */
-    public ArrayList<Product> getFiltered(String search) {
+    public ArrayList<Product> getFiltered(String search, Integer pageIndex) {
         try {
             Integer productId = Integer.parseInt(search);
 
             return getSingle(productId);
         } catch(NumberFormatException e) {
-            System.out.println("High..." + search);
-            PageRequest request = getPageRequest(0, "productId", "product");
+            PageRequest request = getPageRequest(pageIndex, "productId", "product", 30);
             return makeListFromIterable(
                     productRepository.findByProductName(search, request)
             );
@@ -224,7 +224,7 @@ public class ProductService {
      * @return list of products in the category
      */
     public ArrayList<Product> getByCategory(Integer catId, Integer pageIndex, String column_name) {
-        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name, "product")));
+        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name, "product", 25)));
     }
 
     /**

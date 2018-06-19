@@ -72,7 +72,7 @@ public class GrizLibraryApplicationTests {
         String resultString;
 
         //execution
-        result = helper.getPageRequest(pageIndex, column_name, table);
+        result = helper.getPageRequest(pageIndex, column_name, table, 25);
         resultString = result.getSort().toString();
 
         //verification
@@ -90,7 +90,7 @@ public class GrizLibraryApplicationTests {
         String resultString;
 
         //execution
-        result = helper.getPageRequest(pageIndex, column_name, table);
+        result = helper.getPageRequest(pageIndex, column_name, table, 25);
         resultString = result.getSort().toString();
 
         //verification
@@ -105,6 +105,6 @@ public class GrizLibraryApplicationTests {
         String table = "invalid";
 
         // execution
-        helper.getPageRequest(pageIndex, column_name, table);
+        helper.getPageRequest(pageIndex, column_name, table, 25);
     }
 }

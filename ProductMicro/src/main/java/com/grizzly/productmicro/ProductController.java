@@ -146,11 +146,12 @@ public class ProductController {
     /**
      * Return a list of products in the system filtered by a given search string on ID or name
      * @param search, string to filter returned list on by ID or name
+     * @param pageIndex, index of the page of results to return (starts at 0)
      * @return the filtered products in a list
      */
-    @GetMapping("/search/{search}")
-    public ResponseEntity getFiltered(@PathVariable(value="search") String search) {
-        ArrayList<Product> products = productService.getFiltered(search);
+    @GetMapping("/search/{search}/{pageIndex}")
+    public ResponseEntity getFiltered(@PathVariable(value="search") String search, @PathVariable(value="pageIndex") Integer pageIndex) {
+        ArrayList<Product> products = productService.getFiltered(search, pageIndex);
 
         // no products found
         if (products == null || products.isEmpty()) {
