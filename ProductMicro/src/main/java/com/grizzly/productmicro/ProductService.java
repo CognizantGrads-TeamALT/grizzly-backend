@@ -32,6 +32,28 @@ public class ProductService {
     @Autowired
     private ImageRepository imageRepository;
 
+    // Convert a Product object into a ProductDTO
+    public ProductDTO productToDTO(Product product) {
+        List<Image> images = imageRepository.findByProductId(product.getProductId());
+
+        ImageDTO[] imageDTO = new ImageDTO[images.size()];
+
+        for (int i = 0; i < images.size(); i++) {
+            String imgName = images.get(i).getImage_url();
+
+            ImageDTO image = new ImageDTO();
+            image.setImgName(imgName);
+
+            imageDTO[i] = image;
+        }
+
+        ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
+                product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
+        productDTO.setProductId(product.getProductId());
+
+        return productDTO;
+    }
+
     public ArrayList<ProductDTO> get(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name, "product", 25);
 
@@ -68,26 +90,9 @@ public class ProductService {
      * @return ArrayList of Products with Imgs
      */
     public ProductDTO getSingleWithImgs(Integer productId) {
-        Product product = getSingle(productId).get(0);
+        ProductDTO product = getSingle(productId).get(0);
 
-        List<Image> images = imageRepository.findByProductId(productId);
-
-        ImageDTO[] imageDTO = new ImageDTO[images.size()];
-
-        for (int i = 0; i < images.size(); i++) {
-            String imgName = images.get(i).getImage_url();
-
-            ImageDTO image = new ImageDTO();
-            image.setImgName(imgName);
-
-            imageDTO[i] = image;
-        }
-
-        ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
-                product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
-        productDTO.setProductId(product.getProductId());
-
-        return productDTO;
+        return product;
     }
 
     public ImageDTO getImageFromProduct(Integer productId, String fileName) {
@@ -111,10 +116,14 @@ public class ProductService {
      * @param search, the string to match to ID to filter the product by
      * @return ArrayList of Product objs whose names or IDs
      */
-    public ArrayList<Product> getSingle(Integer search) {
-        return makeListFromIterable(
-                productRepository.findByProductId(search)
-        );
+    public ArrayList<ProductDTO> getSingle(Integer search) {
+        ArrayList<ProductDTO> result = new ArrayList<>();
+
+        ProductDTO product = productToDTO(productRepository.findByProductId(search).get(0));
+
+        result.add(product);
+
+        return result;
     }
 
     /**
@@ -123,16 +132,22 @@ public class ProductService {
      * @param pageIndex, the index of the page of results to return (starts at 0)
      * @return ArrayList of Product objs whose names or IDs
      */
-    public ArrayList<Product> getFiltered(String search, Integer pageIndex) {
+    public ArrayList<ProductDTO> getFiltered(String search, Integer pageIndex) {
         try {
             Integer productId = Integer.parseInt(search);
 
             return getSingle(productId);
         } catch(NumberFormatException e) {
             PageRequest request = getPageRequest(pageIndex, "productId", "product", 30);
-            return makeListFromIterable(
-                    productRepository.findByProductName(search, request)
-            );
+
+            List<Product> products = productRepository.findByProductName(search, request);
+
+            ArrayList<ProductDTO> productsResult = new ArrayList<>();
+            for (Product product : products) {
+                productsResult.add(productToDTO(product));
+            }
+
+            return productsResult;
         }
     }
 
@@ -141,7 +156,7 @@ public class ProductService {
      * @param newProduct, the entity of the new product to save
      * @return the added product object
      */
-    public Product add(ProductDTO newProduct) {
+    public ProductDTO add(ProductDTO newProduct) {
         Product created = productRepository.save(newProduct.toEntity());
 
         ImageDTO[] imageDTO = newProduct.getImageDTO();
@@ -169,14 +184,17 @@ public class ProductService {
                                 "category/updateCount/" + created.getCategoryId());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
-            int status = con.getResponseCode();
         } catch (MalformedURLException e) {
             return null;
         } catch (IOException e){
             return null;
         }
 
-        return created;
+        ProductDTO productDTO = new ProductDTO(created.getName(), created.getVendorId(), created.getCategoryId(),
+                created.getDesc(), created.getPrice(), created.getRating(), created.getEnabled(), imageDTO);
+        productDTO.setProductId(created.getProductId());
+
+        return productDTO;
     }
 
     /**
@@ -223,8 +241,15 @@ public class ProductService {
      * @param column_name, name of the product field to sort the results by
      * @return list of products in the category
      */
-    public ArrayList<Product> getByCategory(Integer catId, Integer pageIndex, String column_name) {
-        return makeListFromIterable(productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name, "product", 25)));
+    public ArrayList<ProductDTO> getByCategory(Integer catId, Integer pageIndex, String column_name) {
+        List<Product> products = productRepository.findByCategoryId(catId, getPageRequest(pageIndex, column_name, "product", 25));
+
+        ArrayList<ProductDTO> productsResult = new ArrayList<>();
+        for (Product product : products) {
+            productsResult.add(productToDTO(product));
+        }
+
+        return productsResult;
     }
 
     /**
@@ -243,7 +268,7 @@ public class ProductService {
      * @return the original product object; null if none was found
      *
      */
-    public Product edit(ProductDTO request) {
+    public ProductDTO edit(ProductDTO request) {
         // find the existing product
         Product prod;
         try {
@@ -261,8 +286,9 @@ public class ProductService {
         prod.setEnabled(request.getEnabled());
 
         // save the updated product
-      productRepository.save(prod);
-        return prod;
+        productRepository.save(prod);
+
+        return productToDTO(prod);
     }
 
     /**
