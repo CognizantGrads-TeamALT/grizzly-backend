@@ -44,7 +44,7 @@ public class ProductController {
      */
     @GetMapping("/get/{id}")
     public ResponseEntity getSingle(@PathVariable(value="id") Integer id) {
-        ArrayList<Product> products = productService.getSingle(id);
+        ArrayList<ProductDTO> products = productService.getSingle(id);
 
         // no product found
         if (products == null || products.isEmpty()) {
@@ -151,7 +151,7 @@ public class ProductController {
      */
     @GetMapping("/search/{search}/{pageIndex}")
     public ResponseEntity getFiltered(@PathVariable(value="search") String search, @PathVariable(value="pageIndex") Integer pageIndex) {
-        ArrayList<Product> products = productService.getFiltered(search, pageIndex);
+        ArrayList<ProductDTO> products = productService.getFiltered(search, pageIndex);
 
         // no products found
         if (products == null || products.isEmpty()) {
@@ -188,7 +188,7 @@ public class ProductController {
      */
     @PutMapping("/add")
     public ResponseEntity addProduct(@RequestBody ProductDTO newProduct) {
-        Product created;
+        ProductDTO created;
         try {
             created = productService.add(newProduct);
         }
@@ -213,7 +213,7 @@ public class ProductController {
     public ResponseEntity getByCategory(@PathVariable(value="catId") Integer catId,
                                                           @PathVariable(value="pageIndex") Integer pageIndex,
                                                           @PathVariable(value="column_name") String column_name) {
-        ArrayList<Product> prods = productService.getByCategory(catId, pageIndex, column_name);
+        ArrayList<ProductDTO> prods = productService.getByCategory(catId, pageIndex, column_name);
 
         if (prods == null || prods.isEmpty()) {
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
@@ -231,18 +231,23 @@ public class ProductController {
      */
     @PostMapping("/edit/{id}")
     public ResponseEntity edit(@RequestBody ProductDTO request) {
-        Product product = productService.edit(request);
+
+        ProductDTO product = productService.edit(request);
 
         // null if the ID did not map to an existing product
         if (product == null) {
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
                     "name: " + request.getName()
-                    + "price: " + request.getPrice() +
-                    "desc: " + request.getDesc() +
-                    "categoryId: " + request.getCategoryId()));
-        }
+                            + "price: " + request.getPrice() +
+                            "desc: " + request.getDesc() +
+                            "categoryId: " + request.getCategoryId()));
 
-        return new ResponseEntity<>(product, HttpStatus.OK);
+
+            // null if the ID did not map to an existing product
+
+
+        }
+        return new ResponseEntity(product, HttpStatus.OK);
     }
 
 

@@ -1,6 +1,6 @@
 package com.grizzly.categorymicro;
 
-import com.grizzly.grizlibrary.helpers.Helper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -33,7 +33,7 @@ public class CategoryService {
      */
 
     public ArrayList<Category> get(Integer pageIndex, String column_name) {
-       PageRequest request = getPageRequest(pageIndex, column_name,"category");
+       PageRequest request = getPageRequest(pageIndex, column_name,"category", 15);
         return makeListFromIterable(categoryRepository.findAll(request));
     }
 
