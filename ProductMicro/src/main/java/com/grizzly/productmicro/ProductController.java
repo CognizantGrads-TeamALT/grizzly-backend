@@ -231,25 +231,18 @@ public class ProductController {
      */
     @PostMapping("/edit/{id}")
     public ResponseEntity edit(@RequestBody ProductDTO request) {
-
         ProductDTO product = productService.edit(request);
-
         // null if the ID did not map to an existing product
         if (product == null) {
+            // null if the ID did not map to an existing product
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
                     "name: " + request.getName()
                             + "price: " + request.getPrice() +
                             "desc: " + request.getDesc() +
                             "categoryId: " + request.getCategoryId()));
-
-
-            // null if the ID did not map to an existing product
-
-
         }
         return new ResponseEntity(product, HttpStatus.OK);
     }
-
 
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {

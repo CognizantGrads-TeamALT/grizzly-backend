@@ -152,10 +152,8 @@ public class CategoryService {
                     newcat.setDescription("category not found");
                     batchList.add(newcat);
                 }
-
             }
         }
-
         return batchList;
     }
 

@@ -82,7 +82,6 @@
             <artifactId>grizlibrary</artifactId>
             <version>0.0.4-SNAPSHOT</version>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>

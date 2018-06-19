@@ -147,7 +147,6 @@ public class CategoryController {
     public ResponseEntity getBatch(@PathVariable(value="ids") String ids) {
         String[] request = ids.split(",");
         ArrayList<Category> categories = new ArrayList<Category>();
-        ///TODO
         try {
             categories = categoryService.getBatchbyId(Arrays.asList(request));
         }
