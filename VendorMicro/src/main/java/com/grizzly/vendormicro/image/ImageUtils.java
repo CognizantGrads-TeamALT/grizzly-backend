@@ -1,9 +1,6 @@
 package com.grizzly.vendormicro.image;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +9,8 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class ImageUtils {
     private static String deploymentPath = "/opt/deployed/vendor_img/";
@@ -29,28 +28,43 @@ public class ImageUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static String readFromFile(Integer productId, String imageName) {
         String imageString = null;
         String path = deploymentPath + productId + "/" + imageName;
         File file = new File(path);
-        try {
 
+        try {
             FileInputStream imageInFile = new FileInputStream(file);
             byte imageData[] = new byte[(int) file.length()];
             imageInFile.read(imageData);
-            imageString = Base64.getEncoder().encodeToString(imageData);
+
+            // Decompress
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
+            GZIPInputStream gis = new GZIPInputStream(bis);
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gis.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+
+            imageString = Base64.getEncoder().encodeToString(bos.toByteArray());
+
+            bos.close();
+            gis.close();
+            bis.close();
+            imageInFile.close();
         } catch (IOException e) {
             e.printStackTrace();
-
         }
+
         return imageString;
     }
 
     public static void writeToFile(String base64Image, Integer productId, String name) {
-
         // Set Permission
         Set<PosixFilePermission> fullPermission = new HashSet<>();
         fullPermission.add(PosixFilePermission.OWNER_EXECUTE);
@@ -94,11 +108,23 @@ public class ImageUtils {
         try {
             // Converting a Base64 String into Image byte array
             byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
+
             Path dirPathObj = Paths.get(newPath);
+
             Files.createFile(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
             Files.setPosixFilePermissions(dirPathObj, fullPermission);
-            Files.write(dirPathObj, imageByteArray);
 
+            // Compression.
+            ByteArrayOutputStream obj = new ByteArrayOutputStream();
+            GZIPOutputStream gis = new GZIPOutputStream(obj);
+
+            gis.write(imageByteArray);
+            gis.flush();
+            gis.close();
+
+            Files.write(dirPathObj, obj.toByteArray());
+
+            obj.close();
         } catch (FileNotFoundException e) {
             System.out.println("Image not found" + e);
         } catch (IOException ioe) {

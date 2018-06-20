@@ -156,7 +156,7 @@ public class VendorService {
                 String newName = DatatypeConverter
                         .printHexBinary(digest).toUpperCase();
 
-                newName += ogName.substring(ogName.lastIndexOf(".") + 1);
+                newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
 
                 ImageUtils.writeToFile(content, created.getVendorId(), newName);
                 imageRepository.save(new Image(created.getVendorId(), newName));
