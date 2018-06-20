@@ -28,7 +28,6 @@ public class ImageUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static String readFromFile(Integer productId, String imageName) {
