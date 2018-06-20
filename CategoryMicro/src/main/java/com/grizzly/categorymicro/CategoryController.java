@@ -1,5 +1,8 @@
 package com.grizzly.categorymicro;
 
+import com.grizzly.grizlibrary.errorhandling.ApiError;
+import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -26,7 +30,7 @@ public class CategoryController {
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
-            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No categories were found.", "pageIndex: " + pageIndex + "; column_name: " + column_name));
         }
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
@@ -37,7 +41,8 @@ public class CategoryController {
         CategoryDTO created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
 
         if (created == null) {
-            return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Category was not saved",
+                    "name: " + categoryDTO.getName() + " desc: " + categoryDTO.getDescription()));
         }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -54,7 +59,7 @@ public class CategoryController {
 
         // no categories found
         if (category == null) {
-            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No Category was found.", "id: " + id));
         }
 
         return new ResponseEntity<>(category, HttpStatus.OK);
@@ -63,7 +68,7 @@ public class CategoryController {
     /**
      * Update a given category (by ID), enabling/disabling the item
      * @param id, ID of the category to update
-     * @param categorydto, the new boolean
+     * @param request, a category DTO with the appropiate enabled value
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
@@ -72,7 +77,7 @@ public class CategoryController {
 
         // null if the ID did not map to an existing category
         if (category == null) {
-            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "The category to block was not found.", "id: " + id + "; new block status: " + request.getEnabled()));
         }
 
         return new ResponseEntity<>(category, HttpStatus.OK);
@@ -89,7 +94,7 @@ public class CategoryController {
 
         // no categories found
         if (categories == null || categories.isEmpty()) {
-            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No categories were found.", "search: " + search));
         }
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
@@ -112,7 +117,9 @@ public class CategoryController {
 
         // null if the ID did not map to an existing category
         if (category == null) {
-            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
+                    "name: " + request.getName() +
+                    "desc: " + request.getDescription() ));
         }
 
         return new ResponseEntity<>(category, HttpStatus.OK);
@@ -128,9 +135,9 @@ public class CategoryController {
         String[] request = ids.split(",");
         ArrayList<CategoryDTO> categories = categoryService.getBatchbyId(Arrays.asList(request));
 
-        // no vendors found
+        // no categories found
         if (categories == null || categories.isEmpty()) {
-            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "get Category names failed", "ids: " + ids));
         }
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
@@ -147,7 +154,9 @@ public class CategoryController {
             categoryService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             // this ID didn't match any category
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No category was found to delete.",
+                    "id: " + id));
         }
 
         return new ResponseEntity(HttpStatus.OK);
@@ -163,11 +172,11 @@ public class CategoryController {
     public ResponseEntity incrementProductCount(@PathVariable(value="catID") String catID){
         try{
             categoryService.incrementProductCount(Integer.parseInt(catID));
-        }catch(NumberFormatException e){
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch(NumberFormatException e){
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "increment product count failed",
+                    "catiD: " + catID));
         }
 
         return new ResponseEntity(HttpStatus.OK);
-
     }
 }

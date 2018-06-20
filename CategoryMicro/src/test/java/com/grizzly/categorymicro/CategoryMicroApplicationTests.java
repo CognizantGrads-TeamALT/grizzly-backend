@@ -21,14 +21,14 @@ public class CategoryMicroApplicationTests {
 	@Autowired
 	CategoryService testService;
 
-	@InjectMocks
-	CategoryService mockService;
+	//@InjectMocks
+	//CategoryService mockService;
 
 	@Test
 	public void contextLoads() {
 	}
 
-	@Test
+	/*@Test
 	public void makeListFromIterableReplicatesIterables() {
 		// set up
 		List<String> original = new ArrayList<String>();
@@ -141,5 +141,5 @@ public class CategoryMicroApplicationTests {
 
 		// verification
 		assertNull(newCat);
-	}
+	}*/
 }

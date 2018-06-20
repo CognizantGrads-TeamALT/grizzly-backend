@@ -5,7 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
+import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
+import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
 import javax.validation.constraints.Null;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class CategoryService {
      */
 
     public ArrayList<CategoryDTO> get(Integer pageIndex, String column_name) {
-        PageRequest request = getPageRequest(pageIndex, column_name);
+        PageRequest request = getPageRequest(pageIndex, column_name, "category", 25);
         Page<Category> categories = categoryRepository.findAll(request);
 
         ArrayList<CategoryDTO> result = new ArrayList<>();
@@ -73,36 +74,6 @@ public class CategoryService {
         // save the updated category
         categoryRepository.save(category);
         return categoryToDTO(category);
-    }
-
-    public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {
-        ArrayList<T> list = new ArrayList<T>();
-
-        for(T item: iter) {
-            list.add(item);
-        }
-
-        return list;
-    }
-
-    /**
-     * Utility function to generate a pagerequest to tell the database how to page and sort a query
-     * @param column_name, the fieldname in the database to sort the list
-     * @return pageRequest to the method called
-     */
-    public PageRequest getPageRequest(Integer pageIndex, String column_name) {
-        final String[] fields = {"categoryId", "name", "description", "enabled"};
-        String sortField;
-        if (Arrays.asList(fields).contains(column_name)) {
-            sortField = column_name;
-        } else {
-            sortField = "categoryId";
-        }
-
-        Sort sort = new Sort(Sort.Direction.ASC, sortField);
-
-        PageRequest request = PageRequest.of(pageIndex, 25, sort);
-        return request;
     }
 
     @Transactional
