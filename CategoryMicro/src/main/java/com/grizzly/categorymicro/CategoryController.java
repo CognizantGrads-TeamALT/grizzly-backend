@@ -1,5 +1,8 @@
 package com.grizzly.categorymicro;
 
+import com.grizzly.grizlibrary.errorhandling.ApiError;
+import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -21,12 +25,12 @@ public class CategoryController {
      * @return categories in a list
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Category>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Category> categories = categoryService.get(pageIndex, column_name);
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
-            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No categories were found.", "pageIndex: " + pageIndex + "; column_name: " + column_name));
         }
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
@@ -40,11 +44,12 @@ public class CategoryController {
     //}
 
     @PutMapping("/add")
-    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity addCategory(@RequestBody CategoryDTO categoryDTO) {
         Category created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
 
         if (created == null) {
-            return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Category was not saved",
+                    "name: " + categoryDTO.getName() + " desc: " + categoryDTO.getDescription()  ));
         }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -56,12 +61,18 @@ public class CategoryController {
      * @return the category
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<Category> getSingle(@PathVariable(value="id") Integer id) {
-        Category category = categoryService.getSingle(id);
+    public ResponseEntity getSingle(@PathVariable(value="id") Integer id) {
+        Category category = new Category();
+        try{
+            category = categoryService.getSingle(id);
+        }
+        catch(NoSuchElementException e){
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No Category was found.", "id: " + id));
+        }
 
         // no categories found
         if (category == null) {
-            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No Category was found.", "id: " + id));
         }
 
         return new ResponseEntity<>(category, HttpStatus.OK);
@@ -70,16 +81,16 @@ public class CategoryController {
     /**
      * Update a given category (by ID), enabling/disabling the item
      * @param id, ID of the category to update
-     * @param categorydto, the new boolean
+     * @param request, a category DTO with the appropiate enabled value
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
-    public ResponseEntity<Category> setBlock(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
+    public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
         Category category = categoryService.setEnabled(id, request.getEnabled());
 
         // null if the ID did not map to an existing category
         if (category == null) {
-            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "The category to block was not found.", "id: " + id + "; new block status: " + request.getEnabled()));
         }
 
         return new ResponseEntity<>(category, HttpStatus.OK);
@@ -91,12 +102,12 @@ public class CategoryController {
      * @return the filtered categories in a list
      */
     @GetMapping("/search/{search}")
-    public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search) {
+    public ResponseEntity getFiltered(@PathVariable(value="search") String search) {
         ArrayList<Category> categories = categoryService.getFiltered(search);
 
         // no categories found
         if (categories == null || categories.isEmpty()) {
-            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No categories were found.", "search: " + search));
         }
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
@@ -114,12 +125,14 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @PostMapping("/edit/{id}")
-    public ResponseEntity<Category> edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
+    public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
         Category category = categoryService.edit(id, request.getName(), request.getDescription());
 
         // null if the ID did not map to an existing category
         if (category == null) {
-            return new ResponseEntity<>(category, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
+                    "name: " + request.getName() +
+                            "desc: " + request.getDescription() ));
         }
 
         return new ResponseEntity<>(category, HttpStatus.OK);
@@ -131,13 +144,20 @@ public class CategoryController {
      * @return the matching vendors in a list
      */
     @GetMapping("/batchFetch/{ids}")
-    public ResponseEntity<ArrayList<Category>> getBatch(@PathVariable(value="ids") String ids) {
+    public ResponseEntity getBatch(@PathVariable(value="ids") String ids) {
         String[] request = ids.split(",");
-        ArrayList<Category> categories = categoryService.getBatchbyId(Arrays.asList(request));
-
+        ArrayList<Category> categories = new ArrayList<Category>();
+        try {
+            categories = categoryService.getBatchbyId(Arrays.asList(request));
+        }
+        catch (IllegalArgumentException e) {
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "A null set of IDs was received.",
+                    "ids: " + ids));
+        }
         // no vendors found
         if (categories == null || categories.isEmpty()) {
-            return new ResponseEntity<>(categories, HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "get Category names failed", "ids: " + ids));
         }
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
@@ -154,7 +174,9 @@ public class CategoryController {
             categoryService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             // this ID didn't match any category
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No category was found to delete.",
+                    "id: " + id));
         }
 
         return new ResponseEntity(HttpStatus.OK);
@@ -171,7 +193,8 @@ public class CategoryController {
         try{
             categoryService.incrementProductCount(Integer.parseInt(catID));
         }catch(NumberFormatException e){
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "increment product count failed",
+                    "catiD: " + catID));
         }
 
         return new ResponseEntity(HttpStatus.OK);

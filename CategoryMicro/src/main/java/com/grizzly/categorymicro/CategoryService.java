@@ -1,9 +1,13 @@
 package com.grizzly.categorymicro;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
+import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
 
 import javax.validation.constraints.Null;
 import javax.transaction.Transactional;
@@ -29,7 +33,7 @@ public class CategoryService {
      */
 
     public ArrayList<Category> get(Integer pageIndex, String column_name) {
-       PageRequest request = getPageRequest(pageIndex, column_name);
+       PageRequest request = getPageRequest(pageIndex, column_name,"category", 15);
         return makeListFromIterable(categoryRepository.findAll(request));
     }
 
@@ -56,36 +60,6 @@ public class CategoryService {
         // save the updated category
         categoryRepository.save(cat);
         return cat;
-    }
-
-    public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {
-        ArrayList<T> list = new ArrayList<T>();
-
-        for(T item: iter) {
-            list.add(item);
-        }
-
-        return list;
-    }
-
-    /**
-     * Utility function to generate a pagerequest to tell the database how to page and sort a query
-     * @param column_name, the fieldname in the database to sort the list
-     * @return pageRequest to the method called
-     */
-    public PageRequest getPageRequest(Integer pageIndex, String column_name) {
-        final String[] fields = {"categoryId", "name", "description", "enabled"};
-        String sortField;
-        if (Arrays.asList(fields).contains(column_name)) {
-            sortField = column_name;
-        } else {
-            sortField = "categoryId";
-        }
-
-        Sort sort = new Sort(Sort.Direction.ASC, sortField);
-
-        PageRequest request = PageRequest.of(pageIndex, 25, sort);
-        return request;
     }
 
     @Transactional
@@ -167,7 +141,28 @@ public class CategoryService {
         for(String id: ids){
             ints.add(Integer.parseInt(id));
         }
-        return makeListFromIterable(categoryRepository.findByCategoryIdIn(ints));
+        ArrayList<Category> batchList = makeListFromIterable(categoryRepository.findByCategoryIdIn(ints));
+        if(ints.size() != batchList.size()){
+            //invalid category passed in.
+            for (int i: ints) {
+                if(!hasCategory(batchList,i)){
+                    Category newcat = new Category();
+                    newcat.setCategoryId(i);
+                    newcat.setName("not found");
+                    newcat.setDescription("category not found");
+                    batchList.add(newcat);
+                }
+            }
+        }
+        return batchList;
+    }
+
+    private boolean hasCategory(ArrayList<Category> categorys, int i){
+        for(Category category:categorys){
+            if(category.getCategoryId() == i)
+                return true;
+        }
+        return false;
     }
 
     /**
