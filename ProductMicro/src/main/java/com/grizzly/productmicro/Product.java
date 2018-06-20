@@ -16,6 +16,11 @@ public class Product {
     @Column(name="rating")          private Integer rating;
     @Column(name="enabled")         private Boolean enabled;
 
+    @Column(name="stock")           private Integer stock;
+    @Column(name="req")           private Integer req;
+    @Column(name="buffer")           private Integer buffer;
+    @Column(name="pending")           private Integer pending;
+
     public Product() {
         super();
     }
@@ -30,7 +35,27 @@ public class Product {
         setPrice(price);
         setRating(rating);
         setEnabled(enabled);
+        setStock(0);
+        setReq(0);
+        setBuffer(0);
+        setPending(0);
     }
+
+    public Integer getStock() { return stock; }
+
+    public void setStock(Integer stock) { this.stock = stock; }
+
+    public Integer getReq() { return req; }
+
+    public void setReq(Integer req) { this.req = req; }
+
+    public Integer getBuffer() { return buffer; }
+
+    public void setBuffer(Integer buffer) { this.buffer = buffer; }
+
+    public Integer getPending() { return pending; }
+
+    public void setPending(Integer pending) { this.pending = pending; }
 
     public Integer getProductId() {
         return productId;

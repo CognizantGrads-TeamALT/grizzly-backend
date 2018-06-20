@@ -30,4 +30,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
 
     @Query("SELECT p FROM product p WHERE p.categoryId = :categoryId")
     List<Product> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);
+
+    @Query("SELECT p FROM product p WHERE p.vendorId = :vendorId")
+    List<Product> findByVendorId(@Param("vendorId") Integer vendorId, Pageable pageable);
 }

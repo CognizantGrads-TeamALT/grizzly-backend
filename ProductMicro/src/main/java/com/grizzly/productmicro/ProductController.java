@@ -245,6 +245,29 @@ public class ProductController {
         return new ResponseEntity(product, HttpStatus.OK);
     }
 
+    @GetMapping("/getInventory/{pageIndex}/{vendorId}")
+    public ResponseEntity getInventory(@PathVariable Integer pageIndex, @PathVariable Integer vendorId){
+        ArrayList<ProductInventoryDTO> products = productService.getInventory(pageIndex,vendorId);
+
+        if (products == null || products.isEmpty()){
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No inventory was found.", "vendor id: " + vendorId));
+        }
+
+
+        return new ResponseEntity(products, HttpStatus.OK);
+    }
+    /*@GetMapping("/get/{pageIndex}/{column_name}")
+    public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<ProductDTO> products = productService.get(pageIndex, column_name);
+
+        // no products found
+        if (products == null || products.isEmpty()) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No products were found.", "pageIndex: " + pageIndex + "; column_name: " + column_name));
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }*/
+
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);

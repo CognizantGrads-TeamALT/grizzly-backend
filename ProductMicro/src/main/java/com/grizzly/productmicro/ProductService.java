@@ -54,6 +54,15 @@ public class ProductService {
         return productDTO;
     }
 
+    public ProductInventoryDTO productToInventoryDTO(Product product){
+        ProductInventoryDTO pIDTO = new ProductInventoryDTO(product.getName(), product.getStock(), product.getReq(),
+                product.getBuffer(), product.getPending(), product.getPrice(), product.getRating());
+        pIDTO.setProductId(product.getProductId());
+
+        return pIDTO;
+    }
+    //(String name, Integer stock, Integer req, Integer buffer, Integer pending, Integer price, Integer rating)
+
     public ArrayList<ProductDTO> get(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name, "product", 25);
 
@@ -62,6 +71,19 @@ public class ProductService {
         ArrayList<ProductDTO> result = new ArrayList<>();
         for (Product product : products) {
             result.add(productToDTO(product));
+        }
+
+        return result;
+    }
+
+    public ArrayList<ProductInventoryDTO> getInventory(Integer pageIndex, Integer vendorId){
+        PageRequest request = getPageRequest(pageIndex, "default", "product", 25);
+
+        List<Product> products = productRepository.findByVendorId(vendorId, request);
+
+        ArrayList<ProductInventoryDTO> result = new ArrayList<>();
+        for(Product product: products){
+            result.add(productToInventoryDTO(product));
         }
 
         return result;
