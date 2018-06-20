@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/category")
+@RequestMapping("/")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
@@ -21,8 +21,8 @@ public class CategoryController {
      * @return categories in a list
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Category>> get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
-        ArrayList<Category> categories = categoryService.get(pageIndex, column_name);
+    public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+        ArrayList<CategoryDTO> categories = categoryService.get(pageIndex, column_name);
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
@@ -32,16 +32,9 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-
-    //@RequestMapping(value="/category", method= RequestMethod.GET)
-    //public ArrayList<Category> getAllCategories()
-    //{
-    //    return categoryService.getAllCategories();
-    //}
-
     @PutMapping("/add")
-    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryDTO) {
-        Category created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
+    public ResponseEntity addCategory(@RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
 
         if (created == null) {
             return new ResponseEntity<>(created, HttpStatus.BAD_REQUEST);
@@ -56,8 +49,8 @@ public class CategoryController {
      * @return the category
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<Category> getSingle(@PathVariable(value="id") Integer id) {
-        Category category = categoryService.getSingle(id);
+    public ResponseEntity getSingle(@PathVariable(value="id") Integer id) {
+        CategoryDTO category = categoryService.getSingle(id);
 
         // no categories found
         if (category == null) {
@@ -74,8 +67,8 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
-    public ResponseEntity<Category> setBlock(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
-        Category category = categoryService.setEnabled(id, request.getEnabled());
+    public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
+        CategoryDTO category = categoryService.setEnabled(id, request.getEnabled());
 
         // null if the ID did not map to an existing category
         if (category == null) {
@@ -91,8 +84,8 @@ public class CategoryController {
      * @return the filtered categories in a list
      */
     @GetMapping("/search/{search}")
-    public ResponseEntity<ArrayList<Category>> getFiltered(@PathVariable(value="search") String search) {
-        ArrayList<Category> categories = categoryService.getFiltered(search);
+    public ResponseEntity getFiltered(@PathVariable(value="search") String search) {
+        ArrayList<CategoryDTO> categories = categoryService.getFiltered(search);
 
         // no categories found
         if (categories == null || categories.isEmpty()) {
@@ -114,8 +107,8 @@ public class CategoryController {
      * @return HTTP status response only
      */
     @PostMapping("/edit/{id}")
-    public ResponseEntity<Category> edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
-        Category category = categoryService.edit(id, request.getName(), request.getDescription());
+    public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
+        CategoryDTO category = categoryService.edit(id, request.getName(), request.getDescription());
 
         // null if the ID did not map to an existing category
         if (category == null) {
@@ -131,9 +124,9 @@ public class CategoryController {
      * @return the matching vendors in a list
      */
     @GetMapping("/batchFetch/{ids}")
-    public ResponseEntity<ArrayList<Category>> getBatch(@PathVariable(value="ids") String ids) {
+    public ResponseEntity getBatch(@PathVariable(value="ids") String ids) {
         String[] request = ids.split(",");
-        ArrayList<Category> categories = categoryService.getBatchbyId(Arrays.asList(request));
+        ArrayList<CategoryDTO> categories = categoryService.getBatchbyId(Arrays.asList(request));
 
         // no vendors found
         if (categories == null || categories.isEmpty()) {
@@ -144,7 +137,7 @@ public class CategoryController {
     }
 
     /**
-     * Delete a vendor based on a given ID
+     * Delete a category based on a given ID
      * @param id, ID of the vendor to delete
      * @return HTTP status response only
      */

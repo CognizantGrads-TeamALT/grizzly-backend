@@ -1,4 +1,4 @@
-package com.grizzly.productmicro.image;
+package com.grizzly.vendormicro.image;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ImageUtils {
-    private static String deploymentPath = "/opt/deployed/product_img/";
+    private static String deploymentPath = "/opt/deployed/vendor_img/";
 
     public static  void deleteImage(Integer productId, String imageName) {
         String path = deploymentPath + productId + "/" + imageName;

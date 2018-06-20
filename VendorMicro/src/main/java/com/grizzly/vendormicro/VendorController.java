@@ -17,7 +17,7 @@ import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/vendor")
+@RequestMapping("/")
 public class VendorController {
     @Autowired
     private VendorService vendorService;
@@ -30,7 +30,7 @@ public class VendorController {
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
     public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
-        ArrayList<Vendor> vendors = vendorService.get(pageIndex, column_name);
+        ArrayList<VendorDTO> vendors = vendorService.get(pageIndex, column_name);
 
         // no vendors found in this page
         if (vendors == null || vendors.isEmpty()) {
@@ -39,7 +39,7 @@ public class VendorController {
                                             "pageIndex: " + pageIndex + "\ncolumn_name: " + column_name));
         }
 
-        return new ResponseEntity(vendors, HttpStatus.OK);
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
     }
 
     /**
@@ -49,7 +49,7 @@ public class VendorController {
      */
     @GetMapping("/get/{id}")
     public ResponseEntity getSingle(@PathVariable(value="id") Integer id) {
-        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
+        ArrayList<VendorDTO> vendors;
         try {
             vendors = vendorService.getSingle(id);
         }
@@ -67,7 +67,7 @@ public class VendorController {
                     "id: " + id));
         }
 
-        return new ResponseEntity(vendors, HttpStatus.OK);
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
     }
 
     /**
@@ -77,7 +77,7 @@ public class VendorController {
      */
     @GetMapping("/search/{search}")
     public ResponseEntity getFiltered(@PathVariable(value="search") String search) {
-        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
+        ArrayList<VendorDTO> vendors;
         try {
             vendors = vendorService.getFiltered(search);
         }
@@ -95,7 +95,7 @@ public class VendorController {
                     "search: " + search));
         }
 
-        return new ResponseEntity(vendors, HttpStatus.OK);
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
     }
     /**
      * Get a list of vendors based on vendor IDs
@@ -105,7 +105,7 @@ public class VendorController {
     @GetMapping("/batchFetch/{ids}")
     public ResponseEntity getBatch(@PathVariable(value="ids") String ids) {
         String[] request = ids.split(",");
-        ArrayList<Vendor> vendors = new ArrayList<Vendor>();
+        ArrayList<VendorDTO> vendors;
         try {
             vendors = vendorService.getBatchbyId(Arrays.asList(request));
         }
@@ -123,7 +123,7 @@ public class VendorController {
                     "ids: " + ids));
         }
 
-        return new ResponseEntity(vendors, HttpStatus.OK);
+        return new ResponseEntity<>(vendors, HttpStatus.OK);
     }
 
     /**
@@ -143,7 +143,7 @@ public class VendorController {
                     "id: " + id));
         }
 
-        return new ResponseEntity(id, HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     /**
@@ -172,7 +172,7 @@ public class VendorController {
                     "id: " + id));
         }
 
-        return new ResponseEntity(vendor, HttpStatus.OK);
+        return new ResponseEntity<>(vendor, HttpStatus.OK);
     }
 
     /**
@@ -181,8 +181,15 @@ public class VendorController {
      * @return the newly created vendor
      */
     @PutMapping("/add")
-    public ResponseEntity<Vendor> addVendor(@RequestBody VendorDTO newVendor) {
-        Vendor created = vendorService.add(newVendor.toEntity());
+    public ResponseEntity addVendor(@RequestBody VendorDTO newVendor) {
+        VendorDTO created;
+        try {
+            created = vendorService.add(newVendor);
+        } catch (NullPointerException e) {
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "A null pointer exception occurred while writing image to file.",
+                    e.getLocalizedMessage()));
+        }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
