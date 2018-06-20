@@ -76,10 +76,11 @@
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.0</version>
 		</dependency>
+        <!--mvn versions:use-latest-versions -DallowSnapshots=true -Dincludes=com.grizzly:grizlibrary-->
         <dependency>
             <groupId>com.grizzly</groupId>
             <artifactId>grizlibrary</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
+            <version>0.0.5-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

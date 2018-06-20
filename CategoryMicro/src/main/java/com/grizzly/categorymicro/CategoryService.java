@@ -1,12 +1,15 @@
 package com.grizzly.categorymicro;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
 import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
+
 import javax.validation.constraints.Null;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -38,7 +41,6 @@ public class CategoryService {
      * Currently only returns 1st page (can update with first param of PageRequest.of()
      * @return ArrayList of Category objs
      */
-
     public ArrayList<CategoryDTO> get(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name, "category", 25);
         Page<Category> categories = categoryRepository.findAll(request);
