@@ -123,6 +123,8 @@ public class ImageUtils {
             gis.close();
 
             Files.write(dirPathObj, obj.toByteArray());
+
+            obj.close();
         } catch (FileNotFoundException e) {
             System.out.println("Image not found" + e);
         } catch (IOException ioe) {
