@@ -12,7 +12,7 @@ public class Helper {
 
     // If a field can be used as a sort anchor, it needs to be in here.
     private static final String[] vendorFields = {"vendorId", "name", "contactNum", "website", "email", "bio"};
-    private static final String[] productFields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "rating", "enabled"};
+    private static final String[] productFields = {"productId", "name", "vendorId", "categoryId", "desc", "price", "rating"};
     private static final String[] categoryFields = {"categoryId", "name", "description"};
     /**
      * Utility function to generate a pagerequest to tell the database how to page and sort a query

@@ -28,7 +28,6 @@ public class CategoryMicroApplicationTests {
 	public void contextLoads() {
 	}
 
-
 	@Test
 	public void edit_changesNameAndDescription() {
 		// set up
@@ -42,7 +41,7 @@ public class CategoryMicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.edit(1, newName, newDescription);
+		CategoryDTO newCat = mockService.edit(1, newName, newDescription);
 
 		// verification
 		assertEquals(newName, newCat.getName());
@@ -62,7 +61,7 @@ public class CategoryMicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.edit(1, newName, newDescription);
+		CategoryDTO newCat = mockService.edit(1, newName, newDescription);
 
 		// verification
 		assertEquals(newName, newCat.getName());
@@ -83,7 +82,7 @@ public class CategoryMicroApplicationTests {
 		mockService.setCategoryRepository(mockRepo);
 
 		// execution
-		Category newCat = mockService.edit(1, newName, newDescription);
+		CategoryDTO newCat = mockService.edit(1, newName, newDescription);
 
 		// verification
 		assertNull(newCat);

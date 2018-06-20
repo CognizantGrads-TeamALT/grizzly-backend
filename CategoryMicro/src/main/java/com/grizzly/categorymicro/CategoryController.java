@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/category")
+@RequestMapping("/")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
@@ -26,7 +26,7 @@ public class CategoryController {
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
     public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
-        ArrayList<Category> categories = categoryService.get(pageIndex, column_name);
+        ArrayList<CategoryDTO> categories = categoryService.get(pageIndex, column_name);
 
         // if no categories found
         if (categories == null || categories.isEmpty()) {
@@ -36,20 +36,13 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-
-    //@RequestMapping(value="/category", method= RequestMethod.GET)
-    //public ArrayList<Category> getAllCategories()
-    //{
-    //    return categoryService.getAllCategories();
-    //}
-
     @PutMapping("/add")
     public ResponseEntity addCategory(@RequestBody CategoryDTO categoryDTO) {
-        Category created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
+        CategoryDTO created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
 
         if (created == null) {
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Category was not saved",
-                    "name: " + categoryDTO.getName() + " desc: " + categoryDTO.getDescription()  ));
+                    "name: " + categoryDTO.getName() + " desc: " + categoryDTO.getDescription()));
         }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -62,13 +55,7 @@ public class CategoryController {
      */
     @GetMapping("/get/{id}")
     public ResponseEntity getSingle(@PathVariable(value="id") Integer id) {
-        Category category = new Category();
-        try{
-            category = categoryService.getSingle(id);
-        }
-        catch(NoSuchElementException e){
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No Category was found.", "id: " + id));
-        }
+        CategoryDTO category = categoryService.getSingle(id);
 
         // no categories found
         if (category == null) {
@@ -86,7 +73,7 @@ public class CategoryController {
      */
     @PostMapping("/setBlock/{id}")
     public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
-        Category category = categoryService.setEnabled(id, request.getEnabled());
+        CategoryDTO category = categoryService.setEnabled(id, request.getEnabled());
 
         // null if the ID did not map to an existing category
         if (category == null) {
@@ -103,7 +90,7 @@ public class CategoryController {
      */
     @GetMapping("/search/{search}")
     public ResponseEntity getFiltered(@PathVariable(value="search") String search) {
-        ArrayList<Category> categories = categoryService.getFiltered(search);
+        ArrayList<CategoryDTO> categories = categoryService.getFiltered(search);
 
         // no categories found
         if (categories == null || categories.isEmpty()) {
@@ -126,13 +113,13 @@ public class CategoryController {
      */
     @PostMapping("/edit/{id}")
     public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
-        Category category = categoryService.edit(id, request.getName(), request.getDescription());
+        CategoryDTO category = categoryService.edit(id, request.getName(), request.getDescription());
 
         // null if the ID did not map to an existing category
         if (category == null) {
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
                     "name: " + request.getName() +
-                            "desc: " + request.getDescription() ));
+                    "desc: " + request.getDescription() ));
         }
 
         return new ResponseEntity<>(category, HttpStatus.OK);
@@ -146,16 +133,9 @@ public class CategoryController {
     @GetMapping("/batchFetch/{ids}")
     public ResponseEntity getBatch(@PathVariable(value="ids") String ids) {
         String[] request = ids.split(",");
-        ArrayList<Category> categories = new ArrayList<Category>();
-        try {
-            categories = categoryService.getBatchbyId(Arrays.asList(request));
-        }
-        catch (IllegalArgumentException e) {
-            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
-                    "A null set of IDs was received.",
-                    "ids: " + ids));
-        }
-        // no vendors found
+        ArrayList<CategoryDTO> categories = categoryService.getBatchbyId(Arrays.asList(request));
+
+        // no categories found
         if (categories == null || categories.isEmpty()) {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "get Category names failed", "ids: " + ids));
         }
@@ -164,7 +144,7 @@ public class CategoryController {
     }
 
     /**
-     * Delete a vendor based on a given ID
+     * Delete a category based on a given ID
      * @param id, ID of the vendor to delete
      * @return HTTP status response only
      */
@@ -192,12 +172,11 @@ public class CategoryController {
     public ResponseEntity incrementProductCount(@PathVariable(value="catID") String catID){
         try{
             categoryService.incrementProductCount(Integer.parseInt(catID));
-        }catch(NumberFormatException e){
+        } catch(NumberFormatException e){
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "increment product count failed",
                     "catiD: " + catID));
         }
 
         return new ResponseEntity(HttpStatus.OK);
-
     }
 }

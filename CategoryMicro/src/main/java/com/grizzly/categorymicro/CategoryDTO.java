@@ -4,7 +4,17 @@ public class CategoryDTO {
     private Integer categoryId;
     private String name;
     private String description;
-    private boolean enabled;
+    private Boolean enabled;
+    private Integer product_count;
+
+    public CategoryDTO(String name, String description, Boolean enabled, Integer product_count) {
+        super();
+
+        this.name = name;
+        this.description = description;
+        this.enabled = enabled;
+        this.product_count = product_count;
+    }
 
     public String getName() {
         return name;
@@ -30,11 +40,15 @@ public class CategoryDTO {
         this.categoryId = categoryId;
     }
 
-    public boolean getEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+    public Integer getProductCount() { return product_count; }
+
+    public void setProductCount(Integer product_count) { this.product_count = product_count; }
 }

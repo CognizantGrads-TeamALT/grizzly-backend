@@ -61,24 +61,7 @@ public class ProductService {
 
         ArrayList<ProductDTO> result = new ArrayList<>();
         for (Product product : products) {
-            List<Image> images = imageRepository.findByProductId(product.getProductId());
-
-            ImageDTO[] imageDTO = new ImageDTO[images.size()];
-
-            for (int i = 0; i < images.size(); i++) {
-                String imgName = images.get(i).getImage_url();
-
-                ImageDTO image = new ImageDTO();
-                image.setImgName(imgName);
-
-                imageDTO[i] = image;
-            }
-
-            ProductDTO productDTO = new ProductDTO(product.getName(), product.getVendorId(), product.getCategoryId(),
-                    product.getDesc(), product.getPrice(), product.getRating(), product.getEnabled(), imageDTO);
-            productDTO.setProductId(product.getProductId());
-
-            result.add(productDTO);
+            result.add(productToDTO(product));
         }
 
         return result;
@@ -202,7 +185,7 @@ public class ProductService {
      * @param id, ID of the product to update
      * @param newBool, new status enabled/disabled of product
      */
-    public Product setEnabled(Integer id, Boolean newBool) {
+    public ProductDTO setEnabled(Integer id, Boolean newBool) {
         // find the existing product
         Product product;
         try {
@@ -216,7 +199,7 @@ public class ProductService {
 
         // save the updated product
         productRepository.save(product);
-        return product;
+        return productToDTO(product);
     }
 
     /**

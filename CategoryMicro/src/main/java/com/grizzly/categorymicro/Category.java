@@ -10,8 +10,8 @@ public class Category {
 
     @Column(name="name")            private String name;
     @Column(name="description")     private String description;
-    @Column(name="enabled")         private boolean enabled;
-    @Column(name="product_count")   private int productCount;
+    @Column(name="enabled")         private Boolean enabled;
+    @Column(name="product_count")   private Integer productCount;
 
     public Category() {
         super();

@@ -16,7 +16,7 @@ import javax.validation.constraints.Null;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/")
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -34,7 +34,7 @@ public class ProductController {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No products were found.", "pageIndex: " + pageIndex + "; column_name: " + column_name));
         }
 
-        return new ResponseEntity(products, HttpStatus.OK);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     /**
@@ -51,7 +51,7 @@ public class ProductController {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No product was found.", "id: " + id));
         }
 
-        return new ResponseEntity(products, HttpStatus.OK);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     /**
@@ -95,14 +95,14 @@ public class ProductController {
      */
     @PostMapping("/setBlock/{id}")
     public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody ProductDTO request) {
-        Product product = productService.setEnabled(id, request.getEnabled());
+        ProductDTO product = productService.setEnabled(id, request.getEnabled());
 
         // null if the ID did not map to an existing category
         if (product == null) {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "The product to block was not found.", "id: " + id + "; new block status: " + request.getEnabled()));
         }
 
-        return new ResponseEntity(product, HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     /**
@@ -121,7 +121,7 @@ public class ProductController {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "The vendor to block products of was not found.", "id: " + id + "; exception msg: " + e.getLocalizedMessage()));
         }
 
-        return new ResponseEntity(id, HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     /**
@@ -140,7 +140,7 @@ public class ProductController {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "The category to block products of was not found.", "id: " + id + "; exception msg: " + e.getLocalizedMessage()));
         }
 
-        return new ResponseEntity(id, HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     /**
@@ -158,7 +158,7 @@ public class ProductController {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No products were found.", "search: " + search));
         }
 
-        return new ResponseEntity(products, HttpStatus.OK);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     /**
@@ -178,7 +178,7 @@ public class ProductController {
                     "id: " + id + "; exception msg: " + e.getLocalizedMessage()));
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     /**
@@ -199,7 +199,7 @@ public class ProductController {
                     e.getLocalizedMessage()));
         }
 
-        return new ResponseEntity(created, HttpStatus.CREATED);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     /**
@@ -213,15 +213,15 @@ public class ProductController {
     public ResponseEntity getByCategory(@PathVariable(value="catId") Integer catId,
                                                           @PathVariable(value="pageIndex") Integer pageIndex,
                                                           @PathVariable(value="column_name") String column_name) {
-        ArrayList<ProductDTO> prods = productService.getByCategory(catId, pageIndex, column_name);
+        ArrayList<ProductDTO> products = productService.getByCategory(catId, pageIndex, column_name);
 
-        if (prods == null || prods.isEmpty()) {
+        if (products == null || products.isEmpty()) {
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
                     "No products were found.",
                     "catId: " + catId + "; pageIndex: " + pageIndex + "; column_name: " + column_name));
         }
 
-        return new ResponseEntity(prods, HttpStatus.OK);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     /**
@@ -241,6 +241,7 @@ public class ProductController {
                             "desc: " + request.getDesc() +
                             "categoryId: " + request.getCategoryId()));
         }
+
         return new ResponseEntity(product, HttpStatus.OK);
     }
 

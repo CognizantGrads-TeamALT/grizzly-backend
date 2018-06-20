@@ -1,5 +1,7 @@
 package com.grizzly.vendormicro;
 
+import com.grizzly.vendormicro.image.ImageDTO;
+
 public class VendorDTO {
     private Integer vendorId;
     private String name;
@@ -8,6 +10,19 @@ public class VendorDTO {
     private String email;
     private String bio;
     private Boolean enabled;
+    private ImageDTO[] imageDTO;
+
+    public VendorDTO(String name, String contactNum, String website, String email, String bio, Boolean enabled, ImageDTO[] imageDTO) {
+        super();
+
+        this.name = name;
+        this.contactNum = contactNum;
+        this.website = website;
+        this.email = email;
+        this.bio = bio;
+        this.enabled = enabled;
+        this.imageDTO = imageDTO;
+    }
 
     public Integer getVendorId() {
         return vendorId;
@@ -68,5 +83,13 @@ public class VendorDTO {
     public Vendor toEntity() {
         Vendor vendor = new Vendor(this.name, this.contactNum, this.website, this.email, this.bio, this.enabled);
         return vendor;
+    }
+
+    public ImageDTO[] getImageDTO() {
+        return imageDTO;
+    }
+
+    public void setImageDTO(ImageDTO[] imageDTO) {
+        this.imageDTO = imageDTO;
     }
 }
