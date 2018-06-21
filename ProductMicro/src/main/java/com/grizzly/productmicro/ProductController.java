@@ -245,6 +245,24 @@ public class ProductController {
         return new ResponseEntity(product, HttpStatus.OK);
     }
 
+    @PostMapping("/editInventory")
+    public ResponseEntity editInventory(@RequestBody ProductInventoryDTO request){
+        ProductInventoryDTO product = productService.editInventory(request);
+
+        if(product== null){
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
+                    "name: " + request.getName()
+                            + "price: " + request.getPrice() +
+                            "stock: " + request.getStock() +
+                            "buffer: " + request.getBuffer() +
+                            "req: " + request.getReq() +
+                            "pending: " + request.getPending()
+            ));
+        }
+
+        return new ResponseEntity(product, HttpStatus.OK);
+    }
+
     @GetMapping("/getInventory/{pageIndex}/{vendorId}")
     public ResponseEntity getInventory(@PathVariable Integer pageIndex, @PathVariable Integer vendorId){
         ArrayList<ProductInventoryDTO> products = productService.getInventory(pageIndex,vendorId);
@@ -256,17 +274,6 @@ public class ProductController {
 
         return new ResponseEntity(products, HttpStatus.OK);
     }
-    /*@GetMapping("/get/{pageIndex}/{column_name}")
-    public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
-        ArrayList<ProductDTO> products = productService.get(pageIndex, column_name);
-
-        // no products found
-        if (products == null || products.isEmpty()) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No products were found.", "pageIndex: " + pageIndex + "; column_name: " + column_name));
-        }
-
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }*/
 
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {

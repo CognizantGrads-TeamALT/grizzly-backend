@@ -16,10 +16,10 @@ public class Product {
     @Column(name="rating")          private Integer rating;
     @Column(name="enabled")         private Boolean enabled;
 
-    @Column(name="stock")           private Integer stock;
-    @Column(name="req")           private Integer req;
-    @Column(name="buffer")           private Integer buffer;
-    @Column(name="pending")           private Integer pending;
+    @Column(name="stock", columnDefinition = "INT DEFAULT 0")           private Integer stock =0;
+    @Column(name="req", columnDefinition = "INT DEFAULT 0")           private Integer req=0;
+    @Column(name="buffer", columnDefinition = "INT DEFAULT 0")           private Integer buffer=0;
+    @Column(name="pending", columnDefinition = "INT DEFAULT 0")           private Integer pending=0;
 
     public Product() {
         super();

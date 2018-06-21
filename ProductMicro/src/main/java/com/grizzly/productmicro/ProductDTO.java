@@ -34,6 +34,10 @@ public class ProductDTO {
         product.setPrice(price);
         product.setRating(rating);
         product.setEnabled(enabled);
+        product.setPending(0);
+        product.setBuffer(0);
+        product.setReq(0);
+        product.setStock(0);
         return product;
     }
 

@@ -296,6 +296,27 @@ public class ProductService {
         return productToDTO(prod);
     }
 
+    public ProductInventoryDTO editInventory(ProductInventoryDTO request){
+        Product prod;
+        try{
+            prod = productRepository.findByProductId(request.getProductId()).get(0);
+        }
+        catch (NoSuchElementException e){
+            return null;
+        }
+        prod.setName(request.getName());
+        prod.setStock(request.getStock());
+        prod.setBuffer(request.getBuffer());
+        prod.setPending(request.getPending());
+        prod.setPrice(request.getPrice());
+        int req = request.getBuffer() - request.getStock();
+        if(req < 0) req =0;
+        prod.setReq(req);
+
+        productRepository.save(prod);
+        return productToInventoryDTO(prod);
+    }
+
     /**
      * Disable all products with the categoryId
      * Set local categoryId to 0
