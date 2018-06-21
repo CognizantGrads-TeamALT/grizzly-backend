@@ -1,7 +1,7 @@
 package com.grizzly.usermicro.vendor;
 
 public class VendorDTO {
-    private String userId;
+    private Integer userId;
     private String address;
     private String website;
     private String about;
@@ -26,11 +26,11 @@ public class VendorDTO {
         return vendor;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

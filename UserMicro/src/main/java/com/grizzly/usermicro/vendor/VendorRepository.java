@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VendorRepository extends PagingAndSortingRepository<Vendor, String> {
+public interface VendorRepository extends PagingAndSortingRepository<Vendor, Integer> {
     @Query("SELECT u FROM vendor u WHERE u.userId = :userId")
-    List<Vendor> findByUserVendorId(@Param("userId") String userId, Pageable pageable);
+    List<Vendor> findByUserVendorId(@Param("userId") Integer userId, Pageable pageable);
 }

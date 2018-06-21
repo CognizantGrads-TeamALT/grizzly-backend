@@ -66,7 +66,7 @@ public class UserService {
      * @param search, the string to match to ID to filter the user by
      * @return ArrayList of User objs whose names or IDs
      */
-    public ArrayList<Customer> getSingleUserCustomer(String search) {
+    public ArrayList<Customer> getSingleUserCustomer(Integer search) {
         Sort sort = new Sort(Sort.Direction.ASC, "userId");
         PageRequest request = PageRequest.of(0, 1, sort);
 
@@ -80,7 +80,7 @@ public class UserService {
      * @param search, the string to match to ID to filter the user by
      * @return ArrayList of Vendor objs whose names or IDs
      */
-    public ArrayList<Vendor> getSingleUserVendor(String search) {
+    public ArrayList<Vendor> getSingleUserVendor(Integer search) {
         Sort sort = new Sort(Sort.Direction.ASC, "userId");
         PageRequest request = PageRequest.of(0, 1, sort);
 
@@ -94,7 +94,7 @@ public class UserService {
      * @param search, the string to match to ID to filter the user by
      * @return ArrayList of User objs whose names or IDs
      */
-    public ArrayList<Admin> getSingleUserAdmin(String search) {
+    public ArrayList<Admin> getSingleUserAdmin(Integer search) {
         Sort sort = new Sort(Sort.Direction.ASC, "userId");
         PageRequest request = PageRequest.of(0, 1, sort);
 

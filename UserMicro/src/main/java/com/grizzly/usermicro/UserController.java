@@ -72,7 +72,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/admin/{id}")
-    public ResponseEntity<ArrayList<Admin>> getSingleUserAdmin(@PathVariable(value="id") String id) {
+    public ResponseEntity<ArrayList<Admin>> getSingleUserAdmin(@PathVariable(value="id") Integer id) {
         ArrayList<Admin> admins = userService.getSingleUserAdmin(id);
 
         // no users found
@@ -89,7 +89,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/vendor/{id}")
-    public ResponseEntity<ArrayList<Vendor>> getSingleUserVendor(@PathVariable(value="id") String id) {
+    public ResponseEntity<ArrayList<Vendor>> getSingleUserVendor(@PathVariable(value="id") Integer id) {
         ArrayList<Vendor> vendors = userService.getSingleUserVendor(id);
 
         // no users found
@@ -106,7 +106,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/customer/{id}")
-    public ResponseEntity<ArrayList<Customer>> getSingleUserCustomer(@PathVariable(value="id") String id) {
+    public ResponseEntity<ArrayList<Customer>> getSingleUserCustomer(@PathVariable(value="id") Integer id) {
         ArrayList<Customer> customers = userService.getSingleUserCustomer(id);
 
         // no users found

@@ -7,11 +7,9 @@ import javax.persistence.*;
 @Entity(name="vendor")
 @Table(name = "vendor")
 public class Vendor extends User {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")      private String userId;
+    @Column(name="user_id")      private Integer userId;
 
     @AttributeOverrides({
             @AttributeOverride(name="name", column=@Column(name="name")),
@@ -37,11 +35,11 @@ public class Vendor extends User {
         setProductPortfolio(product_portfolio);
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

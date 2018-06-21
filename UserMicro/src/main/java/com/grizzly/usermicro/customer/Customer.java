@@ -11,7 +11,7 @@ public class Customer extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")      private String userId;
+    @Column(name="user_id")      private Integer userId;
 
     @AttributeOverrides({
             @AttributeOverride(name="name", column=@Column(name="name")),
@@ -31,11 +31,11 @@ public class Customer extends User {
         setAddress(address);
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
