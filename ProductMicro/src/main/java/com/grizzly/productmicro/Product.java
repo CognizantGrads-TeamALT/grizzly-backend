@@ -11,7 +11,7 @@ public class Product {
     @Column(name="name")            private String name;
     @Column(name="vendor_id")       private Integer vendorId;
     @Column(name="category_id")     private Integer categoryId;
-    @Column(name="desc")            private String desc;
+    @Column(name="description")     private String desc;
     @Column(name="price")           private Integer price;
     @Column(name="rating")          private Integer rating;
     @Column(name="enabled")         private Boolean enabled;
