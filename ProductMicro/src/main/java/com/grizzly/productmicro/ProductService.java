@@ -54,6 +54,15 @@ public class ProductService {
         return productDTO;
     }
 
+    public ProductInventoryDTO productToInventoryDTO(Product product){
+        ProductInventoryDTO pIDTO = new ProductInventoryDTO(product.getName(), product.getStock(), product.getReq(),
+                product.getBuffer(), product.getPending(), product.getPrice(), product.getRating());
+        pIDTO.setProductId(product.getProductId());
+
+        return pIDTO;
+    }
+    //(String name, Integer stock, Integer req, Integer buffer, Integer pending, Integer price, Integer rating)
+
     public ArrayList<ProductDTO> get(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name, "product", 25);
 
@@ -62,6 +71,19 @@ public class ProductService {
         ArrayList<ProductDTO> result = new ArrayList<>();
         for (Product product : products) {
             result.add(productToDTO(product));
+        }
+
+        return result;
+    }
+
+    public ArrayList<ProductInventoryDTO> getInventory(Integer pageIndex, Integer vendorId){
+        PageRequest request = getPageRequest(pageIndex, "default", "product", 25);
+
+        List<Product> products = productRepository.findByVendorId(vendorId, request);
+
+        ArrayList<ProductInventoryDTO> result = new ArrayList<>();
+        for(Product product: products){
+            result.add(productToInventoryDTO(product));
         }
 
         return result;
@@ -272,6 +294,27 @@ public class ProductService {
         productRepository.save(prod);
 
         return productToDTO(prod);
+    }
+
+    public ProductInventoryDTO editInventory(ProductInventoryDTO request){
+        Product prod;
+        try{
+            prod = productRepository.findByProductId(request.getProductId()).get(0);
+        }
+        catch (NoSuchElementException e){
+            return null;
+        }
+        prod.setName(request.getName());
+        prod.setStock(request.getStock());
+        prod.setBuffer(request.getBuffer());
+        prod.setPending(request.getPending());
+        prod.setPrice(request.getPrice());
+        int req = request.getBuffer() - request.getStock();
+        if(req < 0) req =0;
+        prod.setReq(req);
+
+        productRepository.save(prod);
+        return productToInventoryDTO(prod);
     }
 
     /**

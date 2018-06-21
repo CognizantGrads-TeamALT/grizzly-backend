@@ -245,6 +245,36 @@ public class ProductController {
         return new ResponseEntity(product, HttpStatus.OK);
     }
 
+    @PostMapping("/editInventory")
+    public ResponseEntity editInventory(@RequestBody ProductInventoryDTO request){
+        ProductInventoryDTO product = productService.editInventory(request);
+
+        if(product== null){
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
+                    "name: " + request.getName()
+                            + "price: " + request.getPrice() +
+                            "stock: " + request.getStock() +
+                            "buffer: " + request.getBuffer() +
+                            "req: " + request.getReq() +
+                            "pending: " + request.getPending()
+            ));
+        }
+
+        return new ResponseEntity(product, HttpStatus.OK);
+    }
+
+    @GetMapping("/getInventory/{pageIndex}/{vendorId}")
+    public ResponseEntity getInventory(@PathVariable Integer pageIndex, @PathVariable Integer vendorId){
+        ArrayList<ProductInventoryDTO> products = productService.getInventory(pageIndex,vendorId);
+
+        if (products == null || products.isEmpty()){
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No inventory was found.", "vendor id: " + vendorId));
+        }
+
+
+        return new ResponseEntity(products, HttpStatus.OK);
+    }
+
     @GetMapping("/hello")
     public ResponseEntity<String> hello() {
         return new ResponseEntity<String>("Hello!", HttpStatus.OK);
