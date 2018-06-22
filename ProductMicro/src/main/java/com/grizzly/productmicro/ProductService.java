@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
@@ -26,7 +25,6 @@ import java.util.NoSuchElementException;
 import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
 import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
 
-@Component
 @Service
 public class ProductService {
     @Autowired
@@ -106,10 +104,6 @@ public class ProductService {
     @Cacheable("ImageDTO")
     public ImageDTO getImageFromProduct(Integer productId, String fileName) {
         Image image = imageRepository.findByProductIdAndName(productId, fileName);
-
-        // throws error on fake request
-        if (image == null)
-            return null;
 
         String imageName = image.getImage_url();
         String base64Image = ImageUtils.readFromFile(productId, imageName);
