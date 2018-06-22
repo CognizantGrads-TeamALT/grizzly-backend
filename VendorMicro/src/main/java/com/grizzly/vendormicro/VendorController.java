@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import com.grizzly.vendormicro.errorhandling.RestExceptionHandler;
+import com.grizzly.vendormicro.image.ImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -68,6 +69,22 @@ public class VendorController {
         }
 
         return new ResponseEntity<>(vendors, HttpStatus.OK);
+    }
+
+    /**
+     * Return a single image from a vendor
+     * @param id, product ID, string filename
+     * @return the product with imgs
+     */
+    @GetMapping("/getImage/{id}/{filename}")
+    public ResponseEntity getSingleImage(@PathVariable(value="id") Integer id, @PathVariable(value="filename") String fileName) {
+        ImageDTO image = vendorService.getImageFromVendor(id, fileName);
+
+        if (image == null) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "id: " + id + " " + "filename: " + fileName));
+        }
+
+        return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
     /**
