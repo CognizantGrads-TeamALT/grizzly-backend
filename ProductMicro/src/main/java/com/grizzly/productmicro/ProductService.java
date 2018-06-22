@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -254,17 +255,18 @@ public class ProductService {
 
     /**
      * Update an existing product (based on a given ID) with a new parameters
+     * @param productId, the ID of the product to be updated
      * @param  request, productId, categoryId, vendorID, price, imageDTO, rating, enabled of the product to update
      * @return the original product object; null if none was found
      *
      */
-    public ProductDTO edit(ProductDTO request) {
+    public ProductDTO edit(Integer productId, ProductDTO request) {
         // find the existing product
         Product prod;
         try {
-            prod = productRepository.findByProductId(request.getProductId()).get(0);
+            prod = productRepository.findByProductId(productId).get(0);
         } catch (NoSuchElementException e) {
-            return null;
+            throw e;
         }
 
         // make the changes to the product
@@ -297,7 +299,7 @@ public class ProductService {
 
             // perform the adds
             for (ImageDTO add : toAdd) {
-                saveImageDTO(add, request.getProductId());
+                saveImageDTO(add, prod.getProductId());
             }
 
             // perform the deletes
