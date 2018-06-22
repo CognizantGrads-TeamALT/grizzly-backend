@@ -165,7 +165,7 @@ public class ProductService {
      * @param newProduct, the entity of the new product to save
      * @return the added product object
      */
-    public ProductDTO add(ProductDTO newProduct) {
+    public ProductDTO add(ProductDTO newProduct) throws NoSuchAlgorithmException {
         Product created = productRepository.save(newProduct.toEntity());
 
         ImageDTO[] imageDTO = newProduct.getImageDTO();
@@ -262,7 +262,7 @@ public class ProductService {
      * @return the original product object; null if none was found
      *
      */
-    public ProductDTO edit(Integer productId, ProductDTO request) {
+    public ProductDTO edit(Integer productId, ProductDTO request) throws NoSuchAlgorithmException {
         // find the existing product
         Product prod;
         try {
@@ -289,14 +289,28 @@ public class ProductService {
         if (request.getImageDTO().length != images.size()) {
             List<ImageDTO> toAdd = new ArrayList<ImageDTO>();
             List<Image> toDel = new ArrayList<Image>();
+            List<String> dbUrls = new ArrayList<String>();
+            List<String> dtoUrls = new ArrayList<String>();
+
+            for (Image image : images) {
+                dbUrls.add(image.getImage_url());
+            }
+            for (ImageDTO imageDto : request.getImageDTO()) {
+                dtoUrls.add(hashImageName(imageDto.getImgName(), imageDto.getBase64Image()));
+            }
+
             // if there isn't a DB image for a DTO image, the DTO one must be added
             for (ImageDTO imgDto : request.getImageDTO()) {
-                toAdd.add(imgDto);
+                if (!dbUrls.contains(hashImageName(imgDto.getImgName(), imgDto.getBase64Image()))) {
+                    toAdd.add(imgDto);
+                }
             }
 
             // if there isn't a DTO image for a DB image, the DB one must be deleted
             for (Image img : images) {
-                toDel.add(img);
+                if (!dtoUrls.contains(img.getImage_url())) {
+                    toDel.add(img);
+                }
             }
 
             // perform the adds
@@ -307,6 +321,7 @@ public class ProductService {
             // perform the deletes
             for (Image del : toDel) {
                 ImageUtils.deleteImage(del.getImage_id(), del.getImage_url());
+                imageRepository.deleteById(del.getImage_id());
             }
         }
 
@@ -318,15 +333,25 @@ public class ProductService {
      * @param imgDto, the image dto to save, as it came in from the front-end
      * @param prodId, the ID of the product to attach the image to
      */
-    private void saveImageDTO(ImageDTO imgDto, Integer prodId) {
-        String ogName = imgDto.getImgName();
-        String content = imgDto.getBase64Image();
+    private void saveImageDTO(ImageDTO imgDto, Integer prodId) throws NoSuchAlgorithmException {
+        String newName = hashImageName(imgDto.getImgName(), imgDto.getBase64Image());
 
+        ImageUtils.writeToFile(imgDto.getBase64Image(), prodId, newName);
+        imageRepository.save(new Image(prodId, newName));
+    }
+
+    /**
+     * Hashes a given image's name and base64 encoding into a new file name
+     * @param ogName, the original name of the image
+     * @param content, the base64 encoding of the image
+     * @return a new, hashed file name for the image (including correct extension)
+     */
+    private String hashImageName(String ogName, String content) throws NoSuchAlgorithmException {
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
         } catch(NoSuchAlgorithmException e) {
-            return; // TODO: handle this better
+            throw e;
         }
         md.update(content.getBytes());
         byte[] digest = md.digest();
@@ -334,9 +359,7 @@ public class ProductService {
                 .printHexBinary(digest).toUpperCase();
 
         newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
-
-        ImageUtils.writeToFile(content, prodId, newName);
-        imageRepository.save(new Image(prodId, newName));
+        return newName;
     }
 
     public ProductInventoryDTO editInventory(ProductInventoryDTO request){
