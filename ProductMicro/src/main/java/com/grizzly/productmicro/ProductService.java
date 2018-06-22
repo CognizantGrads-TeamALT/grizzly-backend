@@ -5,6 +5,7 @@ import com.grizzly.productmicro.image.ImageDTO;
 import com.grizzly.productmicro.image.ImageRepository;
 import com.grizzly.productmicro.image.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -100,6 +101,7 @@ public class ProductService {
         return product;
     }
 
+    @Cacheable("ImageDTO")
     public ImageDTO getImageFromProduct(Integer productId, String fileName) {
         Image image = imageRepository.findByProductIdAndName(productId, fileName);
 

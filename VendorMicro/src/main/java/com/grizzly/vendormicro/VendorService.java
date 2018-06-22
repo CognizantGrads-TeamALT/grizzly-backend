@@ -5,6 +5,7 @@ import com.grizzly.vendormicro.image.ImageDTO;
 import com.grizzly.vendormicro.image.ImageRepository;
 import com.grizzly.vendormicro.image.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -65,6 +66,23 @@ public class VendorService {
         }
 
         return result;
+    }
+
+    @Cacheable("ImageDTO")
+    public ImageDTO getImageFromVendor(Integer vendorId, String fileName) {
+        Image image = imageRepository.findByVendorIdAndName(vendorId, fileName);
+
+        String imageName = image.getImage_url();
+        String base64Image = ImageUtils.readFromFile(vendorId, imageName);
+
+        ImageDTO response = new ImageDTO();
+        response.setImgName(image.getImage_url());
+
+        String base64String = "data:image/" + imageName.substring(imageName.lastIndexOf(".") + 1)
+                + ";base64," + base64Image;
+        response.setBase64Image(base64String);
+
+        return response;
     }
 
     /**
