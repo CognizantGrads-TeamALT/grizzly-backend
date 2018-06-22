@@ -167,23 +167,7 @@ public class ProductService {
 
         ImageDTO[] imageDTO = newProduct.getImageDTO();
         for (int i = 0; i < imageDTO.length; i++) {
-            String ogName = imageDTO[i].getImgName();
-            String content = imageDTO[i].getBase64Image();
-
-            try {
-                MessageDigest md = MessageDigest.getInstance("MD5");
-                md.update(content.getBytes());
-                byte[] digest = md.digest();
-                String newName = DatatypeConverter
-                        .printHexBinary(digest).toUpperCase();
-
-                newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
-
-                ImageUtils.writeToFile(content, created.getProductId(), newName);
-                imageRepository.save(new Image(created.getProductId(), newName));
-            } catch (Exception e) {
-                return null;
-            }
+            saveImageDTO(imageDTO[i], created.getProductId());
         }
         try {
             URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
