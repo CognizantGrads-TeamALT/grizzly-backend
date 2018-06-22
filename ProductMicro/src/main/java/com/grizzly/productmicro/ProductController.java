@@ -1,5 +1,6 @@
 package com.grizzly.productmicro;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
@@ -192,11 +193,16 @@ public class ProductController {
         try {
             created = productService.add(newProduct);
         }
-        // saving image to file failed (TODO: or something else?)
+        // saving image to file failed
         catch (NullPointerException e) {
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
                     "A null pointer exception occurred while writing image to file.",
                     e.getLocalizedMessage()));
+        }
+        catch (NoSuchAlgorithmException e) {
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "The product's images failed to save.",
+                    e.getLocalizedMessage())); // TODO: make this process transactional so that this doesn't give us image-less products
         }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
