@@ -11,12 +11,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -168,23 +170,7 @@ public class ProductService {
 
         ImageDTO[] imageDTO = newProduct.getImageDTO();
         for (int i = 0; i < imageDTO.length; i++) {
-            String ogName = imageDTO[i].getImgName();
-            String content = imageDTO[i].getBase64Image();
-
-            try {
-                MessageDigest md = MessageDigest.getInstance("MD5");
-                md.update(content.getBytes());
-                byte[] digest = md.digest();
-                String newName = DatatypeConverter
-                        .printHexBinary(digest).toUpperCase();
-
-                newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
-
-                ImageUtils.writeToFile(content, created.getProductId(), newName);
-                imageRepository.save(new Image(created.getProductId(), newName));
-            } catch (Exception e) {
-                return null;
-            }
+            saveImageDTO(imageDTO[i], created.getProductId());
         }
         try {
             URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
@@ -271,17 +257,18 @@ public class ProductService {
 
     /**
      * Update an existing product (based on a given ID) with a new parameters
+     * @param productId, the ID of the product to be updated
      * @param  request, productId, categoryId, vendorID, price, imageDTO, rating, enabled of the product to update
      * @return the original product object; null if none was found
      *
      */
-    public ProductDTO edit(ProductDTO request) {
+    public ProductDTO edit(Integer productId, ProductDTO request) {
         // find the existing product
         Product prod;
         try {
-            prod = productRepository.findByProductId(request.getProductId()).get(0);
+            prod = productRepository.findByProductId(productId).get(0);
         } catch (NoSuchElementException e) {
-            return null;
+            throw e;
         }
 
         // make the changes to the product
@@ -295,7 +282,61 @@ public class ProductService {
         // save the updated product
         productRepository.save(prod);
 
+        // find the existing images
+        List<Image> images = imageRepository.findByProductId(prod.getProductId());
+
+        // check if any changes to images are required
+        if (request.getImageDTO().length != images.size()) {
+            List<ImageDTO> toAdd = new ArrayList<ImageDTO>();
+            List<Image> toDel = new ArrayList<Image>();
+            // if there isn't a DB image for a DTO image, the DTO one must be added
+            for (ImageDTO imgDto : request.getImageDTO()) {
+                toAdd.add(imgDto);
+            }
+
+            // if there isn't a DTO image for a DB image, the DB one must be deleted
+            for (Image img : images) {
+                toDel.add(img);
+            }
+
+            // perform the adds
+            for (ImageDTO add : toAdd) {
+                saveImageDTO(add, prod.getProductId());
+            }
+
+            // perform the deletes
+            for (Image del : toDel) {
+                ImageUtils.deleteImage(del.getImage_id(), del.getImage_url());
+            }
+        }
+
         return productToDTO(prod);
+    }
+
+    /**
+     * writes a given image DTO to file and saves it as an image in the Database
+     * @param imgDto, the image dto to save, as it came in from the front-end
+     * @param prodId, the ID of the product to attach the image to
+     */
+    private void saveImageDTO(ImageDTO imgDto, Integer prodId) {
+        String ogName = imgDto.getImgName();
+        String content = imgDto.getBase64Image();
+
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch(NoSuchAlgorithmException e) {
+            return; // TODO: handle this better
+        }
+        md.update(content.getBytes());
+        byte[] digest = md.digest();
+        String newName = DatatypeConverter
+                .printHexBinary(digest).toUpperCase();
+
+        newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
+
+        ImageUtils.writeToFile(content, prodId, newName);
+        imageRepository.save(new Image(prodId, newName));
     }
 
     public ProductInventoryDTO editInventory(ProductInventoryDTO request){
