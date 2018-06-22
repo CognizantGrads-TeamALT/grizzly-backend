@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -293,7 +294,61 @@ public class ProductService {
         // save the updated product
         productRepository.save(prod);
 
+        // find the existing images
+        List<Image> images = imageRepository.findByProductId(prod.getProductId());
+
+        // check if any changes to images are required
+        if (request.getImageDTO().length != images.size()) {
+            List<ImageDTO> toAdd = new ArrayList<ImageDTO>();
+            List<Image> toDel = new ArrayList<Image>();
+            // if there isn't a DB image for a DTO image, the DTO one must be added
+            for (ImageDTO imgDto : request.getImageDTO()) {
+                toAdd.add(imgDto);
+            }
+
+            // if there isn't a DTO image for a DB image, the DB one must be deleted
+            for (Image img : images) {
+                toDel.add(img);
+            }
+
+            // perform the adds
+            for (ImageDTO add : toAdd) {
+                saveImageDTO(add, request.getProductId());
+            }
+
+            // perform the deletes
+            for (Image del : toDel) {
+                ImageUtils.deleteImage(del.getImage_id(), del.getImage_url());
+            }
+        }
+
         return productToDTO(prod);
+    }
+
+    /**
+     * writes a given image DTO to file and saves it as an image in the Database
+     * @param imgDto, the image dto to save, as it came in from the front-end
+     * @param prodId, the ID of the product to attach the image to
+     */
+    private void saveImageDTO(ImageDTO imgDto, Integer prodId) {
+        String ogName = imgDto.getImgName();
+        String content = imgDto.getBase64Image();
+
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch(NoSuchAlgorithmException e) {
+            return; // TODO: handle this better
+        }
+        md.update(content.getBytes());
+        byte[] digest = md.digest();
+        String newName = DatatypeConverter
+                .printHexBinary(digest).toUpperCase();
+
+        newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
+
+        ImageUtils.writeToFile(content, prodId, newName);
+        imageRepository.save(new Image(prodId, newName));
     }
 
     public ProductInventoryDTO editInventory(ProductInventoryDTO request){
