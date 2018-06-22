@@ -14,6 +14,9 @@ zuul:
     productmicro:
       path: /product/**
       serviceId: productmicro
+    usermicro:
+      path: /user/**
+      serviceId: usermicro
 eureka:
   instance:
     preferIpAddress: true
