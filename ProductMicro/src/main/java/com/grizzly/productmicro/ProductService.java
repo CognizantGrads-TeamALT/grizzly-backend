@@ -286,18 +286,29 @@ public class ProductService {
         List<Image> images = imageRepository.findByProductId(prod.getProductId());
 
         // check if any changes to images are required
+        // cases for edit include: there are new images in the DTO that aren't in the DB
+        //                          and/or the number of images differs between the two
+        List<String> dbUrls = new ArrayList<String>();
+        List<String> dtoUrls = new ArrayList<String>();
+        boolean needsEdit = false;
+
+        for (Image image : images) {
+            dbUrls.add(image.getImage_url());
+        }
+        for (ImageDTO imageDto : request.getImageDTO()) {
+            dtoUrls.add(hashImageName(imageDto.getImgName(), imageDto.getBase64Image()));
+            if (!dbUrls.contains(dtoUrls.get(dtoUrls.size()-1))) {
+                needsEdit = true;
+            }
+        }
+        if (dbUrls.size() != dtoUrls.size()) {
+            needsEdit = true;
+        }
+
+        // check if any changes to images are required
         if (request.getImageDTO().length != images.size()) {
             List<ImageDTO> toAdd = new ArrayList<ImageDTO>();
             List<Image> toDel = new ArrayList<Image>();
-            List<String> dbUrls = new ArrayList<String>();
-            List<String> dtoUrls = new ArrayList<String>();
-
-            for (Image image : images) {
-                dbUrls.add(image.getImage_url());
-            }
-            for (ImageDTO imageDto : request.getImageDTO()) {
-                dtoUrls.add(hashImageName(imageDto.getImgName(), imageDto.getBase64Image()));
-            }
 
             // if there isn't a DB image for a DTO image, the DTO one must be added
             for (ImageDTO imgDto : request.getImageDTO()) {
