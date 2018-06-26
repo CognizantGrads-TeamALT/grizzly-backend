@@ -306,7 +306,7 @@ public class ProductService {
         }
 
         // check if any changes to images are required
-        if (request.getImageDTO().length != images.size()) {
+        if (needsEdit) {
             List<ImageDTO> toAdd = new ArrayList<ImageDTO>();
             List<Image> toDel = new ArrayList<Image>();
 
