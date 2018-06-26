@@ -1,6 +1,6 @@
 package com.grizzly.apigatewayserver.security;
 
-import org.springframework.security.authentication.AuthenticationManager;
+/*import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -48,3 +48,4 @@ public class AuthFilter extends BasicAuthenticationFilter {
     //    return null;
     //}
 }
+*/
