@@ -34,7 +34,7 @@ public class Helper {
                 fields = categoryFields;
                 break;
             default:
-                final String[] validTables = {"vendor", "product"};
+                final String[] validTables = {"vendor", "product", "category"};
                 throw new IllegalArgumentException("The provided table name (" + table + ") is invalid. Valid ones are: " + validTables.toString() + ".");
         }
 
