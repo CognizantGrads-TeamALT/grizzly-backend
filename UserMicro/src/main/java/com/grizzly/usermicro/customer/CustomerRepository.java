@@ -12,4 +12,7 @@ import java.util.List;
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer> {
     @Query("SELECT u FROM customer u WHERE u.userId = :userId")
     List<Customer> findByUserCustomerId(@Param("userId") Integer userId, Pageable pageable);
+
+    @Query("SELECT u FROM customer u WHERE u.email = :email")
+    Customer findByUserEmail(@Param("email") String email);
 }

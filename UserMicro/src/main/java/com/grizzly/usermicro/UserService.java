@@ -1,10 +1,11 @@
-package com.grizzly.usermicro.user;
+package com.grizzly.usermicro;
 
 import com.grizzly.usermicro.admin.Admin;
 import com.grizzly.usermicro.admin.AdminRepository;
 import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.customer.CustomerRepository;
+import com.grizzly.usermicro.user.User;
 import com.grizzly.usermicro.vendor.Vendor;
 import com.grizzly.usermicro.vendor.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
