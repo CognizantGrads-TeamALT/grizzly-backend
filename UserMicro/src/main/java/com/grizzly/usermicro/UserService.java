@@ -3,6 +3,7 @@ package com.grizzly.usermicro.user;
 import com.grizzly.usermicro.admin.Admin;
 import com.grizzly.usermicro.admin.AdminRepository;
 import com.grizzly.usermicro.customer.Customer;
+import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.customer.CustomerRepository;
 import com.grizzly.usermicro.vendor.Vendor;
 import com.grizzly.usermicro.vendor.VendorRepository;
@@ -39,6 +40,30 @@ public class UserService {
     public ArrayList<Admin> getAllAdmins(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name);
         return makeListFromIterable(adminRepository.findAll(request));
+    }
+
+    // Lets find the user...
+    // Start with admin -> vendor -> customer.
+    public User findByUserEmail(String email) {
+        // Check admin repo.
+        User userFound = adminRepository.findByUserEmail(email);
+
+        // Found!? Great. return it.
+        if (userFound != null)
+            return userFound;
+
+        // Not found... check vendor
+        userFound = vendorRepository.findByUserEmail(email);
+
+        // We found it now? return it.
+        if (userFound != null)
+            return userFound;
+
+        // eugh. still haven't found the user.
+        userFound = customerRepository.findByUserEmail(email);
+
+        // either we found it or not, return it.
+        return userFound;
     }
 
     /**
@@ -103,6 +128,11 @@ public class UserService {
         );
     }
 
+    public User addNewUser(CustomerDTO user) {
+        User created = customerRepository.save(user.toEntity());
+
+        return created;
+    }
 
     /**
      * Make an ArrayList of Objects based on a passed-in Iterable
