@@ -1,4 +1,4 @@
-package com.grizzly.apigatewayserver;
+package com.grizzly.apigatewayserver.filter;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ErrorFilter extends ZuulFilter {
+public class PreFilter extends ZuulFilter {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public String filterType() {
-        return "error";
+        return "pre";
     }
 
     @Override
