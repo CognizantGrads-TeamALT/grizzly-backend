@@ -1,23 +1,23 @@
-package com.grizzly.apigatewayserver.model;
+package com.grizzly.apigatewayserver;
 
-public class User {
-    private String userId;
+public class UserDTO {
+    private Integer userId;
     private String name;
     private String contact_num;
     private String email;
 
-    public User(String userId, String name, String contact_num, String email) {
+    public UserDTO(Integer userId, String name, String contact_num, String email) {
         this.userId = userId;
         this.name = name;
         this.contact_num = contact_num;
         this.email = email;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -44,5 +44,4 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
 }

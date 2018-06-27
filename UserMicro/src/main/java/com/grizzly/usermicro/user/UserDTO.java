@@ -1,15 +1,12 @@
 package com.grizzly.usermicro.user;
 
 public class UserDTO {
-    private String userId;
+    private Integer userId;
     private String name;
     private String contact_num;
     private String email;
 
-    public UserDTO() {
-    }
-
-    public UserDTO(String userId, String name, String contact_num, String email) {
+    public UserDTO(Integer userId, String name, String contact_num, String email) {
         this.userId = userId;
         this.name = name;
         this.contact_num = contact_num;
@@ -24,11 +21,11 @@ public class UserDTO {
         return user;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -55,5 +52,4 @@ public class UserDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
 }

@@ -50,21 +50,31 @@ public class UserService {
         User userFound = adminRepository.findByUserEmail(email);
 
         // Found!? Great. return it.
-        if (userFound != null)
+        if (userFound != null) {
+            userFound.setRole("Admin");
             return userFound;
+        }
 
         // Not found... check vendor
         userFound = vendorRepository.findByUserEmail(email);
 
         // We found it now? return it.
-        if (userFound != null)
+        if (userFound != null) {
+            userFound.setRole("Vendor");
             return userFound;
+        }
 
         // eugh. still haven't found the user.
         userFound = customerRepository.findByUserEmail(email);
 
-        // either we found it or not, return it.
-        return userFound;
+        // mustve found a customer... right ???
+        if (userFound != null) {
+            userFound.setRole("Customer");
+            return userFound;
+        }
+
+        // found nothing. user doesn't exist
+        return null;
     }
 
     /**

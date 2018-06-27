@@ -6,15 +6,15 @@ server:
 zuul:
   ignored-services: "*"
   routes:
-    vendormicro:
-      path: /vendor/**
-      serviceId: vendormicro
     categorymicro:
       path: /category/**
       serviceId: categorymicro
     productmicro:
       path: /product/**
       serviceId: productmicro
+    vendormicro:
+      path: /vendor/**
+      serviceId: vendormicro
     usermicro:
       path: /user/**
       serviceId: usermicro

@@ -7,10 +7,8 @@ public class VendorDTO {
     private String about;
     private String product_portfolio;
 
-    public VendorDTO() {
-    }
-
-    public VendorDTO(String address, String website, String about, String product_portfolio) {
+    public VendorDTO(Integer userId, String address, String website, String about, String product_portfolio) {
+        this.userId = userId;
         this.address = address;
         this.website = website;
         this.about = about;

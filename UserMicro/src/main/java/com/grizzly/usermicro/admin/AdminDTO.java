@@ -5,9 +5,6 @@ public class AdminDTO {
     private String job_position;
     private String office;
 
-    public AdminDTO() {
-    }
-
     public AdminDTO(Integer userId, String job_position, String office) {
         this.userId = userId;
         this.job_position = job_position;
