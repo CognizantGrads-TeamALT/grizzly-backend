@@ -73,7 +73,7 @@ public class VendorService {
         Image image = imageRepository.findByVendorIdAndName(vendorId, fileName);
 
         String imageName = image.getImage_url();
-        String base64Image = ImageUtils.readFromFile(vendorId, imageName);
+        String base64Image = ImageUtils.readFromFile(imageName);
 
         ImageDTO response = new ImageDTO();
         response.setImgName(image.getImage_url());
@@ -176,7 +176,7 @@ public class VendorService {
 
                 newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
 
-                ImageUtils.writeToFile(content, created.getVendorId(), newName);
+                ImageUtils.writeToFile(content, newName);
                 imageRepository.save(new Image(created.getVendorId(), newName));
             } catch (Exception e) {
                 return null;

@@ -212,7 +212,7 @@ public class VendorController {
     }
 
     @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return new ResponseEntity<String>("Hello!", HttpStatus.OK);
+    public ResponseEntity hello() {
+        return new ResponseEntity<>("Hello!", HttpStatus.OK);
     }
 }

@@ -15,8 +15,8 @@ import java.util.zip.GZIPOutputStream;
 public class ImageUtils {
     private static String deploymentPath = "/opt/deployed/product_img/";
 
-    public static  void deleteImage(Integer productId, String imageName) {
-        String path = deploymentPath + productId + "/" + imageName;
+    public static void deleteImage(String imageName) {
+        String path = deploymentPath + "/" + imageName;
         File file = new File(path);
 
         //delete if exists
@@ -30,9 +30,9 @@ public class ImageUtils {
         }
     }
 
-    public static String readFromFile(Integer productId, String imageName) {
+    public static String readFromFile(String imageName) {
         String imageString = null;
-        String path = deploymentPath + productId + "/" + imageName;
+        String path = deploymentPath + "/" + imageName;
         File file = new File(path);
 
         try {
@@ -64,7 +64,7 @@ public class ImageUtils {
         return imageString;
     }
 
-    public static void writeToFile(String base64Image, Integer productId, String name) {
+    public static void writeToFile(String base64Image, String name) {
         // Set Permission
         Set<PosixFilePermission> fullPermission = new HashSet<>();
         fullPermission.add(PosixFilePermission.OWNER_EXECUTE);
@@ -79,7 +79,7 @@ public class ImageUtils {
         fullPermission.add(PosixFilePermission.OTHERS_READ);
         fullPermission.add(PosixFilePermission.OTHERS_WRITE);
 
-        String path = deploymentPath + productId;
+        String path = deploymentPath;
 
         try {
             // Check If Directory Already Exists Or Not?
@@ -104,12 +104,14 @@ public class ImageUtils {
         }
 
         //Specify the file path
-        String newPath = path + "/" + name;
+        String newPath = path + name;
         try {
+            Path dirPathObj = Paths.get(newPath);
+            if (Files.exists(dirPathObj))
+                return;
+
             // Converting a Base64 String into Image byte array
             byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
-
-            Path dirPathObj = Paths.get(newPath);
 
             Files.createFile(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
             Files.setPosixFilePermissions(dirPathObj, fullPermission);

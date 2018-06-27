@@ -108,7 +108,7 @@ public class ProductService {
         Image image = imageRepository.findByProductIdAndName(productId, fileName);
 
         String imageName = image.getImage_url();
-        String base64Image = ImageUtils.readFromFile(productId, imageName);
+        String base64Image = ImageUtils.readFromFile(imageName);
 
         ImageDTO response = new ImageDTO();
         response.setImgName(image.getImage_url());
@@ -221,8 +221,8 @@ public class ProductService {
 
         // Delete imgs
         List<Image> images = imageRepository.findByProductId(deleteId);
-        for (Image img : images)
-            ImageUtils.deleteImage(deleteId, img.getImage_url());
+        //for (Image img : images)
+        //    ImageUtils.deleteImage(img.getImage_url());
 
         imageRepository.deleteAll(images);
     }
@@ -331,7 +331,7 @@ public class ProductService {
 
             // perform the deletes
             for (Image del : toDel) {
-                ImageUtils.deleteImage(del.getImage_id(), del.getImage_url());
+                //ImageUtils.deleteImage(del.getImage_id(), del.getImage_url());
                 imageRepository.deleteById(del.getImage_id());
             }
         }
@@ -347,7 +347,7 @@ public class ProductService {
     private void saveImageDTO(ImageDTO imgDto, Integer prodId) throws NoSuchAlgorithmException {
         String newName = hashImageName(imgDto.getImgName(), imgDto.getBase64Image());
 
-        ImageUtils.writeToFile(imgDto.getBase64Image(), prodId, newName);
+        ImageUtils.writeToFile(imgDto.getBase64Image(), newName);
         imageRepository.save(new Image(prodId, newName));
     }
 
