@@ -14,20 +14,24 @@ import java.io.IOException;
 @CrossOrigin(origins = "*")
 @RequestMapping("/")
 public class AuthController {
+    @Autowired
+    private UserClient userClient;
+
+    @Autowired
+    private AuthService authService;
+
     // dev purposes. we can use this to check if a token is valid or not.
     @GetMapping("/get/{token}")
     public ResponseEntity get(@PathVariable(value = "token") String idTokenString) {
-        GoogleIdToken.Payload output = GoogleAuthenticator.verifyIdToken(idTokenString);
+        //GoogleIdToken.Payload output = GoogleAuthenticator.verifyIdToken(idTokenString);
+        AuthSession authSession = authService.sessionStart(idTokenString);
 
-        try {
-            return new ResponseEntity<>(output.toPrettyString(), HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
+        //try {
+            return new ResponseEntity<>(authSession, HttpStatus.OK);
+        //} catch (IOException e) {
+        //    return new ResponseEntity(HttpStatus.NOT_FOUND);
+        //}
     }
-
-    @Autowired
-    private UserClient userClient;
 
     // dev purposes. we can use this to check if a user exists, and if so spits out their info
     // uses feignclient to connect to user micro.
