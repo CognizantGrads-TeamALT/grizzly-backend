@@ -25,14 +25,14 @@ public class GoogleAuthenticator {
                     .setAudience(Collections.singletonList(client))
                     .build();
 
-    public static boolean verifyIdToken(String idTokenString) {
+    public static Payload verifyIdToken(String idTokenString) {
         try {
             GoogleIdToken idToken = verifier.verify(idTokenString);
             if (idToken != null) {
                 Payload payload = idToken.getPayload();
 
                 System.out.println(payload.toPrettyString());
-                return true;
+                return payload;
             } else {
                 System.out.println("Invalid ID token.");
             }
@@ -42,6 +42,6 @@ public class GoogleAuthenticator {
             System.out.println("IOException");
         }
 
-        return false;
+        return null;
     }
 }

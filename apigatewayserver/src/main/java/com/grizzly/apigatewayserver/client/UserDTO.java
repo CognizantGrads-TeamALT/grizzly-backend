@@ -1,15 +1,16 @@
-package com.grizzly.apigatewayserver;
+package com.grizzly.apigatewayserver.client;
+
+// Used to create a new user.
 
 public class UserDTO {
     private Integer userId;
     private String name;
-    private String contact_num;
     private String email;
 
-    public UserDTO(Integer userId, String name, String contact_num, String email) {
-        this.userId = userId;
+    private String role = "customer";
+
+    public UserDTO(String name, String email) {
         this.name = name;
-        this.contact_num = contact_num;
         this.email = email;
     }
 
@@ -29,19 +30,19 @@ public class UserDTO {
         this.name = name;
     }
 
-    public String getContact_num() {
-        return contact_num;
-    }
-
-    public void setContact_num(String contact_num) {
-        this.contact_num = contact_num;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

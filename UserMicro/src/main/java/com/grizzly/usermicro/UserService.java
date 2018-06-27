@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-// TOASK: What dat v
 @Service
 public class UserService {
     @Autowired
@@ -51,7 +50,7 @@ public class UserService {
 
         // Found!? Great. return it.
         if (userFound != null) {
-            userFound.setRole("Admin");
+            userFound.setRole("admin");
             return userFound;
         }
 
@@ -60,7 +59,7 @@ public class UserService {
 
         // We found it now? return it.
         if (userFound != null) {
-            userFound.setRole("Vendor");
+            userFound.setRole("vendor");
             return userFound;
         }
 
@@ -69,7 +68,7 @@ public class UserService {
 
         // mustve found a customer... right ???
         if (userFound != null) {
-            userFound.setRole("Customer");
+            userFound.setRole("customer");
             return userFound;
         }
 

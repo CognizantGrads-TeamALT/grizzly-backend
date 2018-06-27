@@ -1,6 +1,11 @@
 spring:
   application:
     name: apigatewayserver
+  jpa:
+    show-sql: true
+  h2:
+    console:
+      enabled: true
 server:
   port: 8765
 zuul:
