@@ -1,11 +1,17 @@
 package com.grizzly.usermicro.vendor;
 
-public class VendorDTO {
+import com.grizzly.usermicro.user.UserDTO;
+
+public class VendorDTO extends UserDTO {
     private Integer userId;
     private String address;
     private String website;
     private String about;
     private String product_portfolio;
+
+    public VendorDTO() {
+        super();
+    }
 
     public VendorDTO(Integer userId, String address, String website, String about, String product_portfolio) {
         this.userId = userId;

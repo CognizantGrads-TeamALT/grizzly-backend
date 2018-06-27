@@ -6,6 +6,7 @@ import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.customer.CustomerRepository;
 import com.grizzly.usermicro.user.User;
+import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import com.grizzly.usermicro.vendor.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,8 +139,8 @@ public class UserService {
         );
     }
 
-    public User addNewUser(CustomerDTO user) {
-        User created = customerRepository.save(user.toEntity());
+    public Customer addNewUser(Customer user) {
+        Customer created = customerRepository.save(user);
 
         return created;
     }

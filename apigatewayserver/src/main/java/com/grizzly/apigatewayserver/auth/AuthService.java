@@ -7,6 +7,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -36,8 +38,9 @@ public class AuthService {
             Payload tokenData = verifyToken(tokenId);
 
             // invalid token.
-            if (tokenData == null)
+            if (tokenData == null) {
                 return null;
+            }
 
             // create a new session.
             authSession = createSession(tokenId, tokenData);
@@ -61,35 +64,34 @@ public class AuthService {
             user = signUp(tokenData);
 
             // not happening...
-            if (user == null) {
+            if (user == null)
                 return null;
-            }
         }
 
-        try {
-            AuthSession authSession =
-                    new AuthSession(
-                            tokenId,
-                            user.getClass().getField("role").toString(),
-                            tokenData.getEmail()
-                    );
+        LinkedHashMap<String, String> map = (LinkedHashMap) user;
 
-            // Clear any expired tokens that may exist.
-            clearExpiredSessions(tokenData.getEmail());
+        AuthSession authSession =
+                new AuthSession(
+                        tokenId,
+                        map.get("role"),
+                        tokenData.getEmail()
+                );
 
-            return authSession;
-        } catch (NoSuchFieldException e) {
-            return null;
-        }
+        // Clear any expired tokens that may exist.
+        clearExpiredSessions(tokenData.getEmail());
+
+        // save.
+        authRepository.save(authSession);
+
+        return authSession;
     }
 
     // creating a new user.
     private Object signUp(Payload tokenData) {
         String email = tokenData.getEmail();
         String name = (String) tokenData.get("name");
-        UserDTO user = new UserDTO(name, email);
 
-        return userClient.addNewUser(user);
+        return userClient.addNewUser(name, email);
     }
 
     // clear the old expired sessions.

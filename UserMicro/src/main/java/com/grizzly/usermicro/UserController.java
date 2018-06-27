@@ -6,6 +6,7 @@ import com.grizzly.usermicro.admin.Admin;
 import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.user.User;
+import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -133,18 +134,16 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    /**
-     * Create a new user
-     * @param userDetails, the user
-     * @return the user
-     */
-    @PostMapping("/add")
-    public ResponseEntity<User> addNewUser(@PathVariable(value="user") CustomerDTO userDetails) {
-        User newUser = userService.addNewUser(userDetails);
+
+    @PostMapping("/add/{name}/{email}")
+    public ResponseEntity<Customer> addNewUser(@PathVariable(value="name") String name,
+                                                @PathVariable(value="email") String email) {
+        Customer newUser = new Customer(name, null, email, null);
+        newUser.setRole("customer");
 
         if (newUser == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+        return new ResponseEntity<>(userService.addNewUser(newUser), HttpStatus.OK);
     }
 }

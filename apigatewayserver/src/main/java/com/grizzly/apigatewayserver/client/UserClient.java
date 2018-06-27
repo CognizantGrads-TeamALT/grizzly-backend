@@ -12,7 +12,7 @@ public interface UserClient {
     @GetMapping(value = "/get/{email}")
     Object findByUserEmail(@RequestParam("email") String email);
 
-    @PostMapping(value = "/add")
-    Object addNewUser(@RequestParam("user") UserDTO user);
+    @PostMapping(value = "/add/{name}/{email}")
+    Object addNewUser(@RequestParam("name") String name, @RequestParam("email") String email);
 }
 
