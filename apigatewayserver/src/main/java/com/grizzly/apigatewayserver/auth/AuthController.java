@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/")
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
-    private UserClient userClient;
+    private UserClient userClient; // feignclient (talks to usermicro)
 
     @Autowired
     private AuthService authService;
@@ -19,7 +19,6 @@ public class AuthController {
     // dev purposes. we can use this to check if a token is valid or not.
     @GetMapping("/getRole/{token}")
     public ResponseEntity get(@PathVariable(value = "token") String idTokenString) {
-        //GoogleIdToken.Payload output = GoogleAuthenticator.verifyIdToken(idTokenString);
         AuthSession authSession = authService.sessionStart(idTokenString);
 
         if (authSession == null)
@@ -42,8 +41,14 @@ public class AuthController {
 
     // maybe theres a better way to implement this.
     // we can't read authorization bearer through this IIRC.
-    @GetMapping("/logout")
-    public ResponseEntity logout() {
-        return new ResponseEntity(HttpStatus.OK);
+    // kills the token provided. for dev.
+    @GetMapping("/logout/{token}")
+    public ResponseEntity logout(@PathVariable(value = "token") String idTokenString) {
+        Boolean deleted = authService.deleteSession(idTokenString);
+
+        if (deleted)
+            return new ResponseEntity(HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }

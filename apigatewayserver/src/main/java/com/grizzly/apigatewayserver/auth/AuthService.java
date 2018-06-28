@@ -1,13 +1,11 @@
 package com.grizzly.apigatewayserver.auth;
 
-import com.grizzly.apigatewayserver.client.UserDTO;
 import com.grizzly.apigatewayserver.client.UserClient;
 import com.grizzly.apigatewayserver.security.GoogleAuthenticator;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -29,6 +27,7 @@ public class AuthService {
         return GoogleAuthenticator.verifyIdToken(tokenId);
     }
 
+    // the method we'll be calling in the filter.
     public AuthSession sessionStart(String tokenId) {
         AuthSession authSession = authRepository.findByTokenId(tokenId);
 
@@ -48,6 +47,18 @@ public class AuthService {
 
         // Return existing session.
         return authSession;
+    }
+
+    // delete session
+    public Boolean deleteSession(String tokenId) {
+        AuthSession authSession = authRepository.findByTokenId(tokenId);
+
+        if (authSession != null) {
+            authRepository.delete(authSession);
+            return true;
+        }
+
+        return false;
     }
 
     public Boolean hasAccess(AuthSession authSession, String expectedRole) {
