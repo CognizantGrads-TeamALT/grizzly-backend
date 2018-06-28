@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
-
     private Integer productId;
     private String name;
     private Integer vendorId;
@@ -21,8 +20,6 @@ public class ProductDTO {
     private Integer rating;
     private Boolean enabled;
     private ImageDTO[] imageDTO;
-
-
 
     public Product toEntity() {
         Product product = new Product();
@@ -38,6 +35,7 @@ public class ProductDTO {
         product.setBuffer(0);
         product.setReq(0);
         product.setStock(0);
+
         return product;
     }
 
@@ -125,5 +123,4 @@ public class ProductDTO {
     public void setImageDTO(ImageDTO[] imageDTO) {
         this.imageDTO = imageDTO;
     }
-
 }

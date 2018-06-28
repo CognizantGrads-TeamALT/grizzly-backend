@@ -74,15 +74,15 @@ public class ProductController {
 
     /**
      * Return a single image from a product
-     * @param id, product ID, string filename
+     * @param fileName, file name.
      * @return the product with imgs
      */
-    @GetMapping("/getImage/{id}/{filename}")
-    public ResponseEntity getSingleImage(@PathVariable(value="id") Integer id, @PathVariable(value="filename") String fileName) {
-        ImageDTO image = productService.getImageFromProduct(id, fileName);
+    @GetMapping("/getImage/{filename}")
+    public ResponseEntity getSingleImage(@PathVariable(value="filename") String fileName) {
+        ImageDTO image = productService.getImageFromProduct(fileName);
 
         if (image == null) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "id: " + id + " " + "filename: " + fileName));
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "filename: " + fileName));
         }
 
         return new ResponseEntity<>(image, HttpStatus.OK);
