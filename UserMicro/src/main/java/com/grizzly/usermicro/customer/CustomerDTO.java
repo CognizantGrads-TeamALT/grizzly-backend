@@ -1,13 +1,16 @@
 package com.grizzly.usermicro.customer;
 
-public class CustomerDTO {
-    private String userId;
+import com.grizzly.usermicro.user.UserDTO;
+
+public class CustomerDTO extends UserDTO {
+    private Integer userId;
     private String address;
 
     public CustomerDTO() {
+        super();
     }
 
-    public CustomerDTO(String userId, String address) {
+    public CustomerDTO(Integer userId, String address) {
         this.userId = userId;
         this.address = address;
     }
@@ -18,11 +21,11 @@ public class CustomerDTO {
         return customer;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

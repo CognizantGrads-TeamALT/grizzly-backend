@@ -1,9 +1,12 @@
-package com.grizzly.usermicro.user;
+package com.grizzly.usermicro;
 
 import com.grizzly.usermicro.admin.Admin;
 import com.grizzly.usermicro.admin.AdminRepository;
 import com.grizzly.usermicro.customer.Customer;
+import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.customer.CustomerRepository;
+import com.grizzly.usermicro.user.User;
+import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import com.grizzly.usermicro.vendor.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-// TOASK: What dat v
 @Service
 public class UserService {
     @Autowired
@@ -39,6 +41,40 @@ public class UserService {
     public ArrayList<Admin> getAllAdmins(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name);
         return makeListFromIterable(adminRepository.findAll(request));
+    }
+
+    // Lets find the user...
+    // Start with admin -> vendor -> customer.
+    public User findByUserEmail(String email) {
+        // Check admin repo.
+        User userFound = adminRepository.findByUserEmail(email);
+
+        // Found!? Great. return it.
+        if (userFound != null) {
+            userFound.setRole("admin");
+            return userFound;
+        }
+
+        // Not found... check vendor
+        userFound = vendorRepository.findByUserEmail(email);
+
+        // We found it now? return it.
+        if (userFound != null) {
+            userFound.setRole("vendor");
+            return userFound;
+        }
+
+        // eugh. still haven't found the user.
+        userFound = customerRepository.findByUserEmail(email);
+
+        // mustve found a customer... right ???
+        if (userFound != null) {
+            userFound.setRole("customer");
+            return userFound;
+        }
+
+        // found nothing. user doesn't exist
+        return null;
     }
 
     /**
@@ -103,6 +139,11 @@ public class UserService {
         );
     }
 
+    public Customer addNewUser(Customer user) {
+        Customer created = customerRepository.save(user);
+
+        return created;
+    }
 
     /**
      * Make an ArrayList of Objects based on a passed-in Iterable

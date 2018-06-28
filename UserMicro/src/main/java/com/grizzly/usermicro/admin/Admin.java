@@ -11,16 +11,16 @@ public class Admin extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")      private Integer userId;
+    @Column(name="user_id")         private Integer userId;
 
     @AttributeOverrides({
             @AttributeOverride(name="name", column=@Column(name="name")),
             @AttributeOverride(name="contact_num", column=@Column(name="contact_num")),
             @AttributeOverride(name="email", column=@Column(name="email"))
     })
-    @Column(name="job_position")     private String jobPosition;
-    @Column(name="office")       private String office;
 
+    @Column(name="job_position")    private String jobPosition;
+    @Column(name="office")          private String office;
 
     public Admin() {
         super();

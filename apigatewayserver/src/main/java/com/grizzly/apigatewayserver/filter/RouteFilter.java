@@ -1,21 +1,22 @@
-package com.grizzly.apigatewayserver;
+package com.grizzly.apigatewayserver.filter;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ErrorFilter extends ZuulFilter {
+public class RouteFilter  extends ZuulFilter {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public String filterType() {
-        return "error";
+        return "route";
     }
 
     @Override

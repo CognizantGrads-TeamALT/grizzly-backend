@@ -1,6 +1,8 @@
 package com.grizzly.usermicro.vendor;
 
-public class VendorDTO {
+import com.grizzly.usermicro.user.UserDTO;
+
+public class VendorDTO extends UserDTO {
     private Integer userId;
     private String address;
     private String website;
@@ -8,9 +10,11 @@ public class VendorDTO {
     private String product_portfolio;
 
     public VendorDTO() {
+        super();
     }
 
-    public VendorDTO(String address, String website, String about, String product_portfolio) {
+    public VendorDTO(Integer userId, String address, String website, String about, String product_portfolio) {
+        this.userId = userId;
         this.address = address;
         this.website = website;
         this.about = about;

@@ -1,11 +1,14 @@
 package com.grizzly.usermicro.admin;
 
-public class AdminDTO {
+import com.grizzly.usermicro.user.UserDTO;
+
+public class AdminDTO extends UserDTO {
     private Integer userId;
     private String job_position;
     private String office;
 
     public AdminDTO() {
+        super();
     }
 
     public AdminDTO(Integer userId, String job_position, String office) {
