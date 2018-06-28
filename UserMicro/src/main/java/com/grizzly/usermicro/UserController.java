@@ -124,9 +124,9 @@ public class UserController {
     }
 
     /**
-     * Return a single customer with orders based on id
+     * Return a single customer with orders based on their id
      * @param id, user ID
-     * @return the customer user with orders
+     * @return A CustomerDTO with orders
      */
     @GetMapping("/get/orders/{id}")
     public ResponseEntity getSingleWithOrders(@PathVariable(value="id") Integer id) {
@@ -141,9 +141,9 @@ public class UserController {
     }
 
     /**
-     * Return a single order from a customer
+     * Return a single specific order from a specific customer
      * @param id, user ID, orderId
-     * @return the customer with order
+     * @return OrderDTOs from that userId
      */
     @GetMapping("/getOrder/{id}/{orderId}")
     public ResponseEntity getSingleOrder(@PathVariable(value="id") Integer id, @PathVariable(value="orderId") Integer orderId) {
@@ -157,7 +157,7 @@ public class UserController {
     }
 
     /**
-     * Return a single order with orders items based on orderid
+     * Return a single order with orders items
      * @param orderId, order id
      * @return the order with orders items
      */
@@ -174,7 +174,7 @@ public class UserController {
     }
 
     /**
-     * Return a single order item from a order
+     * Return a single order item from a orderId
      * @param orderItemId, orderItemId, user ID, orderId
      * @return the order items from one order Id
      */
