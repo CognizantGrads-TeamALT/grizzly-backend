@@ -5,6 +5,9 @@ import com.grizzly.usermicro.admin.AdminRepository;
 import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.customer.CustomerRepository;
+import com.grizzly.usermicro.orderitem.OrderItem;
+import com.grizzly.usermicro.orderitem.OrderItemDTO;
+import com.grizzly.usermicro.orderitem.OrderItemRepository;
 import com.grizzly.usermicro.orders.Order;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.orders.OrderRepository;
@@ -32,6 +35,8 @@ public class UserService {
     private AdminRepository adminRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     public ArrayList<Customer> getAllCustomers(Integer pageIndex, String column_name) {
         PageRequest request = getPageRequest(pageIndex, column_name);
@@ -82,6 +87,50 @@ public class UserService {
         return makeListFromIterable(
                 customerRepository.findByUserCustomerId(search, request)
         );
+    }
+
+    /**
+     * Get a single item from vendor id.
+     * @param search, the string to match to ID to filter the user by
+     * @return ArrayList of Vendor objs whose names or IDs
+     */
+    public ArrayList<Vendor> getSingleUserVendor(Integer search) {
+        Sort sort = new Sort(Sort.Direction.ASC, "userId");
+        PageRequest request = PageRequest.of(0, 1, sort);
+
+        return makeListFromIterable(
+                vendorRepository.findByUserVendorId(search, request)
+        );
+    }
+
+    /**
+     * Get a single item from user id.
+     * @param search, the string to match to ID to filter the user by
+     * @return ArrayList of User objs whose names or IDs
+     */
+    public ArrayList<Admin> getSingleUserAdmin(Integer search) {
+        Sort sort = new Sort(Sort.Direction.ASC, "userId");
+        PageRequest request = PageRequest.of(0, 1, sort);
+
+        return makeListFromIterable(
+                adminRepository.findByUserAdminId(search, request)
+        );
+    }
+
+
+    /**
+     * Make an ArrayList of Objects based on a passed-in Iterable
+     * @param iter An Iterable of Objects
+     * @return An ArrayList made from the Iterable
+     */
+    public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {
+        ArrayList<T> list = new ArrayList<T>();
+
+        for(T item: iter) {
+            list.add(item);
+        }
+
+        return list;
     }
 
     /**
@@ -162,48 +211,77 @@ public class UserService {
     }
 
     /**
-     * Get a single item from vendor id.
-     * @param search, the string to match to ID to filter the user by
-     * @return ArrayList of Vendor objs whose names or IDs
+     * Get orderItems from an order id.
+     * @param orderId, the string to match to ID to filter the orders by
+     * @return ArrayList of Order with OrderItems
      */
-    public ArrayList<Vendor> getSingleUserVendor(Integer search) {
-        Sort sort = new Sort(Sort.Direction.ASC, "userId");
-        PageRequest request = PageRequest.of(0, 1, sort);
+    public OrderDTO getSingleOrderWithItems(Integer orderId) {
+        OrderDTO order = getOrder(orderId).get(0);
 
-        return makeListFromIterable(
-                vendorRepository.findByUserVendorId(search, request)
-        );
+        return order;
     }
 
     /**
-     * Get a single item from user id.
+     * Get a single order from user id.
      * @param search, the string to match to ID to filter the user by
      * @return ArrayList of User objs whose names or IDs
      */
-    public ArrayList<Admin> getSingleUserAdmin(Integer search) {
-        Sort sort = new Sort(Sort.Direction.ASC, "userId");
-        PageRequest request = PageRequest.of(0, 1, sort);
+    public ArrayList<OrderDTO> getOrder(Integer search) {
+        ArrayList<OrderDTO> result = new ArrayList<>();
 
-        return makeListFromIterable(
-                adminRepository.findByUserAdminId(search, request)
-        );
+        OrderDTO order = orderToDTO(orderRepository.findByUserId(search).get(0));
+
+        result.add(order);
+
+        return result;
     }
 
+    @Cacheable("OrderItemDTO")
+    public OrderItemDTO getOrderItemsFromOrder(Integer orderItemId, Integer orderId) {
+        OrderItem item = orderItemRepository.findOrderItemByOrderId(orderItemId, orderId);
 
-    /**
-     * Make an ArrayList of Objects based on a passed-in Iterable
-     * @param iter An Iterable of Objects
-     * @return An ArrayList made from the Iterable
-     */
-    public static <T> ArrayList<T> makeListFromIterable(Iterable<T> iter) {
-        ArrayList<T> list = new ArrayList<T>();
+        Integer order_id = item.getOrder_id();
+        String productId = item.getProductId();
+        String rating = item.getRating();
+        String quantity = item.getQuantity();
 
-        for(T item: iter) {
-            list.add(item);
+        OrderItemDTO response = new OrderItemDTO();
+        response.setOrder_id(order_id);
+        response.setProductId(productId);
+        response.setRating(rating);
+        response.setQuantity(quantity);
+
+        return response;
+    }
+
+    // Convert a Order object into a OrderDTO
+    public OrderDTO orderToDTO(Order order) {
+        List<OrderItem> items = orderItemRepository.findItemsByOrderId(order.getOrder_id());
+
+        OrderItemDTO[] orderItemDTO = new OrderItemDTO[items.size()];
+
+        for (int i = 0; i < items.size(); i++) {
+            Integer orderId = items.get(i).getOrder_id();
+            String productId = items.get(i).getProductId();
+            String rating = items.get(i).getRating();
+            String quantity = items.get(i).getQuantity();
+
+            OrderItemDTO orderItem = new OrderItemDTO();
+            orderItem.setOrder_id(orderId);
+            orderItem.setProductId(productId);
+            orderItem.setRating(rating);
+            orderItem.setQuantity(quantity);
+
+
+            orderItemDTO[i] = orderItem;
         }
 
-        return list;
+        OrderDTO orderDTO = new OrderDTO(order.getUser_id(), order.getTxn_id(), order.getCost(), order.getDestination(), order.getShipped_on(), orderItemDTO);
+        orderDTO.setUser_id(order.getUser_id());
+
+        return orderDTO;
     }
+
 
 
 }

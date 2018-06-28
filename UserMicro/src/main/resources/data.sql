@@ -19,4 +19,12 @@ insert into user_order (user_id, txn_id, cost, destination, shipped_on) values (
 insert into user_order (user_id, txn_id, cost, destination, shipped_on) values (2, 1246, 35.00, 'Order 2 User 2', '2017-11-15');
 insert into user_order (user_id, txn_id, cost, destination, shipped_on) values (1, 187946, 65.00, 'Order 3 User 1', '2017-11-15');
 insert into user_order (user_id, txn_id, cost, destination, shipped_on) values (1, 122576, 300.00, 'Order 4 User 1', '2017-11-15');
-
+insert into order_item (order_id, product_id, rating, quantity) values (1, '1', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (1, '2', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (1, '3', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (1, '4', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (2, '1', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (3, '1', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (4, '1', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (2, '3', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (3, '4', '5', '1');

@@ -8,6 +8,7 @@ import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 import com.grizzly.usermicro.admin.Admin;
 import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
+import com.grizzly.usermicro.orderitem.OrderItemDTO;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.UserService;
 import com.grizzly.usermicro.vendor.Vendor;
@@ -153,6 +154,39 @@ public class UserController {
         }
 
         return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    /**
+     * Return a single order with orders items based on orderid
+     * @param orderId, order id
+     * @return the order with orders items
+     */
+    @GetMapping("/get/orderItems/{orderId}")
+    public ResponseEntity getSingleOrderWithOrderItems(@PathVariable(value="orderId") Integer orderId) {
+        OrderDTO order = userService.getSingleOrderWithItems(orderId);
+
+        // no product found
+        if (order == null) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No user was found.", "orderId: " + orderId));
+        }
+
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    /**
+     * Return a single order item from a order
+     * @param orderItemId, orderItemId, user ID, orderId
+     * @return the order items from one order Id
+     */
+    @GetMapping("/getOrderItem/{orderId}/{orderItemId}")
+    public ResponseEntity getSingleOrderItemByOrderId(@PathVariable(value="orderId") Integer orderId, @PathVariable(value="orderItemId") Integer orderItemId) {
+        OrderItemDTO orderItem = userService.getOrderItemsFromOrder(orderItemId, orderId);
+
+        if (orderItem == null) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "orderId: " + orderId + " " + "orderItemId: " + orderItemId));
+        }
+
+        return new ResponseEntity<>(orderItem, HttpStatus.OK);
     }
 
 }
