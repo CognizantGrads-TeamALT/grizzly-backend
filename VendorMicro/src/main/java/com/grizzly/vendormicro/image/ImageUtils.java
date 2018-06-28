@@ -12,127 +12,130 @@ import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-    public class ImageUtils {
-        private static String deploymentPath = "/opt/deployed/vendor_img/";
+public class ImageUtils {
+    private static String deploymentPath = "/opt/deployed/vendor_img/";
 
-        public static void deleteImage(String imageName) {
-            String path = deploymentPath + "/" + imageName;
-            File file = new File(path);
+    /**
+     * Disabled because multiple products may link to the same image.
+     * If deleted on one product, it may delete the image used in other products.
+     public static void deleteImage(String imageName) {
+         String path = deploymentPath + "/" + imageName;
+         File file = new File(path);
 
-            //delete if exists
-            try {
-                boolean success = Files.deleteIfExists(file.toPath());
-                System.out.println("Delete status: " + success);
-            } catch (IOException | SecurityException e) {
-                System.err.println(e);
-            } catch (Exception e) {
-                e.printStackTrace();
+         //delete if exists
+         try {
+             boolean success = Files.deleteIfExists(file.toPath());
+             System.out.println("Delete status: " + success);
+         } catch (IOException | SecurityException e) {
+            System.err.println(e);
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+     }*/
+
+    public static String readFromFile(String imageName) {
+        String imageString = null;
+        String path = deploymentPath + "/" + imageName;
+        File file = new File(path);
+
+        try {
+            FileInputStream imageInFile = new FileInputStream(file);
+            byte imageData[] = new byte[(int) file.length()];
+            imageInFile.read(imageData);
+
+            // Decompress
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
+            GZIPInputStream gis = new GZIPInputStream(bis);
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gis.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
             }
+
+            imageString = Base64.getEncoder().encodeToString(bos.toByteArray());
+
+            bos.close();
+            gis.close();
+            bis.close();
+            imageInFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        public static String readFromFile(String imageName) {
-            String imageString = null;
-            String path = deploymentPath + "/" + imageName;
-            File file = new File(path);
+        return imageString;
+    }
 
-            try {
-                FileInputStream imageInFile = new FileInputStream(file);
-                byte imageData[] = new byte[(int) file.length()];
-                imageInFile.read(imageData);
+    public static void writeToFile(String base64Image, String name) {
+        // Set Permission
+        Set<PosixFilePermission> fullPermission = new HashSet<>();
+        fullPermission.add(PosixFilePermission.OWNER_EXECUTE);
+        fullPermission.add(PosixFilePermission.OWNER_READ);
+        fullPermission.add(PosixFilePermission.OWNER_WRITE);
 
-                // Decompress
-                ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
-                GZIPInputStream gis = new GZIPInputStream(bis);
+        fullPermission.add(PosixFilePermission.GROUP_EXECUTE);
+        fullPermission.add(PosixFilePermission.GROUP_READ);
+        fullPermission.add(PosixFilePermission.GROUP_WRITE);
 
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int len;
-                while ((len = gis.read(buffer)) != -1) {
-                    bos.write(buffer, 0, len);
+        fullPermission.add(PosixFilePermission.OTHERS_EXECUTE);
+        fullPermission.add(PosixFilePermission.OTHERS_READ);
+        fullPermission.add(PosixFilePermission.OTHERS_WRITE);
+
+        String path = deploymentPath;
+
+        try {
+            // Check If Directory Already Exists Or Not?
+
+            Path dirPathObj = Paths.get(path);
+
+            boolean dirExists = Files.exists(dirPathObj);
+            if(dirExists) {
+                System.out.println("! Directory Already Exists !");
+            } else {
+                try {
+                    // Creating The New Directory Structure
+                    Files.createDirectories(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
+                    Files.setPosixFilePermissions(dirPathObj, fullPermission);
+                    System.out.println("! New Directory Successfully Created !");
+                } catch (IOException ioExceptionObj) {
+                    System.out.println("Problem occurred While Creating The Directory Structure= " + ioExceptionObj.getMessage());
                 }
-
-                imageString = Base64.getEncoder().encodeToString(bos.toByteArray());
-
-                bos.close();
-                gis.close();
-                bis.close();
-                imageInFile.close();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-
-            return imageString;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        public static void writeToFile(String base64Image, String name) {
-            // Set Permission
-            Set<PosixFilePermission> fullPermission = new HashSet<>();
-            fullPermission.add(PosixFilePermission.OWNER_EXECUTE);
-            fullPermission.add(PosixFilePermission.OWNER_READ);
-            fullPermission.add(PosixFilePermission.OWNER_WRITE);
+        //Specify the file path
+        String newPath = path + name;
+        try {
+            Path dirPathObj = Paths.get(newPath);
+            if (Files.exists(dirPathObj))
+                return;
 
-            fullPermission.add(PosixFilePermission.GROUP_EXECUTE);
-            fullPermission.add(PosixFilePermission.GROUP_READ);
-            fullPermission.add(PosixFilePermission.GROUP_WRITE);
+            // Converting a Base64 String into Image byte array
+            byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
 
-            fullPermission.add(PosixFilePermission.OTHERS_EXECUTE);
-            fullPermission.add(PosixFilePermission.OTHERS_READ);
-            fullPermission.add(PosixFilePermission.OTHERS_WRITE);
+            Files.createFile(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
+            Files.setPosixFilePermissions(dirPathObj, fullPermission);
 
-            String path = deploymentPath;
+            // Compression.
+            ByteArrayOutputStream obj = new ByteArrayOutputStream();
+            GZIPOutputStream gis = new GZIPOutputStream(obj);
 
-            try {
-                // Check If Directory Already Exists Or Not?
+            gis.write(imageByteArray);
+            gis.flush();
+            gis.close();
 
-                Path dirPathObj = Paths.get(path);
+            Files.write(dirPathObj, obj.toByteArray());
 
-                boolean dirExists = Files.exists(dirPathObj);
-                if(dirExists) {
-                    System.out.println("! Directory Already Exists !");
-                } else {
-                    try {
-                        // Creating The New Directory Structure
-                        Files.createDirectories(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
-                        Files.setPosixFilePermissions(dirPathObj, fullPermission);
-                        System.out.println("! New Directory Successfully Created !");
-                    } catch (IOException ioExceptionObj) {
-                        System.out.println("Problem occurred While Creating The Directory Structure= " + ioExceptionObj.getMessage());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            //Specify the file path
-            String newPath = path + name;
-            try {
-                Path dirPathObj = Paths.get(newPath);
-                if (Files.exists(dirPathObj))
-                    return;
-
-                // Converting a Base64 String into Image byte array
-                byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
-
-                Files.createFile(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
-                Files.setPosixFilePermissions(dirPathObj, fullPermission);
-
-                // Compression.
-                ByteArrayOutputStream obj = new ByteArrayOutputStream();
-                GZIPOutputStream gis = new GZIPOutputStream(obj);
-
-                gis.write(imageByteArray);
-                gis.flush();
-                gis.close();
-
-                Files.write(dirPathObj, obj.toByteArray());
-
-                obj.close();
-            } catch (FileNotFoundException e) {
-                System.out.println("Image not found" + e);
-            } catch (IOException ioe) {
-                System.out.println("Exception while reading the Image " + ioe);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            obj.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Image not found" + e);
+        } catch (IOException ioe) {
+            System.out.println("Exception while reading the Image " + ioe);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+}
