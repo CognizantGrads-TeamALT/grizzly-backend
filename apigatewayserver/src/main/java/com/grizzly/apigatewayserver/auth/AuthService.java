@@ -136,7 +136,7 @@ public class AuthService {
                 String tokenId = authSession.getTokenId();
 
                 if (verifyToken(tokenId) == null)
-                    authRepository.deleteById(tokenId);
+                    authRepository.deleteByTokenId(tokenId);
             }
     }
 }
