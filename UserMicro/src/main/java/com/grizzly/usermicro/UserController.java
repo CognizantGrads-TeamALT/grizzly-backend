@@ -2,8 +2,13 @@ package com.grizzly.usermicro;
 
 import java.util.ArrayList;
 
+import com.grizzly.grizlibrary.errorhandling.ApiError;
+import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
+
 import com.grizzly.usermicro.admin.Admin;
 import com.grizzly.usermicro.customer.Customer;
+import com.grizzly.usermicro.customer.CustomerDTO;
+import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.UserService;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,4 +121,38 @@ public class UserController {
 
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
+
+    /**
+     * Return a single customer with orders based on id
+     * @param id, user ID
+     * @return the customer user with orders
+     */
+    @GetMapping("/get/orders/{id}")
+    public ResponseEntity getSingleWithOrders(@PathVariable(value="id") Integer id) {
+        CustomerDTO customer = userService.getSingleWithOrders(id);
+
+        // no product found
+        if (customer == null) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No user was found.", "id: " + id));
+        }
+
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
+    /**
+     * Return a single order from a customer
+     * @param id, user ID, orderId
+     * @return the customer with order
+     */
+    @GetMapping("/getOrder/{id}/{orderId}")
+    public ResponseEntity getSingleOrder(@PathVariable(value="id") Integer id, @PathVariable(value="orderId") Integer orderId) {
+        OrderDTO order = userService.getOrderFromCustomer(id, orderId);
+
+        if (order == null) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "id: " + id + " " + "orderId: " + orderId));
+        }
+
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
 }
