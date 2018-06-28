@@ -160,6 +160,29 @@ public class ProductService {
         }
     }
 
+    // Image filetype validator.
+    public String getFileExtension(String fileName) {
+        String extension = "";
+
+        int i = fileName.lastIndexOf('.');
+        if (i > 0) {
+            extension = fileName.substring(i+1);
+        }
+
+        return extension.toLowerCase();
+    }
+
+    // Image filetype validator.
+    public Boolean isValidImageType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        if (!fileExtension.equals(".png") &&
+                !fileExtension.equals(".jpg") &&
+                !fileExtension.equals(".jpeg"))
+            return true;
+
+        return false;
+    }
+
     /**
      * Add a new product to the database
      * @param newProduct, the entity of the new product to save
@@ -170,6 +193,9 @@ public class ProductService {
 
         ImageDTO[] imageDTO = newProduct.getImageDTO();
         for (int i = 0; i < imageDTO.length; i++) {
+            // Image filetype validator. should have size check here too...
+            if (!isValidImageType(imageDTO[i].getImgName()))
+                continue;
             saveImageDTO(imageDTO[i], created.getProductId());
         }
         try {
@@ -288,8 +314,8 @@ public class ProductService {
         // check if any changes to images are required
         // cases for edit include: there are new images in the DTO that aren't in the DB
         //                          and/or the number of images differs between the two
-        List<String> dbUrls = new ArrayList<String>();
-        List<String> dtoUrls = new ArrayList<String>();
+        List<String> dbUrls = new ArrayList<>();
+        List<String> dtoUrls = new ArrayList<>();
         boolean needsEdit = false;
 
         for (Image image : images) {
@@ -307,8 +333,8 @@ public class ProductService {
 
         // check if any changes to images are required
         if (needsEdit) {
-            List<ImageDTO> toAdd = new ArrayList<ImageDTO>();
-            List<Image> toDel = new ArrayList<Image>();
+            List<ImageDTO> toAdd = new ArrayList<>();
+            List<Image> toDel = new ArrayList<>();
 
             // if there isn't a DB image for a DTO image, the DTO one must be added
             for (ImageDTO imgDto : request.getImageDTO()) {
@@ -326,6 +352,9 @@ public class ProductService {
 
             // perform the adds
             for (ImageDTO add : toAdd) {
+                // image filetype validator. should have size check here too...
+                if (!isValidImageType(add.getImgName()))
+                    continue;
                 saveImageDTO(add, prod.getProductId());
             }
 
