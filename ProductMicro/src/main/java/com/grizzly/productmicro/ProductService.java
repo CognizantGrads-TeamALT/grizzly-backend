@@ -398,7 +398,7 @@ public class ProductService {
         String newName = DatatypeConverter
                 .printHexBinary(digest).toUpperCase();
 
-        newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
+        newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1).toLowerCase();
         return newName;
     }
 
