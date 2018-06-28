@@ -23,8 +23,30 @@ public class AuthService {
      * @param tokenId
      * @return Payload data
      */
-    private Payload verifyToken(String tokenId) {
+    public Payload verifyToken(String tokenId) {
         return GoogleAuthenticator.verifyIdToken(tokenId);
+    }
+
+    public AuthSession getActiveSession(String tokenId) {
+        AuthSession authSession = authRepository.findByTokenId(tokenId);
+
+        // Session doesn't exist.
+        if (authSession == null) {
+            System.out.println("Session does not exist?");
+            // Fetch token data and validate.
+            Payload tokenData = verifyToken(tokenId);
+
+            // invalid token.
+            if (tokenData == null) {
+                System.out.println("No payload?");
+                return null;
+            }
+        }
+
+        System.out.println("Returning.");
+
+        // Return existing session.
+        return authSession;
     }
 
     // the method we'll be calling in the filter.

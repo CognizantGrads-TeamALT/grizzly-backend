@@ -8,6 +8,9 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import static com.grizzly.apigatewayserver.security.SecurityConstants.AUTH_ISSUER;
+import static com.grizzly.apigatewayserver.security.SecurityConstants.AUTH_CLIENT;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
@@ -16,13 +19,10 @@ public class GoogleAuthenticator {
     private static final HttpTransport transport = new NetHttpTransport();
     private static final JsonFactory jsonFactory = new JacksonFactory();
 
-    private static String issuer = "accounts.google.com";
-    private static String client = "296954481305-plmc2jf1o7j7t0aignvp73arbk2mt3pq.apps.googleusercontent.com";
-
     private static GoogleIdTokenVerifier verifier =
             new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                    .setIssuer(issuer)
-                    .setAudience(Collections.singletonList(client))
+                    .setIssuer(AUTH_ISSUER)
+                    .setAudience(Collections.singletonList(AUTH_CLIENT))
                     .build();
 
     public static Payload verifyIdToken(String idTokenString) {

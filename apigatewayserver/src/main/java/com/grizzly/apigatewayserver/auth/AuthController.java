@@ -27,6 +27,16 @@ public class AuthController {
         return new ResponseEntity<>(authSession.getRole(), HttpStatus.OK);
     }
 
+    @GetMapping("/activeSession/{token}")
+    public ResponseEntity activeSession(@PathVariable(value = "token") String idTokenString) {
+        AuthSession authSession = authService.getActiveSession(idTokenString);
+
+        if (authSession == null)
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(authSession.getRole(), HttpStatus.OK);
+    }
+
     // dev purposes. we can use this to check if a user exists, and if so spits out their info
     // uses feignclient to connect to user micro.
     @GetMapping("/get/user/{email}")
