@@ -15,7 +15,10 @@ import java.util.zip.GZIPOutputStream;
 public class ImageUtils {
     private static String deploymentPath = "/opt/deployed/product_img/";
 
-    public static void deleteImage(String imageName) {
+    /**
+     * Disabled because multiple products may link to the same image.
+     * If deleted on one product, it may delete the image used in other products.
+     public static void deleteImage(String imageName) {
         String path = deploymentPath + "/" + imageName;
         File file = new File(path);
 
@@ -28,7 +31,7 @@ public class ImageUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static String readFromFile(String imageName) {
         String imageString = null;
