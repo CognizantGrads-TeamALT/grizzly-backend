@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -152,10 +153,23 @@ public class UserService {
         );
     }
 
-    public Customer addNewUser(Customer user) {
-        Customer created = customerRepository.save(user);
+    public Customer addOrUpdateCustomer(Customer cust) {
 
-        return created;
+        try {
+            // find the existing Customer
+            Customer customer = customerRepository.findByUserEmail(cust.getEmail());
+            if(customer != null) {
+                customer.setContact_num(cust.getContact_num());
+                customer.setAddress(cust.getAddress());
+                Customer saved = customerRepository.save(customer);
+                return saved;
+            } else {
+                Customer created = customerRepository.save(cust);
+                return created;
+            }
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     /**
