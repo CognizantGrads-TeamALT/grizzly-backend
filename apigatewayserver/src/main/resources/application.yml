@@ -9,7 +9,7 @@ spring:
 server:
   port: 8765
 zuul:
-  ignored-services: "*"
+#  ignored-services: "*"
   routes:
     categorymicro:
       path: /category/**
