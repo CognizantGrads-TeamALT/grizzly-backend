@@ -24,11 +24,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
                 //.antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated()
+//                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/**").permitAll()
+//                .anyRequest().authenticated()
                 .and()
                 //.addFilter(new AuthenticationFilter(authenticationManager()))
-                .addFilter(new AuthorizationFilter(authenticationManager()))
+//                .addFilter(new AuthorizationFilter(authenticationManager()))
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
