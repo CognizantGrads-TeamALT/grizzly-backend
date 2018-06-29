@@ -11,6 +11,7 @@ import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.orderitem.OrderItemDTO;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.User;
+import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -205,15 +206,11 @@ public class UserController {
     }
 
 
-    @PostMapping("/add/{name}/{email}")
-    public ResponseEntity<Customer> addNewUser(@PathVariable(value="name") String name,
-                                                @PathVariable(value="email") String email) {
-        Customer newUser = new Customer(name, null, email, null);
-        newUser.setRole("customer");
+    @PutMapping("/save")
+    public ResponseEntity<Customer> addOrUpdateCustomer(@RequestBody CustomerDTO customerDTO) {
+        Customer customer = new Customer(customerDTO.getName(), customerDTO.getContact_num(), customerDTO.getEmail(), customerDTO.getAddress());
+        customer.setRole("customer");
 
-        if (newUser == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        return new ResponseEntity<>(userService.addNewUser(newUser), HttpStatus.OK);
+        return new ResponseEntity<>(userService.addOrUpdateCustomer(customer), HttpStatus.OK);
     }
 }
