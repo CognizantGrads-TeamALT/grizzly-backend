@@ -7,8 +7,6 @@ import javax.persistence.*;
 @Entity(name="customer")
 @Table(name = "customer")
 public class Customer extends User {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")      private Integer userId;

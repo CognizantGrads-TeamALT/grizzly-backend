@@ -10,7 +10,7 @@ import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.orderitem.OrderItemDTO;
 import com.grizzly.usermicro.orders.OrderDTO;
-import com.grizzly.usermicro.user.UserService;
+import com.grizzly.usermicro.user.User;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -189,4 +189,31 @@ public class UserController {
         return new ResponseEntity<>(orderItem, HttpStatus.OK);
     }
 
+    /**
+     * Return a single user based on email
+     * @param email, user email
+     * @return the user
+     */
+    @GetMapping("/get/{email}")
+    public ResponseEntity<User> getSingleUser(@PathVariable(value="email") String email) {
+        User user = userService.findByUserEmail(email);
+
+        if (user == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/add/{name}/{email}")
+    public ResponseEntity<Customer> addNewUser(@PathVariable(value="name") String name,
+                                                @PathVariable(value="email") String email) {
+        Customer newUser = new Customer(name, null, email, null);
+        newUser.setRole("customer");
+
+        if (newUser == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(userService.addNewUser(newUser), HttpStatus.OK);
+    }
 }

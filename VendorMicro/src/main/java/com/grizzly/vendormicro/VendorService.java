@@ -69,16 +69,13 @@ public class VendorService {
     }
 
     @Cacheable("ImageDTO")
-    public ImageDTO getImageFromVendor(Integer vendorId, String fileName) {
-        Image image = imageRepository.findByVendorIdAndName(vendorId, fileName);
-
-        String imageName = image.getImage_url();
-        String base64Image = ImageUtils.readFromFile(vendorId, imageName);
+    public ImageDTO getImageFromVendor(String fileName) {
+        String base64Image = ImageUtils.readFromFile(fileName);
 
         ImageDTO response = new ImageDTO();
-        response.setImgName(image.getImage_url());
+        response.setImgName(fileName);
 
-        String base64String = "data:image/" + imageName.substring(imageName.lastIndexOf(".") + 1)
+        String base64String = "data:image/" + fileName.substring(fileName.lastIndexOf(".") + 1)
                 + ";base64," + base64Image;
         response.setBase64Image(base64String);
 
@@ -176,7 +173,7 @@ public class VendorService {
 
                 newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
 
-                ImageUtils.writeToFile(content, created.getVendorId(), newName);
+                ImageUtils.writeToFile(content, newName);
                 imageRepository.save(new Image(created.getVendorId(), newName));
             } catch (Exception e) {
                 return null;

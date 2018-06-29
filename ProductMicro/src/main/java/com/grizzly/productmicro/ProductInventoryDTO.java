@@ -29,7 +29,6 @@ public class ProductInventoryDTO {
         this.pending = pending;
         this.price = price;
         this.rating = rating;
-
     }
 
     public Integer getProductId() {

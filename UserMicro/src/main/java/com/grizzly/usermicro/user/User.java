@@ -1,6 +1,5 @@
 package com.grizzly.usermicro.user;
 
-
 import javax.persistence.*;
 
 @MappedSuperclass
@@ -15,6 +14,7 @@ public class User {
     @Column(name="contact_num")     private String contact_num;
     @Column(name="email")           private String email;
 
+    private String role;
 
     public User() {
         super();
@@ -59,5 +59,9 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getRole() { return role; }
+
+    public void setRole(String role) { this.role = role; }
 
 }

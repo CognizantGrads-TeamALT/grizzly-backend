@@ -1,13 +1,15 @@
 package com.grizzly.usermicro.customer;
 
 import com.grizzly.usermicro.orders.OrderDTO;
+import com.grizzly.usermicro.user.UserDTO;
 
-public class CustomerDTO {
+public class CustomerDTO extends UserDTO {
     private Integer userId;
     private String address;
     private OrderDTO[] orderDTO;
 
     public CustomerDTO() {
+        super();
     }
 
     public CustomerDTO(Integer userId, String address, OrderDTO[] orderDTO) {

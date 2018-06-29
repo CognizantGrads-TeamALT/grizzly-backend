@@ -4,7 +4,6 @@ public class ImageDTO {
     private String imgName;
     private String base64Image;
 
-
     public String getImgName() {
         return imgName;
     }

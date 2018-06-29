@@ -73,15 +73,15 @@ public class VendorController {
 
     /**
      * Return a single image from a vendor
-     * @param id, product ID, string filename
+     * @param fileName
      * @return the product with imgs
      */
-    @GetMapping("/getImage/{id}/{filename}")
-    public ResponseEntity getSingleImage(@PathVariable(value="id") Integer id, @PathVariable(value="filename") String fileName) {
-        ImageDTO image = vendorService.getImageFromVendor(id, fileName);
+    @GetMapping("/getImage/{fileName}")
+    public ResponseEntity getSingleImage(@PathVariable(value="fileName") String fileName) {
+        ImageDTO image = vendorService.getImageFromVendor(fileName);
 
         if (image == null) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "id: " + id + " " + "filename: " + fileName));
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "filename: " + fileName));
         }
 
         return new ResponseEntity<>(image, HttpStatus.OK);
@@ -212,7 +212,7 @@ public class VendorController {
     }
 
     @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return new ResponseEntity<String>("Hello!", HttpStatus.OK);
+    public ResponseEntity hello() {
+        return new ResponseEntity<>("Hello!", HttpStatus.OK);
     }
 }
