@@ -1,18 +1,21 @@
 package com.grizzly.usermicro.customer;
 
+import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.UserDTO;
 
 public class CustomerDTO extends UserDTO {
     private Integer userId;
     private String address;
+    private OrderDTO[] orderDTO;
 
     public CustomerDTO() {
         super();
     }
 
-    public CustomerDTO(Integer userId, String address) {
+    public CustomerDTO(Integer userId, String address, OrderDTO[] orderDTO) {
         this.userId = userId;
         this.address = address;
+        this.orderDTO = orderDTO;
     }
 
     public Customer toEntity() {
@@ -35,5 +38,13 @@ public class CustomerDTO extends UserDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public OrderDTO[] getOrderDTO() {
+        return orderDTO;
+    }
+
+    public void setOrderDTO(OrderDTO[] orderDTO) {
+        this.orderDTO = orderDTO;
     }
 }

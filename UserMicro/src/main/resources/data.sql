@@ -15,3 +15,16 @@ insert into vendor (name, contact_num, email, address, website, about, product_p
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Cry Inside', '1800 66 66', 'Helen.Cry Inside@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Buys Some Stuff', '1800 66 66', 'Helen.Buys Some Stuff@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Sells You Gifts', '1800 66 66', 'Helen.Sells You Gifts@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
+insert into user_order (user_id, txn_id, cost, destination, shipped_on) values (1, 12346, 35.00, 'Order 1 User 1', '2017-11-15');
+insert into user_order (user_id, txn_id, cost, destination, shipped_on) values (2, 1246, 35.00, 'Order 2 User 2', '2017-11-15');
+insert into user_order (user_id, txn_id, cost, destination, shipped_on) values (1, 187946, 65.00, 'Order 3 User 1', '2017-11-15');
+insert into user_order (user_id, txn_id, cost, destination, shipped_on) values (1, 122576, 300.00, 'Order 4 User 1', '2017-11-15');
+insert into order_item (order_id, product_id, rating, quantity) values (1, '1', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (1, '2', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (1, '3', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (1, '4', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (2, '1', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (3, '1', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (4, '1', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (2, '3', '5', '1');
+insert into order_item (order_id, product_id, rating, quantity) values (3, '4', '5', '1');
