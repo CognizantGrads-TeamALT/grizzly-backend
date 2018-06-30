@@ -2,6 +2,7 @@ package com.grizzly.productmicro;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
@@ -50,6 +51,35 @@ public class ProductController {
         // no product found
         if (products == null || products.isEmpty()) {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No product was found.", "id: " + id));
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
+     * Get a list of products based on products IDs
+     * @param ids, The comma-separated string-list of Product ids that are to be fetched
+     * @return the matching vendors in a list
+     */
+    @GetMapping("/batchFetch/{ids}")
+    public ResponseEntity getBatch(@PathVariable(value="ids") String ids) {
+        String[] request = ids.split(",");
+        ArrayList<ProductDTO> products;
+        try {
+            products = productService.getBatchbyId(Arrays.asList(request));
+        }
+        // ids were entered into SQL null
+        catch (IllegalArgumentException e) {
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "A null set of IDs was received.",
+                    "ids: " + ids));
+        }
+
+        // no vendors found
+        if (products == null || products.isEmpty()) {
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
+                    "No products were found.",
+                    "ids: " + ids));
         }
 
         return new ResponseEntity<>(products, HttpStatus.OK);
