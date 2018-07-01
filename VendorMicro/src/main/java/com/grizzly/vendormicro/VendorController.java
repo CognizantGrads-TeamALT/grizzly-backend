@@ -114,6 +114,7 @@ public class VendorController {
 
         return new ResponseEntity<>(vendors, HttpStatus.OK);
     }
+
     /**
      * Get a list of vendors based on vendor IDs
      * @param ids, The comma-separated string-list of Vendor ids that are to be fetched

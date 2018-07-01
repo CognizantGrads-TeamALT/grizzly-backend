@@ -432,4 +432,26 @@ public class ProductService {
         productRepository.disableByCategoryId(categoryId);
     }
 
+    /**
+     * Get a list of products based on products IDs
+     * @param ids, The list of Product ids that are to be fetched
+     * @return ArrayList of Product objs whose IDs match ids
+     */
+    public ArrayList<ProductDTO> getBatchbyId(List<String> ids) {
+        List<Integer> productIds = new ArrayList<>();
+
+        for (String id: ids){
+            productIds.add(Integer.parseInt(id));
+        }
+
+        List<Product> products = productRepository.findByProductIdIn(productIds);
+
+        ArrayList<ProductDTO> productResult = new ArrayList<>();
+
+        for (Product product : products) {
+            productResult.add(productToDTO(product));
+        }
+
+        return productResult;
+    }
 }
