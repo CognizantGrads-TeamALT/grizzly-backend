@@ -34,9 +34,9 @@ public class ImageUtils {
          }
      }*/
 
-    public static String readFromFile(Integer productId, String imageName) {
+    public static String readFromFile(String imageName) {
         String imageString = null;
-        String path = deploymentPath + productId + "/" + imageName;
+        String path = deploymentPath + imageName;
         File file = new File(path);
         try {
             FileInputStream imageInFile = new FileInputStream(file);
@@ -52,7 +52,7 @@ public class ImageUtils {
         return imageString;
     }
 
-    public static void writeToFile(String base64Image, Integer productId, String name) {
+    public static void writeToFile(String base64Image, String name) {
         // Set Permission
         Set<PosixFilePermission> fullPermission = new HashSet<>();
         fullPermission.add(PosixFilePermission.OWNER_EXECUTE);
@@ -67,7 +67,7 @@ public class ImageUtils {
         fullPermission.add(PosixFilePermission.OTHERS_READ);
         fullPermission.add(PosixFilePermission.OTHERS_WRITE);
 
-        String path = deploymentPath + productId;
+        String path = deploymentPath;
 
         try {
             // Check If Directory Already Exists Or Not?
@@ -92,7 +92,7 @@ public class ImageUtils {
         }
 
         //Specify the file path
-        String newPath = path + "/" + name;
+        String newPath = path + name;
         try {
             // Converting a Base64 String into Image byte array
             String[] split = base64Image.split(","); // strip out the un-needed data section.
