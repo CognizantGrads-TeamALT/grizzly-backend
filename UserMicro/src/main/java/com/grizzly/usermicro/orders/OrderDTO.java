@@ -1,38 +1,48 @@
 package com.grizzly.usermicro.orders;
 
-import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.orderitem.OrderItemDTO;
 
 import java.time.LocalDate;
 
 public class OrderDTO {
+    private Integer order_id;
     private Integer user_id;
     private Integer txn_id;
     private Double cost;
-    private String destination;
+    private String departing_location;
     private java.time.LocalDate shipped_on;
     private OrderItemDTO[] orderItemDTO;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(Integer user_id, Integer txn_id, Double cost, String destination, LocalDate shipped_on, OrderItemDTO[] orderItemDTO) {
+    public OrderDTO(Integer order_id, Integer user_id, Integer txn_id, Double cost, String departing_location, LocalDate shipped_on, OrderItemDTO[] orderItemDTO) {
+        this.order_id = order_id;
         this.user_id = user_id;
         this.txn_id = txn_id;
         this.cost = cost;
-        this.destination = destination;
+        this.departing_location = departing_location;
         this.shipped_on = shipped_on;
         this.orderItemDTO = orderItemDTO;
     }
 
     public Order toEntity() {
         Order order = new Order();
+        order.setOrder_id(order_id);
         order.setUser_id(user_id);
         order.setTxn_id(txn_id);
         order.setCost(cost);
-        order.setDestination(destination);
+        order.setDeparting_location(departing_location);
         order.setShipped_on(shipped_on);
         return order;
+    }
+
+    public Integer getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(Integer order_id) {
+        this.order_id = order_id;
     }
 
     public Integer getUser_id() {
@@ -59,12 +69,12 @@ public class OrderDTO {
         this.cost = cost;
     }
 
-    public String getDestination() {
-        return destination;
+    public String getDeparting_location() {
+        return departing_location;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setDeparting_location(String departing_location) {
+        this.departing_location = departing_location;
     }
 
     public LocalDate getShipped_on() {

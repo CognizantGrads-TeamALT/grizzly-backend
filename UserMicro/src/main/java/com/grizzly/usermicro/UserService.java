@@ -12,11 +12,9 @@ import com.grizzly.usermicro.orders.Order;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.orders.OrderRepository;
 import com.grizzly.usermicro.user.User;
-import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import com.grizzly.usermicro.vendor.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -187,13 +185,16 @@ public class UserService {
         return list;
     }
 
+
+    // CUSTOMER ORDER HISTORY
     /**
      * Get a single order from customer id.
      * @param userId, the string to match to ID to filter the orders by
      * @return ArrayList of Users with Orders
      */
-    public CustomerDTO getSingleWithOrders(Integer userId) {
-        CustomerDTO customer = getSingle(userId).get(0);
+    // 1. Call this instead of normal getSingleUserCustomer when you want their order history
+    public CustomerDTO getSingleCustomerWithOrders(Integer userId) {
+        CustomerDTO customer = getSingleOrder(userId).get(0);
 
         return customer;
     }
@@ -203,7 +204,8 @@ public class UserService {
      * @param search, the string to match to ID to filter the user by
      * @return ArrayList of User objs whose names or IDs
      */
-    public ArrayList<CustomerDTO> getSingle(Integer search) {
+    // 2. It then matches your user ID with an existing customer
+    public ArrayList<CustomerDTO> getSingleOrder(Integer search) {
         ArrayList<CustomerDTO> result = new ArrayList<>();
         Sort sort = new Sort(Sort.Direction.ASC, "userId");
         PageRequest request = PageRequest.of(0, 25, sort);
@@ -215,44 +217,36 @@ public class UserService {
         return result;
     }
 
-    @Cacheable("OrderDTO")
-    public OrderDTO getOrderFromCustomer(Integer userId, Integer orderId) {
-        Order order = orderRepository.findByCustomerIdAndOrderId(userId, orderId);
-
-        Integer txnId = order.getTxn_id();
-        Double cost = order.getCost();
-        String destination = order.getDestination();
-        LocalDate getShippedOn = order.getShipped_on();
-        Integer customerId = order.getUser_id();
-
-        OrderDTO response = new OrderDTO();
-        response.setUser_id(customerId);
-        response.setTxn_id(txnId);
-        response.setCost(cost);
-        response.setDestination(destination);
-        response.setShipped_on(getShippedOn);
-
-        return response;
-    }
-
-    // Convert a Customer object into a CustomerDTO
+    /**
+     * Convert a Customer object into a CustomerDTO
+     * @param customer, A Customer obj to get orders for
+     * @return A Customer DTO with a populated OrderDTO
+     */
+    // 3. We now prepare to return your customerDTO
     public CustomerDTO customerToDTO(Customer customer) {
+
+        // 3.1 Check whether your user has made orders in the user_order table
         List<Order> orders = orderRepository.findByUserId(customer.getUserId());
 
+        // 3.2 For each order we find return a OrderDTO
         OrderDTO[] orderDTO = new OrderDTO[orders.size()];
 
         for (int i = 0; i < orders.size(); i++) {
+            Integer order_id = orders.get(i).getOrder_id();
             Integer txnId = orders.get(i).getTxn_id();
             Double cost = orders.get(i).getCost();
-            String destination = orders.get(i).getDestination();
+            String destination = orders.get(i).getDeparting_location();
             LocalDate getShippedOn = orders.get(i).getShipped_on();
             Integer userId = orders.get(i).getUser_id();
 
             OrderDTO order = new OrderDTO();
+            order.setOrder_id(order_id);
             order.setTxn_id(txnId);
             order.setCost(cost);
-            order.setDestination(destination);
+            order.setDeparting_location(destination);
             order.setShipped_on(getShippedOn);
+            // 3.3 And also call getOrder to get the items in the order too
+            order.setOrderItemDTO(getOrderItemDTO(orders.get(i)));
             order.setUser_id(userId);
 
             orderDTO[i] = order;
@@ -265,51 +259,12 @@ public class UserService {
     }
 
     /**
-     * Get orderItems from an order id.
-     * @param orderId, the string to match to ID to filter the orders by
-     * @return ArrayList of Order with OrderItems
+     * Get a List of items for an order
+     * @param order, the order id to get items for
+     * @return List of OrderItem objs
      */
-    public OrderDTO getSingleOrderWithItems(Integer orderId) {
-        OrderDTO order = getOrder(orderId).get(0);
-
-        return order;
-    }
-
-    /**
-     * Get a single order from user id.
-     * @param search, the string to match to ID to filter the user by
-     * @return ArrayList of User objs whose names or IDs
-     */
-    public ArrayList<OrderDTO> getOrder(Integer search) {
-        ArrayList<OrderDTO> result = new ArrayList<>();
-
-        OrderDTO order = orderToDTO(orderRepository.findByUserId(search).get(0));
-
-        result.add(order);
-
-        return result;
-    }
-
-    @Cacheable("OrderItemDTO")
-    public OrderItemDTO getOrderItemsFromOrder(Integer orderItemId, Integer orderId) {
-        OrderItem item = orderItemRepository.findOrderItemByOrderId(orderItemId, orderId);
-
-        Integer order_id = item.getOrder_id();
-        String productId = item.getProductId();
-        String rating = item.getRating();
-        String quantity = item.getQuantity();
-
-        OrderItemDTO response = new OrderItemDTO();
-        response.setOrder_id(order_id);
-        response.setProductId(productId);
-        response.setRating(rating);
-        response.setQuantity(quantity);
-
-        return response;
-    }
-
-    // Convert a Order object into a OrderDTO
-    public OrderDTO orderToDTO(Order order) {
+    // Based on the order ID, we put the items into a OrderItemDTO
+    public OrderItemDTO[] getOrderItemDTO(Order order) {
         List<OrderItem> items = orderItemRepository.findItemsByOrderId(order.getOrder_id());
 
         OrderItemDTO[] orderItemDTO = new OrderItemDTO[items.size()];
@@ -326,16 +281,9 @@ public class UserService {
             orderItem.setRating(rating);
             orderItem.setQuantity(quantity);
 
-
             orderItemDTO[i] = orderItem;
         }
 
-        OrderDTO orderDTO = new OrderDTO(order.getUser_id(), order.getTxn_id(), order.getCost(), order.getDestination(), order.getShipped_on(), orderItemDTO);
-        orderDTO.setUser_id(order.getUser_id());
-
-        return orderDTO;
+        return orderItemDTO;
     }
-
-
-
 }
