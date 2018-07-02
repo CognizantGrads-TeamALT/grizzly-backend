@@ -95,7 +95,9 @@ public class ImageUtils {
         String newPath = path + "/" + name;
         try {
             // Converting a Base64 String into Image byte array
-            byte[] imageByteArray = Base64.getDecoder().decode(base64Image);
+            String[] split = base64Image.split(","); // strip out the un-needed data section.
+            if (split.length < 2) return; // fail.
+            byte[] imageByteArray = Base64.getDecoder().decode(split[1]);
             Path dirPathObj = Paths.get(newPath);
             Files.createFile(dirPathObj, PosixFilePermissions.asFileAttribute(fullPermission));
             Files.setPosixFilePermissions(dirPathObj, fullPermission);
