@@ -19,8 +19,8 @@ public class Order {
     @Column(name = "cost")
     private Double cost;
 
-    @Column(name = "destination")
-    private String destination;
+    @Column(name = "departing_location")
+    private String departing_location;
 
     @Column(name = "shipped_on")
     private java.time.LocalDate shipped_on;
@@ -29,11 +29,11 @@ public class Order {
 
     }
 
-    public Order(Integer user_id, Integer txn_id, Double cost, String destination, LocalDate shipped_on) {
+    public Order(Integer user_id, Integer txn_id, Double cost, String departing_location, LocalDate shipped_on) {
         this.user_id = user_id;
         this.txn_id = txn_id;
         this.cost = cost;
-        this.destination = destination;
+        this.departing_location = departing_location;
         this.shipped_on = shipped_on;
     }
 
@@ -61,12 +61,12 @@ public class Order {
         this.cost = cost;
     }
 
-    public String getDestination() {
-        return destination;
+    public String getDeparting_location() {
+        return departing_location;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setDeparting_location(String departing_location) {
+        this.departing_location = departing_location;
     }
 
     public LocalDate getShipped_on() {
