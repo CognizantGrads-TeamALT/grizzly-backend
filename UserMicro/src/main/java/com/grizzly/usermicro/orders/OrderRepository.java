@@ -11,6 +11,4 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Integ
     @Query("SELECT i FROM user_order i WHERE i.user_id = :user_id")
     List<Order> findByUserId(@Param("user_id") Integer user_id);
 
-    @Query("SELECT i FROM user_order i WHERE i.user_id = :user_id AND i.order_id = :order_id")
-    Order findByCustomerIdAndOrderId(@Param("user_id") Integer user_id, @Param("order_id") Integer order_id);
 }

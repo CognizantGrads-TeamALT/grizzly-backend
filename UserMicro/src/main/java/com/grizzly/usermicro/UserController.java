@@ -8,10 +8,7 @@ import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 import com.grizzly.usermicro.admin.Admin;
 import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
-import com.grizzly.usermicro.orderitem.OrderItemDTO;
-import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.User;
-import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -126,68 +123,19 @@ public class UserController {
 
     /**
      * Return a single customer with orders based on their id
-     * @param id, user ID
+     * @param userId, user ID
      * @return A CustomerDTO with orders
      */
-    @GetMapping("/get/orders/{id}")
-    public ResponseEntity getSingleWithOrders(@PathVariable(value="id") Integer id) {
-        CustomerDTO customer = userService.getSingleWithOrders(id);
+    @GetMapping("/get/orders/{userId}")
+    public ResponseEntity getSingleWithOrders(@PathVariable(value="userId") Integer userId) {
+        CustomerDTO customer = userService.getSingleCustomerWithOrders(userId);
 
         // no product found
         if (customer == null) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No user was found.", "id: " + id));
+            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No user was found.", "userId: " + userId));
         }
 
         return new ResponseEntity<>(customer, HttpStatus.OK);
-    }
-
-    /**
-     * Return a single specific order from a specific customer
-     * @param id, user ID, orderId
-     * @return OrderDTOs from that userId
-     */
-    @GetMapping("/getOrder/{id}/{orderId}")
-    public ResponseEntity getSingleOrder(@PathVariable(value="id") Integer id, @PathVariable(value="orderId") Integer orderId) {
-        OrderDTO order = userService.getOrderFromCustomer(id, orderId);
-
-        if (order == null) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "id: " + id + " " + "orderId: " + orderId));
-        }
-
-        return new ResponseEntity<>(order, HttpStatus.OK);
-    }
-
-    /**
-     * Return a single order with orders items
-     * @param orderId, order id
-     * @return the order with orders items
-     */
-    @GetMapping("/get/orderItems/{orderId}")
-    public ResponseEntity getSingleOrderWithOrderItems(@PathVariable(value="orderId") Integer orderId) {
-        OrderDTO order = userService.getSingleOrderWithItems(orderId);
-
-        // no product found
-        if (order == null) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No user was found.", "orderId: " + orderId));
-        }
-
-        return new ResponseEntity<>(order, HttpStatus.OK);
-    }
-
-    /**
-     * Return a single order item from a orderId
-     * @param orderItemId, orderItemId, user ID, orderId
-     * @return the order items from one order Id
-     */
-    @GetMapping("/getOrderItem/{orderId}/{orderItemId}")
-    public ResponseEntity getSingleOrderItemByOrderId(@PathVariable(value="orderId") Integer orderId, @PathVariable(value="orderItemId") Integer orderItemId) {
-        OrderItemDTO orderItem = userService.getOrderItemsFromOrder(orderItemId, orderId);
-
-        if (orderItem == null) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "orderId: " + orderId + " " + "orderItemId: " + orderItemId));
-        }
-
-        return new ResponseEntity<>(orderItem, HttpStatus.OK);
     }
 
     /**
