@@ -36,7 +36,7 @@ public class ImageUtils {
 
     public static String readFromFile(String imageName) {
         String imageString = null;
-        String path = deploymentPath + imageName;
+        String path = deploymentPath + "/" + imageName;
         File file = new File(path);
         try {
             FileInputStream imageInFile = new FileInputStream(file);
