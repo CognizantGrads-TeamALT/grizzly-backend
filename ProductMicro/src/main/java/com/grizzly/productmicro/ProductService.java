@@ -321,12 +321,15 @@ public class ProductService {
         for (Image image : images) {
             dbUrls.add(image.getImage_url());
         }
-        for (ImageDTO imageDto : request.getImageDTO()) {
-            dtoUrls.add(hashImageName(imageDto.getImgName(), imageDto.getBase64Image()));
-            if (!dbUrls.contains(dtoUrls.get(dtoUrls.size()-1))) {
-                needsEdit = true;
+
+        if (request.getImageDTO() != null)
+            for (ImageDTO imageDto : request.getImageDTO()) {
+                dtoUrls.add(hashImageName(imageDto.getImgName(), imageDto.getBase64Image()));
+                if (!dbUrls.contains(dtoUrls.get(dtoUrls.size()-1))) {
+                    needsEdit = true;
+                }
             }
-        }
+
         if (dbUrls.size() != dtoUrls.size()) {
             needsEdit = true;
         }
@@ -337,11 +340,12 @@ public class ProductService {
             List<Image> toDel = new ArrayList<>();
 
             // if there isn't a DB image for a DTO image, the DTO one must be added
-            for (ImageDTO imgDto : request.getImageDTO()) {
-                if (!dbUrls.contains(hashImageName(imgDto.getImgName(), imgDto.getBase64Image()))) {
-                    toAdd.add(imgDto);
+            if (request.getImageDTO() != null)
+                for (ImageDTO imgDto : request.getImageDTO()) {
+                    if (!dbUrls.contains(hashImageName(imgDto.getImgName(), imgDto.getBase64Image()))) {
+                        toAdd.add(imgDto);
+                    }
                 }
-            }
 
             // if there isn't a DTO image for a DB image, the DB one must be deleted
             for (Image img : images) {
