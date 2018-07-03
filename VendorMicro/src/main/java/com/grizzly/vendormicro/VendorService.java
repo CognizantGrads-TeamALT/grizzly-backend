@@ -8,22 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
-import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
 
 @Service
 public class VendorService {
@@ -156,29 +150,17 @@ public class VendorService {
      * @param newVendor, the entity of the new vendor to save
      * @return the added vendor object
      */
-    public VendorDTO add(VendorDTO newVendor) {
+    public VendorDTO add(VendorDTO newVendor) throws NoSuchAlgorithmException {
         Vendor created = vendorRepository.save(newVendor.toEntity());
 
         ImageDTO[] imageDTO = newVendor.getImageDTO();
-        for (int i = 0; i < imageDTO.length; i++) {
-            String ogName = imageDTO[i].getImgName();
-            String content = imageDTO[i].getBase64Image();
-
-            try {
-                MessageDigest md = MessageDigest.getInstance("MD5");
-                md.update(content.getBytes());
-                byte[] digest = md.digest();
-                String newName = DatatypeConverter
-                        .printHexBinary(digest).toUpperCase();
-
-                newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1);
-
-                ImageUtils.writeToFile(content, newName);
-                imageRepository.save(new Image(created.getVendorId(), newName));
-            } catch (Exception e) {
-                return null;
+        if (imageDTO != null)
+            for (int i = 0; i < imageDTO.length; i++) {
+                // Image filetype validator. should have size check here too...
+                if (!isValidImageType(imageDTO[i].getImgName()))
+                    continue;
+                saveImageDTO(imageDTO[i], created.getVendorId());
             }
-        }
 
         VendorDTO vendorDTO = new VendorDTO(created.getName(), created.getContactNum(), created.getWebsite(), created.getEmail(),
                 created.getBio(), created.getEnabled(), imageDTO);
@@ -208,5 +190,62 @@ public class VendorService {
         }
 
         return vendorsResult;
+    }
+
+    // Image filetype validator.
+    public String getFileExtension(String fileName) {
+        String extension = "";
+
+        int i = fileName.lastIndexOf('.');
+        if (i > 0) {
+            extension = fileName.substring(i+1);
+        }
+
+        return extension.toLowerCase();
+    }
+
+    // Image filetype validator.
+    public Boolean isValidImageType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        if (!fileExtension.equals(".png") &&
+                !fileExtension.equals(".jpg") &&
+                !fileExtension.equals(".jpeg"))
+            return true;
+
+        return false;
+    }
+
+    /**
+     * writes a given image DTO to file and saves it as an image in the Database
+     * @param imgDto, the image dto to save, as it came in from the front-end
+     * @param prodId, the ID of the product to attach the image to
+     */
+    private void saveImageDTO(ImageDTO imgDto, Integer prodId) throws NoSuchAlgorithmException {
+        String newName = hashImageName(imgDto.getImgName(), imgDto.getBase64Image());
+
+        ImageUtils.writeToFile(imgDto.getBase64Image(), newName);
+        imageRepository.save(new Image(prodId, newName));
+    }
+
+    /**
+     * Hashes a given image's name and base64 encoding into a new file name
+     * @param ogName, the original name of the image
+     * @param content, the base64 encoding of the image
+     * @return a new, hashed file name for the image (including correct extension)
+     */
+    private String hashImageName(String ogName, String content) throws NoSuchAlgorithmException {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch(NoSuchAlgorithmException e) {
+            throw e;
+        }
+        md.update(content.getBytes());
+        byte[] digest = md.digest();
+        String newName = DatatypeConverter
+                .printHexBinary(digest).toUpperCase();
+
+        newName += "." + ogName.substring(ogName.lastIndexOf(".") + 1).toLowerCase();
+        return newName;
     }
 }

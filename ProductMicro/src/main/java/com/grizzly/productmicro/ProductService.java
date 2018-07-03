@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Null;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -20,11 +18,9 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
 import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
 
 @Service
@@ -192,12 +188,14 @@ public class ProductService {
         Product created = productRepository.save(newProduct.toEntity());
 
         ImageDTO[] imageDTO = newProduct.getImageDTO();
-        for (int i = 0; i < imageDTO.length; i++) {
-            // Image filetype validator. should have size check here too...
-            if (!isValidImageType(imageDTO[i].getImgName()))
-                continue;
-            saveImageDTO(imageDTO[i], created.getProductId());
-        }
+        if (imageDTO != null)
+            for (int i = 0; i < imageDTO.length; i++) {
+                // Image filetype validator. should have size check here too...
+                if (!isValidImageType(imageDTO[i].getImgName()))
+                    continue;
+                saveImageDTO(imageDTO[i], created.getProductId());
+            }
+
         try {
             URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
                                 "category/updateCount/" + created.getCategoryId());
