@@ -272,7 +272,7 @@ public class ProductController {
         try {
             product = productService.edit(productId, request);
         }
-        catch (NoSuchAlgorithmException e) {
+        catch (Exception e) {
             // exception if the ID did not map to an existing product
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
                     "name: " + request.getName()
