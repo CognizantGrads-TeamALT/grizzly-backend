@@ -322,50 +322,50 @@ public class ProductService {
             dbUrls.add(image.getImage_url());
         }
 
-        if (request.getImageDTO() != null)
+        if (request.getImageDTO() != null) {
             for (ImageDTO imageDto : request.getImageDTO()) {
                 dtoUrls.add(hashImageName(imageDto.getImgName(), imageDto.getBase64Image()));
-                if (!dbUrls.contains(dtoUrls.get(dtoUrls.size()-1))) {
+                if (!dbUrls.contains(dtoUrls.get(dtoUrls.size() - 1))) {
                     needsEdit = true;
                 }
             }
 
-        if (dbUrls.size() != dtoUrls.size()) {
-            needsEdit = true;
-        }
+            if (dbUrls.size() != dtoUrls.size()) {
+                needsEdit = true;
+            }
 
-        // check if any changes to images are required
-        if (needsEdit) {
-            List<ImageDTO> toAdd = new ArrayList<>();
-            List<Image> toDel = new ArrayList<>();
+            // check if any changes to images are required
+            if (needsEdit) {
+                List<ImageDTO> toAdd = new ArrayList<>();
+                List<Image> toDel = new ArrayList<>();
 
-            // if there isn't a DB image for a DTO image, the DTO one must be added
-            if (request.getImageDTO() != null)
+                // if there isn't a DB image for a DTO image, the DTO one must be added
                 for (ImageDTO imgDto : request.getImageDTO()) {
                     if (!dbUrls.contains(hashImageName(imgDto.getImgName(), imgDto.getBase64Image()))) {
                         toAdd.add(imgDto);
                     }
                 }
 
-            // if there isn't a DTO image for a DB image, the DB one must be deleted
-            for (Image img : images) {
-                if (!dtoUrls.contains(img.getImage_url())) {
-                    toDel.add(img);
+                // if there isn't a DTO image for a DB image, the DB one must be deleted
+                for (Image img : images) {
+                    if (!dtoUrls.contains(img.getImage_url())) {
+                        toDel.add(img);
+                    }
                 }
-            }
 
-            // perform the adds
-            for (ImageDTO add : toAdd) {
-                // image filetype validator. should have size check here too...
-                if (!isValidImageType(add.getImgName()))
-                    continue;
-                saveImageDTO(add, prod.getProductId());
-            }
+                // perform the adds
+                for (ImageDTO add : toAdd) {
+                    // image filetype validator. should have size check here too...
+                    if (!isValidImageType(add.getImgName()))
+                        continue;
+                    saveImageDTO(add, prod.getProductId());
+                }
 
-            // perform the deletes
-            for (Image del : toDel) {
-                //ImageUtils.deleteImage(del.getImage_id(), del.getImage_url());
-                imageRepository.deleteById(del.getImage_id());
+                // perform the deletes
+                for (Image del : toDel) {
+                    //ImageUtils.deleteImage(del.getImage_id(), del.getImage_url());
+                    imageRepository.deleteById(del.getImage_id());
+                }
             }
         }
 
@@ -391,6 +391,10 @@ public class ProductService {
      * @return a new, hashed file name for the image (including correct extension)
      */
     private String hashImageName(String ogName, String content) throws NoSuchAlgorithmException {
+        // return original name if theres no content.
+        if (content == null)
+            return ogName;
+
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");
