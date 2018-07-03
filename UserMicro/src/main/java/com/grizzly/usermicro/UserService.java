@@ -229,18 +229,16 @@ public class UserService {
         List<Order> orders = orderRepository.findByUserId(customer.getUserId());
 
         // 3.2 For each order we find return a OrderDTO
-        OrderDTO[] orderDTO = new OrderDTO[orders.size()];
+        ArrayList<OrderDTO> orderDTO = new ArrayList<OrderDTO>();
 
         for (int i = 0; i < orders.size(); i++) {
-            Integer order_id = orders.get(i).getOrder_id();
-            Integer txnId = orders.get(i).getTxn_id();
+            String txnId = orders.get(i).getTxn_id();
             Double cost = orders.get(i).getCost();
             String destination = orders.get(i).getDeparting_location();
             LocalDate getShippedOn = orders.get(i).getShipped_on();
             Integer userId = orders.get(i).getUser_id();
 
             OrderDTO order = new OrderDTO();
-            order.setOrder_id(order_id);
             order.setTxn_id(txnId);
             order.setCost(cost);
             order.setDeparting_location(destination);
@@ -249,7 +247,7 @@ public class UserService {
             order.setOrderItemDTO(getOrderItemDTO(orders.get(i)));
             order.setUser_id(userId);
 
-            orderDTO[i] = order;
+            orderDTO.set(i, order);
         }
 
         CustomerDTO customerDTO = new CustomerDTO(customer.getUserId(), customer.getAddress(), orderDTO);
@@ -264,16 +262,16 @@ public class UserService {
      * @return List of OrderItem objs
      */
     // Based on the order ID, we put the items into a OrderItemDTO
-    public OrderItemDTO[] getOrderItemDTO(Order order) {
+    public ArrayList<OrderItemDTO> getOrderItemDTO(Order order) {
         List<OrderItem> items = orderItemRepository.findItemsByOrderId(order.getOrder_id());
 
-        OrderItemDTO[] orderItemDTO = new OrderItemDTO[items.size()];
+        ArrayList<OrderItemDTO> orderItemDTO = new ArrayList<OrderItemDTO>();
 
         for (int i = 0; i < items.size(); i++) {
             Integer orderId = items.get(i).getOrder_id();
-            String productId = items.get(i).getProductId();
-            String rating = items.get(i).getRating();
-            String quantity = items.get(i).getQuantity();
+            Integer productId = items.get(i).getProductId();
+            Float rating = items.get(i).getRating();
+            Integer quantity = items.get(i).getQuantity();
 
             OrderItemDTO orderItem = new OrderItemDTO();
             orderItem.setOrder_id(orderId);
@@ -281,9 +279,23 @@ public class UserService {
             orderItem.setRating(rating);
             orderItem.setQuantity(quantity);
 
-            orderItemDTO[i] = orderItem;
+            orderItemDTO.set(i, orderItem);
         }
 
         return orderItemDTO;
+    }
+
+    public void addOrder(OrderDTO orderDTO){
+
+        Order newOrder = orderRepository.save(orderDTO.toEntity());
+
+        Integer ordID = newOrder.getOrder_id();
+        ArrayList<OrderItemDTO> OrderItems = orderDTO.getOrderItemDTO();
+
+        for (int i = 0; i < OrderItems.size(); i++ ){
+            orderItemRepository.save(OrderItems.get(i).toEntity(ordID));
+        }
+
+
     }
 }

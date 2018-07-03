@@ -14,7 +14,7 @@ public class Order {
     private Integer user_id;
 
     @Column(name = "txn_id")
-    private Integer txn_id;
+    private String txn_id;
 
     @Column(name = "cost")
     private Double cost;
@@ -25,11 +25,13 @@ public class Order {
     @Column(name = "shipped_on")
     private java.time.LocalDate shipped_on;
 
+
+
     public Order() {
 
     }
 
-    public Order(Integer user_id, Integer txn_id, Double cost, String departing_location, LocalDate shipped_on) {
+    public Order(Integer user_id, String txn_id, Double cost, String departing_location, LocalDate shipped_on) {
         this.user_id = user_id;
         this.txn_id = txn_id;
         this.cost = cost;
@@ -45,11 +47,11 @@ public class Order {
         this.order_id = order_id;
     }
 
-    public Integer getTxn_id() {
+    public String getTxn_id() {
         return txn_id;
     }
 
-    public void setTxn_id(Integer txn_id) {
+    public void setTxn_id(String txn_id) {
         this.txn_id = txn_id;
     }
 

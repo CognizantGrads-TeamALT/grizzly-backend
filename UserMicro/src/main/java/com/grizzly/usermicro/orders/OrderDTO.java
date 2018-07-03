@@ -3,21 +3,22 @@ package com.grizzly.usermicro.orders;
 import com.grizzly.usermicro.orderitem.OrderItemDTO;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class OrderDTO {
     private Integer order_id;
     private Integer user_id;
-    private Integer txn_id;
+    private String txn_id;
     private Double cost;
     private String departing_location;
     private java.time.LocalDate shipped_on;
-    private OrderItemDTO[] orderItemDTO;
+    private ArrayList<OrderItemDTO> orderItemDTO;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(Integer order_id, Integer user_id, Integer txn_id, Double cost, String departing_location, LocalDate shipped_on, OrderItemDTO[] orderItemDTO) {
-        this.order_id = order_id;
+    public OrderDTO( Integer user_id, String txn_id, Double cost, String departing_location, LocalDate shipped_on, ArrayList<OrderItemDTO> orderItemDTO) {
+
         this.user_id = user_id;
         this.txn_id = txn_id;
         this.cost = cost;
@@ -28,7 +29,6 @@ public class OrderDTO {
 
     public Order toEntity() {
         Order order = new Order();
-        order.setOrder_id(order_id);
         order.setUser_id(user_id);
         order.setTxn_id(txn_id);
         order.setCost(cost);
@@ -37,13 +37,6 @@ public class OrderDTO {
         return order;
     }
 
-    public Integer getOrder_id() {
-        return order_id;
-    }
-
-    public void setOrder_id(Integer order_id) {
-        this.order_id = order_id;
-    }
 
     public Integer getUser_id() {
         return user_id;
@@ -53,11 +46,11 @@ public class OrderDTO {
         this.user_id = user_id;
     }
 
-    public Integer getTxn_id() {
+    public String getTxn_id() {
         return txn_id;
     }
 
-    public void setTxn_id(Integer txn_id) {
+    public void setTxn_id(String txn_id) {
         this.txn_id = txn_id;
     }
 
@@ -85,11 +78,11 @@ public class OrderDTO {
         this.shipped_on = shipped_on;
     }
 
-    public OrderItemDTO[] getOrderItemDTO() {
+    public ArrayList<OrderItemDTO> getOrderItemDTO() {
         return orderItemDTO;
     }
 
-    public void setOrderItemDTO(OrderItemDTO[] orderItemDTO) {
+    public void setOrderItemDTO(ArrayList<OrderItemDTO> orderItemDTO) {
         this.orderItemDTO = orderItemDTO;
     }
 }
