@@ -156,7 +156,7 @@ public class UserController {
     }
 
     @PutMapping("/save")
-    public ResponseEntity addOrUpdateCustomer(@RequestBody UserDTO userDTO) {
+    public ResponseEntity addOrUpdateCustomer(@RequestBody CustomerDTO userDTO) {
         User user = userService.addOrUpdateUser(userDTO);
 
         if (user == null)
