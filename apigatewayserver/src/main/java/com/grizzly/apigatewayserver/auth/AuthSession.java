@@ -11,7 +11,8 @@ public class AuthSession {
 
     @Lob
     @Column(name="tokenId")     private String tokenId;
-    @Column(name="userData")    private String userData;
+    @Column(name="userData",    columnDefinition = "TEXT")
+                                private String userData;
     @Column(name="email")       private String email;
     @Column(name="role")        private String role;
 
