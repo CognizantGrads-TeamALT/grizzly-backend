@@ -5,7 +5,6 @@ import com.grizzly.productmicro.image.ImageDTO;
 import com.grizzly.productmicro.image.ImageRepository;
 import com.grizzly.productmicro.image.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -93,27 +92,10 @@ public class ProductService {
      * @param productId, the string to match to ID to filter the product by
      * @return ArrayList of Products with Imgs
      */
-    public ProductDTO getSingleWithImgs(Integer productId) {
+    public ProductDTO getSingleById(Integer productId) {
         ProductDTO product = getSingle(productId).get(0);
 
         return product;
-    }
-
-    @Cacheable("ImageDTO")
-    public ImageDTO getImageFromProduct(String fileName) {
-        String base64Image = ImageUtils.readFromFile(fileName);
-
-        if (base64Image == null)
-            return null;
-
-        ImageDTO response = new ImageDTO();
-        response.setImgName(fileName);
-
-        String base64String = "data:image/" + fileName.substring(fileName.lastIndexOf(".") + 1)
-                + ";base64," + base64Image;
-        response.setBase64Image(base64String);
-
-        return response;
     }
 
     /**

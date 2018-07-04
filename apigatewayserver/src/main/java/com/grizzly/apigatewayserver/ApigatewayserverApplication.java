@@ -27,6 +27,6 @@ public class ApigatewayserverApplication {
 
     @GetMapping("/")
     public ResponseEntity index() {
-        return new ResponseEntity<>("YOU GET A COOKIE!", HttpStatus.OK);
+        return new ResponseEntity<>("Welcome!", HttpStatus.OK);
     }
 }

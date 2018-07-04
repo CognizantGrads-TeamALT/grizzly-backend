@@ -12,6 +12,7 @@ import com.grizzly.usermicro.orders.Order;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.orders.OrderRepository;
 import com.grizzly.usermicro.user.User;
+import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import com.grizzly.usermicro.vendor.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
 
 @Service
 public class UserService {
@@ -151,18 +154,36 @@ public class UserService {
         );
     }
 
-    public Customer addOrUpdateCustomer(Customer cust) {
-
+    public User addOrUpdateUser(UserDTO newUser) {
         try {
             // find the existing Customer
-            Customer customer = customerRepository.findByUserEmail(cust.getEmail());
-            if(customer != null) {
-                customer.setContact_num(cust.getContact_num());
-                customer.setAddress(cust.getAddress());
-                Customer saved = customerRepository.save(customer);
+            User user = findByUserEmail(newUser.getEmail());
+            if (user != null) {
+                User saved;
+                if (user.getRole().equals("admin")) {
+                    Admin adminUser = (Admin) user;
+                    adminUser.setName(newUser.getName());
+                    saved = adminRepository.save(adminUser);
+                } else if (user.getRole().equals("vendor")) {
+                    Vendor vendorUser = (Vendor) user;
+                    vendorUser.setName(newUser.getName());
+                    saved = vendorRepository.save(vendorUser);
+                } else {
+                    Customer customerUser = (Customer) user;
+                    CustomerDTO existingUser = (CustomerDTO) newUser;
+                    customerUser.setContact_num(existingUser.getContact_num());
+                    customerUser.setAddress(existingUser.getAddress());
+                    saved = customerRepository.save(customerUser);
+                }
                 return saved;
             } else {
-                Customer created = customerRepository.save(cust);
+                Customer newCustomer = new Customer();
+                CustomerDTO details = (CustomerDTO) newUser;
+                newCustomer.setName(details.getName());
+                newCustomer.setEmail(details.getEmail());
+                newCustomer.setAddress(details.getAddress());
+                newCustomer.setContact_num(details.getContact_num());
+                User created = customerRepository.save(newCustomer);
                 return created;
             }
         } catch (NoSuchElementException e) {

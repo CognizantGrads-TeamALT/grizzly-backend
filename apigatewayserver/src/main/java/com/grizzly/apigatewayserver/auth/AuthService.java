@@ -1,9 +1,11 @@
 package com.grizzly.apigatewayserver.auth;
 
 import com.grizzly.apigatewayserver.client.UserClient;
+import com.grizzly.apigatewayserver.model.CustomerDTO;
 import com.grizzly.apigatewayserver.security.GoogleAuthenticator;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -25,10 +27,6 @@ public class AuthService {
      */
     public Payload verifyToken(String tokenId) {
         return GoogleAuthenticator.verifyIdToken(tokenId);
-    }
-
-    private AuthSession getSession(String tokenId) {
-        return authRepository.findByTokenId(tokenId);
     }
 
     public synchronized AuthSession getActiveSession(String tokenId) {
@@ -87,22 +85,15 @@ public class AuthService {
         return false;
     }
 
-    public Boolean hasAccess(AuthSession authSession, String expectedRole) {
-        return authSession.getRole().equals(expectedRole);
-    }
-
     // aka sign in.
     private synchronized AuthSession createSession(String tokenId, Payload tokenData) {
-        // theres already a session...
-        //AuthSession authSession = getSession(tokenId);
-        //if (authSession != null)
-        //    return authSession;
-
         // search for the user.
         Object user = userClient.findByUserEmail(tokenData.getEmail());
 
         // user doesn't exist, lets create them.
+        Boolean newInsert = false;
         if (user == null) {
+            newInsert = true;
             user = signUp(tokenData);
 
             // not happening...
@@ -115,10 +106,12 @@ public class AuthService {
         System.out.println("DATA FROM USERMICRO: ");
         System.out.println(map.toString());
 
+        String jsonString = new JSONObject(map).toString();
+
         AuthSession authSession =
                 new AuthSession(
                         tokenId,
-                        map.get("role"),
+                        jsonString,
                         tokenData.getEmail()
                 );
 
@@ -128,6 +121,10 @@ public class AuthService {
         // save.
         authRepository.save(authSession);
 
+        // update the users name for example.
+        if (!newInsert)
+            signUp(tokenData);
+
         return authSession;
     }
 
@@ -136,7 +133,11 @@ public class AuthService {
         String email = tokenData.getEmail();
         String name = (String) tokenData.get("name");
 
-        return userClient.addNewUser(name, email);
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setEmail(email);
+        customerDTO.setName(name);
+
+        return userClient.addOrUpdateUser(customerDTO);
     }
 
     // clear the old expired sessions.

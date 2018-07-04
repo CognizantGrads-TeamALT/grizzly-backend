@@ -1,4 +1,4 @@
-package com.grizzly.apigatewayserver;
+package com.grizzly.apigatewayserver.filter;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

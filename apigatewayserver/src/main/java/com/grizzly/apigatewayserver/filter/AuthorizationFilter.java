@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.grizzly.apigatewayserver.security.SecurityConstants.HEADER_STRING;
-import static com.grizzly.apigatewayserver.security.SecurityConstants.TOKEN_PREFIX;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
     private AuthService authService;
@@ -33,7 +32,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                                     FilterChain chain) throws IOException, ServletException {
         String header = request.getHeader(HEADER_STRING);
 
-        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+        if (header == null) {
             chain.doFilter(request, response);
             return;
         }
@@ -54,8 +53,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(HEADER_STRING);
 
         if (token != null) {
-            System.out.println(token.replace(TOKEN_PREFIX, ""));
-            AuthSession authSession = authService.sessionStart(token.replace(TOKEN_PREFIX, ""));
+            System.out.println(token);
+            AuthSession authSession = authService.sessionStart(token);
 
             if (authSession != null) {
                 System.out.println("Success login?");

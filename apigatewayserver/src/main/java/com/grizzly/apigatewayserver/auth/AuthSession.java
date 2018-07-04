@@ -11,16 +11,16 @@ public class AuthSession {
 
     @Lob
     @Column(name="tokenId")     private String tokenId;
-    @Column(name="role")        private String role;
+    @Column(name="userData")    private String userData;
     @Column(name="email")       private String email;
 
     public AuthSession() {
         super();
     }
 
-    public AuthSession(String tokenId, String role, String email) {
+    public AuthSession(String tokenId, String userData, String email) {
         this.tokenId = tokenId;
-        this.role = role;
+        this.userData = userData;
         this.email = email;
     }
 
@@ -40,12 +40,12 @@ public class AuthSession {
         this.tokenId = tokenId;
     }
 
-    public String getRole() {
-        return role;
+    public String getUserData() {
+        return userData;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setUserData(String userData) {
+        this.userData = userData;
     }
 
     public String getEmail() {
@@ -60,7 +60,7 @@ public class AuthSession {
     public String toString() {
         return "AuthSession{" +
                 "tokenId='" + tokenId + '\'' +
-                ", role='" + role + '\'' +
+                ", userData='" + userData + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

@@ -10,7 +10,7 @@ server:
   port: 8765
 zuul:
   ignored-services: "*"
-  sensitiveHeaders: Authorization,Cookie,Set-Cookie
+  sensitiveHeaders: Authorization,Cookie,Set-Cookie,User-Details
   ignored-headers: Access-Control-Allow-Headers,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Max-Age
   routes:
     categorymicro:

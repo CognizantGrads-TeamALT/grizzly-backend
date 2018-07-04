@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -98,11 +97,6 @@ public class CategoryController {
         }
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
-    }
-
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return new ResponseEntity<String>("Hello!", HttpStatus.OK);
     }
 
     /**
