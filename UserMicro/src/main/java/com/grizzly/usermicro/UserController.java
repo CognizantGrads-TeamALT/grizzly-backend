@@ -10,6 +10,7 @@ import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.User;
+import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class UserController {
      * @return Admins in a list
      */
     @GetMapping("/get/vendor/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Vendor>> getAllVendors(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity getAllVendors(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Vendor> vendors = userService.getAllVendors(pageIndex, column_name);
 
         // no products found
@@ -44,7 +45,7 @@ public class UserController {
      * @return Admins in a list
      */
     @GetMapping("/get/customer/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Customer>> getAllCustomers(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity getAllCustomers(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Customer> customers = userService.getAllCustomers(pageIndex, column_name);
 
         // no products found
@@ -60,7 +61,7 @@ public class UserController {
      * @return Admins in a list
      */
     @GetMapping("/get/admin/{pageIndex}/{column_name}")
-    public ResponseEntity<ArrayList<Admin>> getAllAdmins(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity getAllAdmins(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
         ArrayList<Admin> admins = userService.getAllAdmins(pageIndex, column_name);
 
         // no products found
@@ -77,7 +78,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/admin/{id}")
-    public ResponseEntity<ArrayList<Admin>> getSingleUserAdmin(@PathVariable(value="id") Integer id) {
+    public ResponseEntity getSingleUserAdmin(@PathVariable(value="id") Integer id) {
         ArrayList<Admin> admins = userService.getSingleUserAdmin(id);
 
         // no users found
@@ -94,7 +95,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/vendor/{id}")
-    public ResponseEntity<ArrayList<Vendor>> getSingleUserVendor(@PathVariable(value="id") Integer id) {
+    public ResponseEntity getSingleUserVendor(@PathVariable(value="id") Integer id) {
         ArrayList<Vendor> vendors = userService.getSingleUserVendor(id);
 
         // no users found
@@ -111,7 +112,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/customer/{id}")
-    public ResponseEntity<ArrayList<Customer>> getSingleUserCustomer(@PathVariable(value="id") Integer id) {
+    public ResponseEntity getSingleUserCustomer(@PathVariable(value="id") Integer id) {
         ArrayList<Customer> customers = userService.getSingleUserCustomer(id);
 
         // no users found
@@ -144,23 +145,24 @@ public class UserController {
      * @param email, user email
      * @return the user
      */
-    @GetMapping("/get/{email}")
-    public ResponseEntity<User> getSingleUser(@PathVariable(value="email") String email) {
+    @GetMapping("/getByEmail/{email}")
+    public ResponseEntity getSingleUser(@PathVariable(value="email") String email) {
         User user = userService.findByUserEmail(email);
 
         if (user == null)
-            return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-
     @PutMapping("/save")
-    public ResponseEntity<Customer> addOrUpdateCustomer(@RequestBody CustomerDTO customerDTO) {
-        Customer customer = new Customer(customerDTO.getName(), customerDTO.getContact_num(), customerDTO.getEmail(), customerDTO.getAddress());
-        customer.setRole("customer");
+    public ResponseEntity addOrUpdateCustomer(@RequestBody UserDTO userDTO) {
+        User user = userService.addOrUpdateUser(userDTO);
 
-        return new ResponseEntity<>(userService.addOrUpdateCustomer(customer), HttpStatus.OK);
+        if (user == null)
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     /**

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 
-import com.grizzly.productmicro.image.ImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,8 @@ public class ProductController {
      * @return products in a list
      */
     @GetMapping("/get/{pageIndex}/{column_name}")
-    public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity get(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name, @RequestHeader(value="User-Data", required=false) String userData) {
+        System.out.println("User-Data: " + userData);
         ArrayList<ProductDTO> products = productService.get(pageIndex, column_name);
 
         // no products found
@@ -90,7 +90,7 @@ public class ProductController {
      */
     @GetMapping("/getDetails/{id}")
     public ResponseEntity getSingleWithImgs(@PathVariable(value="id") Integer id) {
-        ProductDTO product = productService.getSingleWithImgs(id);
+        ProductDTO product = productService.getSingleById(id);
 
         // no product found
         if (product == null) {
@@ -98,22 +98,6 @@ public class ProductController {
         }
 
         return new ResponseEntity<>(product, HttpStatus.OK);
-    }
-
-    /**
-     * Return a single image from a product
-     * @param fileName, file name.
-     * @return the product with imgs
-     */
-    @GetMapping("/getImage/{filename}")
-    public ResponseEntity getSingleImage(@PathVariable(value="filename") String fileName) {
-        ImageDTO image = productService.getImageFromProduct(fileName);
-
-        if (image == null) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "filename: " + fileName));
-        }
-
-        return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
     /**
@@ -243,7 +227,7 @@ public class ProductController {
      * @param column_name, name of the product field we are sorting by (defaults to product ID)
      * @return list of products in the given category
      */
-    @GetMapping("/bycategory/{catId}/{pageIndex}/{column_name}")
+    @GetMapping("/byCategory/{catId}/{pageIndex}/{column_name}")
     public ResponseEntity getByCategory(@PathVariable(value="catId") Integer catId,
                                                           @PathVariable(value="pageIndex") Integer pageIndex,
                                                           @PathVariable(value="column_name") String column_name) {
@@ -298,7 +282,7 @@ public class ProductController {
             ));
         }
 
-        return new ResponseEntity(product, HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @GetMapping("/getInventory/{pageIndex}/{vendorId}")
@@ -310,11 +294,6 @@ public class ProductController {
         }
 
 
-        return new ResponseEntity(products, HttpStatus.OK);
-    }
-
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return new ResponseEntity<String>("Hello!", HttpStatus.OK);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

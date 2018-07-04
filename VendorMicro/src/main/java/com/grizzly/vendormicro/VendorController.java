@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
-import com.grizzly.vendormicro.image.ImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -69,22 +68,6 @@ public class VendorController {
     }
 
     /**
-     * Return a single image from a vendor
-     * @param fileName
-     * @return the product with imgs
-     */
-    @GetMapping("/getImage/{fileName}")
-    public ResponseEntity getSingleImage(@PathVariable(value="fileName") String fileName) {
-        ImageDTO image = vendorService.getImageFromVendor(fileName);
-
-        if (image == null) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No image was found.", "filename: " + fileName));
-        }
-
-        return new ResponseEntity<>(image, HttpStatus.OK);
-    }
-
-    /**
      * Return a list of vendors in the system filtered by a given search string on ID or name
      * @param search, string to filter returned list on by ID or name
      * @return the filtered vendors in a list
@@ -122,7 +105,7 @@ public class VendorController {
         String[] request = ids.split(",");
         ArrayList<VendorDTO> vendors;
         try {
-            vendors = vendorService.getBatchbyId(Arrays.asList(request));
+            vendors = vendorService.getBatchById(Arrays.asList(request));
         }
         // ids were entered into SQL null
         catch (IllegalArgumentException e) {
@@ -207,10 +190,5 @@ public class VendorController {
         }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/hello")
-    public ResponseEntity hello() {
-        return new ResponseEntity<>("Hello!", HttpStatus.OK);
     }
 }

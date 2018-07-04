@@ -1,12 +1,12 @@
 insert into customer (name, contact_num, email, address) values ('Helen Chang', '1300 6555 06', 'Helen.Chang@grzz.ly', '223 Street');
 insert into customer (name, contact_num, email, address) values ('Helen Chong', '104354345', 'Helen.Chong@grzz.ly', '223 Street');
 insert into customer (name, contact_num, email, address) values ('Helen Cho', '1800 66 66', 'Helen.Cho@grzz.ly', '223 Street');
-insert into customer (name, contact_num, email, address) values ('Helen Stewart', '1800 66 66', 'Helen.Stewart@grzz.ly', '223 Street');
+insert into customer (name, contact_num, email, address) values ('Helen Stewart', '1800 66 66', 'cust01grizzly@gmail.com', '223 Street');
 insert into admin (name, contact_num, email, job_position, office) values ('Harry Cho', '10435434566', 'Harry.Cho@grzz.ly', 'Sr. Admin', 'NYC, NY, USA');
 insert into admin (name, contact_num, email, job_position, office) values ('Harry Chong', '10435434566', 'Harry.Chong@grzz.ly', 'Sr. Admin', 'NYC, NY, USA');
 insert into admin (name, contact_num, email, job_position, office) values ('Harry Chang', '1800435434566', 'Harry.Chang@grzz.ly', 'Sr. Admin', 'NYC, NY, USA');
 insert into admin (name, contact_num, email, job_position, office) values ('Harry Cherry', '1800 04354345 66', 'Harry.Cherry@grzz.ly', 'Sr. Admin', 'NYC, NY, USA');
-insert into admin (name, contact_num, email, job_position, office) values ('Harry Chocolate', '180004354345 66', 'Harry.Chocolate@grzz.ly', 'Sr. Admin', 'NYC, NY, USA');
+insert into admin (name, contact_num, email, job_position, office) values ('Harry Chocolate', '180004354345 66', 'ad01grizzly@gmail.com', 'Sr. Admin', 'NYC, NY, USA');
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Cho', '1800 66 66', 'Helen.Cho@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Chong', '18000435434566', 'Helen.Chong@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Chang', '1800 66 66', 'Helen.Chang@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
@@ -14,7 +14,7 @@ insert into vendor (name, contact_num, email, address, website, about, product_p
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Chocol', '1+61 1800 66 66', 'Helen.Chocol@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Cry Inside', '1800 66 66', 'Helen.Cry Inside@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
 insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Buys Some Stuff', '1800 66 66', 'Helen.Buys Some Stuff@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
-insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Sells You Gifts', '1800 66 66', 'Helen.Sells You Gifts@grzz.ly', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
+insert into vendor (name, contact_num, email, address, website, about, product_portfolio) values ('Helen Sells You Gifts', '1800 66 66', 'ven01grizzly@gmail.com', '22223 Street', 'hi.space', 'I sell Spring', 'portfolio');
 insert into user_order (user_id, txn_id, cost, departing_location, shipped_on) values (1, '12346', 35.00, 'Melbourne, Australia', '2017-11-15');
 insert into user_order (user_id, txn_id, cost, departing_location, shipped_on) values (2, '1246', 35.00, 'Honolulu, United States', '2017-11-25');
 insert into user_order (user_id, txn_id, cost, departing_location, shipped_on) values (3, '187946', 65.00, 'Seoul, South Korea', '2018-06-15');

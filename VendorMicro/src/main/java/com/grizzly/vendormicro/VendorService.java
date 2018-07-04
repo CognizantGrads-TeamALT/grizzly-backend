@@ -5,7 +5,6 @@ import com.grizzly.vendormicro.image.ImageDTO;
 import com.grizzly.vendormicro.image.ImageRepository;
 import com.grizzly.vendormicro.image.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -60,20 +59,6 @@ public class VendorService {
         }
 
         return result;
-    }
-
-    @Cacheable("ImageDTO")
-    public ImageDTO getImageFromVendor(String fileName) {
-        String base64Image = ImageUtils.readFromFile(fileName);
-
-        ImageDTO response = new ImageDTO();
-        response.setImgName(fileName);
-
-        String base64String = "data:image/" + fileName.substring(fileName.lastIndexOf(".") + 1)
-                + ";base64," + base64Image;
-        response.setBase64Image(base64String);
-
-        return response;
     }
 
     /**
@@ -174,7 +159,7 @@ public class VendorService {
      * @param ids, The list of Vendor ids that are to be fetched
      * @return ArrayList of Vendor objs whose IDs match ids
      */
-    public ArrayList<VendorDTO> getBatchbyId(List<String> ids) {
+    public ArrayList<VendorDTO> getBatchById(List<String> ids) {
         List<Integer> vendorIds = new ArrayList<>();
 
         for (String id: ids){

@@ -1,19 +1,15 @@
 package com.grizzly.categorymicro;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
 import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
 
-import javax.validation.constraints.Null;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
