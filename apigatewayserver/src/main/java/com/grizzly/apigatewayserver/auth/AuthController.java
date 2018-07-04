@@ -17,7 +17,10 @@ public class AuthController {
     // respond with logged in users info from userclient
     @GetMapping("/userData")
     public ResponseEntity getUser(@RequestHeader(HEADER_STRING) String token) {
-        AuthSession authSession = authService.getActiveSession(token);
+        if (token == null)
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+        AuthSession authSession = authService.sessionStart(token);
 
         if (authSession == null)
             return new ResponseEntity(HttpStatus.NOT_FOUND);

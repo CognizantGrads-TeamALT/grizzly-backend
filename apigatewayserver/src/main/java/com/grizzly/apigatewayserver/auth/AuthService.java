@@ -106,13 +106,20 @@ public class AuthService {
         System.out.println("DATA FROM USERMICRO: ");
         System.out.println(map.toString());
 
-        String jsonString = new JSONObject(map).toString();
+        JSONObject jsonObject = new JSONObject(map);
+        try {
+            jsonObject.put("name", tokenData.get("name"));
+        } catch (Exception e) {
+            System.out.println("oh no");
+        }
+        String jsonString = jsonObject.toString();
 
         AuthSession authSession =
                 new AuthSession(
                         tokenId,
                         jsonString,
-                        tokenData.getEmail()
+                        tokenData.getEmail(),
+                        map.get("role")
                 );
 
         // Clear any expired tokens that may exist.

@@ -13,15 +13,17 @@ public class AuthSession {
     @Column(name="tokenId")     private String tokenId;
     @Column(name="userData")    private String userData;
     @Column(name="email")       private String email;
+    @Column(name="role")        private String role;
 
     public AuthSession() {
         super();
     }
 
-    public AuthSession(String tokenId, String userData, String email) {
-        this.tokenId = tokenId;
-        this.userData = userData;
-        this.email = email;
+    public AuthSession(String tokenId, String userData, String email, String role) {
+        this.tokenId    = tokenId;
+        this.userData   = userData;
+        this.email      = email;
+        this.role       = role;
     }
 
     public Integer getId() {
@@ -56,12 +58,21 @@ public class AuthSession {
         this.email = email;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "AuthSession{" +
                 "tokenId='" + tokenId + '\'' +
                 ", userData='" + userData + '\'' +
                 ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

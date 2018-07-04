@@ -1,16 +1,12 @@
 package com.grizzly.apigatewayserver.security;
 
-//import com.grizzly.apigatewayserver.filter.AuthenticationFilter;
 import com.grizzly.apigatewayserver.filter.AuthorizationFilter;
-import com.netflix.zuul.ZuulFilter;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import com.grizzly.apigatewayserver.auth.UserDetailsServiceImpl;
 
 @Configuration
@@ -46,14 +42,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 // Vendor microservice
                 .antMatchers( "/vendor/batchFetch/**" ).permitAll()
                 .antMatchers( "/vendor/get/**" ).permitAll()
-                .antMatchers( "/vendor/search/**" ).permitAll()
+                .antMatchers( "/vendor/search/**" ).permitAll() ;
 
                 // User microservice
 
-            .anyRequest().authenticated().and()
-            .addFilter(new AuthorizationFilter(authenticationManager()))
+            //.anyRequest().authenticated().and()
+            //.addFilter(new AuthorizationFilter(authenticationManager()))
             // this disables session creation on Spring Security
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     //@Bean
