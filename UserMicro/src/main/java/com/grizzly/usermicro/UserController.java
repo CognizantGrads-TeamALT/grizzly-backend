@@ -8,6 +8,7 @@ import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 import com.grizzly.usermicro.admin.Admin;
 import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
+import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.User;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,7 +149,7 @@ public class UserController {
         User user = userService.findByUserEmail(email);
 
         if (user == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -161,4 +162,18 @@ public class UserController {
 
         return new ResponseEntity<>(userService.addOrUpdateCustomer(customer), HttpStatus.OK);
     }
+
+    /**
+     * Add a new order based on a given DTO resource
+     * @param orderDTO, the new order to store in the database
+     * @return Http Status Message
+     */
+    @PutMapping("/addorder")
+    public ResponseEntity addOrder(@RequestBody OrderDTO orderDTO) {
+        userService.addOrder(orderDTO);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
+
+

@@ -2,17 +2,14 @@ package com.grizzly.vendormicro;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
-import com.grizzly.vendormicro.errorhandling.RestExceptionHandler;
 import com.grizzly.vendormicro.image.ImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.NestedServletException;
 
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 
@@ -203,9 +200,9 @@ public class VendorController {
         VendorDTO created;
         try {
             created = vendorService.add(newVendor);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
-                    "A null pointer exception occurred while writing image to file.",
+                    "Failed to create a new vendor.",
                     e.getLocalizedMessage()));
         }
 

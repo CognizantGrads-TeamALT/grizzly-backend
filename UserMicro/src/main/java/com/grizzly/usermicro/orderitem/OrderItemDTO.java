@@ -2,9 +2,9 @@ package com.grizzly.usermicro.orderitem;
 
 public class OrderItemDTO {
     private Integer order_id;
-    private String productId;
-    private String rating;
-    private String quantity;
+    private Integer productId;
+    private float rating;
+    private Integer quantity;
 
 
     public Integer getOrder_id() {
@@ -15,27 +15,37 @@ public class OrderItemDTO {
         this.order_id = order_id;
     }
 
-    public String getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
-    public String getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 
-    public String getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public OrderItem toEntity(Integer orderID){
+        OrderItem orderItem = new OrderItem();
+        orderItem.setProductId(productId);
+        orderItem.setQuantity(quantity);
+
+
+        return orderItem;
+
     }
 }
