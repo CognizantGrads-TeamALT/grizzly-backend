@@ -14,18 +14,18 @@ public class OrderItem {
     private Integer order_id;
 
     @Column(name ="product_id")
-    private String productId;
+    private Integer productId;
 
     @Column(name ="rating")
-    private String rating;
+    private Float rating;
 
     @Column(name ="quantity")
-    private String quantity;
+    private Integer quantity;
 
     public OrderItem() {
     }
 
-    public OrderItem(Integer order_id, String productId, String rating, String quantity) {
+    public OrderItem(Integer order_id, Integer productId, Float rating, Integer quantity) {
         this.order_id = order_id;
         this.productId = productId;
         this.rating = rating;
@@ -48,27 +48,27 @@ public class OrderItem {
         this.order_id = order_id;
     }
 
-    public String getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
-    public String getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
-    public String getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }
