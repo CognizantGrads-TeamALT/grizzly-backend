@@ -301,6 +301,7 @@ public class ProductService {
         prod.setName(request.getName());
         prod.setDesc(request.getDesc());
         prod.setVendorId(request.getVendorId());
+        prod.setCategoryId(request.getCategoryId());
         prod.setPrice(request.getPrice());
         prod.setRating(request.getRating());
         prod.setEnabled(request.getEnabled());
@@ -322,11 +323,15 @@ public class ProductService {
             dbUrls.add(image.getImage_url());
         }
 
-        if (request.getImageDTO() != null)
-            for (ImageDTO imageDto : request.getImageDTO()) {
+        for (ImageDTO imageDto : request.getImageDTO()) {
+            if(imageDto.getBase64Image() != null) {
                 dtoUrls.add(hashImageName(imageDto.getImgName(), imageDto.getBase64Image()));
-                if (!dbUrls.contains(dtoUrls.get(dtoUrls.size()-1))) {
-                    needsEdit = true;
+                if (!dbUrls.contains(dtoUrls.get(dtoUrls.size() - 1))) {
+                    needsEdit = true; }
+                }
+                else{
+
+
                 }
             }
 
@@ -342,7 +347,7 @@ public class ProductService {
             // if there isn't a DB image for a DTO image, the DTO one must be added
             if (request.getImageDTO() != null)
                 for (ImageDTO imgDto : request.getImageDTO()) {
-                    if (!dbUrls.contains(hashImageName(imgDto.getImgName(), imgDto.getBase64Image()))) {
+                    if (imgDto.getBase64Image() != null && !dbUrls.contains(hashImageName(imgDto.getImgName(), imgDto.getBase64Image()))) {
                         toAdd.add(imgDto);
                     }
                 }
