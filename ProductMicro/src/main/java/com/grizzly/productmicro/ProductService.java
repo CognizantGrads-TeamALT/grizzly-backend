@@ -340,7 +340,7 @@ public class ProductService {
 
                 // if there isn't a DB image for a DTO image, the DTO one must be added
                 for (ImageDTO imgDto : request.getImageDTO()) {
-                    if (imgDto.getBase64Image() != null && !dbUrls.contains(hashImageName(imgDto.getImgName(), imgDto.getBase64Image()))) {
+                    if (!dbUrls.contains(hashImageName(imgDto.getImgName(), imgDto.getBase64Image()))) {
                         toAdd.add(imgDto);
                     }
                 }
