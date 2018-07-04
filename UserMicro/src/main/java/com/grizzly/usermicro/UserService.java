@@ -154,7 +154,7 @@ public class UserService {
         );
     }
 
-    public User addOrUpdateUser(UserDTO newUser) {
+    public User addOrUpdateUser(CustomerDTO newUser) {
         try {
             // find the existing Customer
             User user = findByUserEmail(newUser.getEmail());
