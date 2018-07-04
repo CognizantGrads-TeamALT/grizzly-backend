@@ -247,7 +247,7 @@ public class UserService {
             order.setOrderItemDTO(getOrderItemDTO(orders.get(i)));
             order.setUser_id(userId);
 
-            orderDTO.set(i, order);
+            orderDTO.add(i, order);
         }
 
         CustomerDTO customerDTO = new CustomerDTO(customer.getUserId(), customer.getAddress(), orderDTO);
@@ -279,7 +279,7 @@ public class UserService {
             orderItem.setRating(rating);
             orderItem.setQuantity(quantity);
 
-            orderItemDTO.set(i, orderItem);
+            orderItemDTO.add(i, orderItem);
         }
 
         return orderItemDTO;
@@ -287,13 +287,18 @@ public class UserService {
 
     public void addOrder(OrderDTO orderDTO){
 
-        Order newOrder = orderRepository.save(orderDTO.toEntity());
+        Order newOrder = orderDTO.toEntity();
+        orderRepository.save(newOrder);
 
         Integer ordID = newOrder.getOrder_id();
         ArrayList<OrderItemDTO> OrderItems = orderDTO.getOrderItemDTO();
 
         for (int i = 0; i < OrderItems.size(); i++ ){
-            orderItemRepository.save(OrderItems.get(i).toEntity(ordID));
+            OrderItem currentItem = OrderItems.get(i).toEntity(ordID);
+            currentItem.setOrder_id(ordID);
+            currentItem.setRating(Float.parseFloat("5"));
+
+            orderItemRepository.save(currentItem);
         }
 
 
