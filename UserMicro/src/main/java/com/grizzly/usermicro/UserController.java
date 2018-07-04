@@ -149,7 +149,7 @@ public class UserController {
         User user = userService.findByUserEmail(email);
 
         if (user == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -175,3 +175,6 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 }
+
+}
+
