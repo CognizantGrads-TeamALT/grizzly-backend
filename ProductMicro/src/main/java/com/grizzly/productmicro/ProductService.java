@@ -299,6 +299,7 @@ public class ProductService {
         prod.setName(request.getName());
         prod.setDesc(request.getDesc());
         prod.setVendorId(request.getVendorId());
+        prod.setCategoryId(request.getCategoryId());
         prod.setPrice(request.getPrice());
         prod.setRating(request.getRating());
         prod.setEnabled(request.getEnabled());
