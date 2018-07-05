@@ -39,7 +39,10 @@ public class AdminAuth {
      * AUTHENTICATION (admin only)
      */
     @PutMapping("/add")
-    public ResponseEntity addVendor(@RequestBody VendorDTO newVendor) {
+    public ResponseEntity addVendor(@RequestBody VendorDTO newVendor, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         VendorDTO created;
         try {
             created = vendorService.add(newVendor);
@@ -60,7 +63,10 @@ public class AdminAuth {
      * AUTHENTICATION (admin only)
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteVendor(@PathVariable(value="id") Integer id) {
+    public ResponseEntity deleteVendor(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         try {
             vendorService.deleteById(id);
         }
@@ -83,7 +89,10 @@ public class AdminAuth {
      * AUTHENTICATION (admin only)
      */
     @PostMapping("/setBlock/{id}")
-    public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody VendorDTO request) {
+    public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody VendorDTO request, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         Vendor vendor;
         try {
             vendor = vendorService.setEnabled(id, request.getEnabled());
