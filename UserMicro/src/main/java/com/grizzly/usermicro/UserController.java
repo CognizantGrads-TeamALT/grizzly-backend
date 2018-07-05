@@ -12,6 +12,7 @@ import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.User;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +25,28 @@ public class UserController {
     private UserService userService;
 
     /**
+     * Returns "accessLevel"
+     * @param userData
+     * @return Integer
+     *
+     * true = admin
+     * false = not admin
+     */
+    private Boolean hasAccess(String userData) {
+        try {
+            JSONObject jsonObject = new JSONObject(userData);
+            return jsonObject.get("role").equals("admin");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
      * Return a list of all Admins in the system
      * @return Admins in a list
      */
     @GetMapping("/get/vendor/{pageIndex}/{column_name}")
-    public ResponseEntity getAllVendors(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity getAllVendors(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name, @RequestHeader(value="User-Data") String userData) {
         ArrayList<Vendor> vendors = userService.getAllVendors(pageIndex, column_name);
 
         // no products found
@@ -44,7 +62,7 @@ public class UserController {
      * @return Admins in a list
      */
     @GetMapping("/get/customer/{pageIndex}/{column_name}")
-    public ResponseEntity getAllCustomers(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity getAllCustomers(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name, @RequestHeader(value="User-Data") String userData) {
         ArrayList<Customer> customers = userService.getAllCustomers(pageIndex, column_name);
 
         // no products found
@@ -60,7 +78,7 @@ public class UserController {
      * @return Admins in a list
      */
     @GetMapping("/get/admin/{pageIndex}/{column_name}")
-    public ResponseEntity getAllAdmins(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name) {
+    public ResponseEntity getAllAdmins(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name, @RequestHeader(value="User-Data") String userData) {
         ArrayList<Admin> admins = userService.getAllAdmins(pageIndex, column_name);
 
         // no products found
@@ -77,7 +95,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/admin/{id}")
-    public ResponseEntity getSingleUserAdmin(@PathVariable(value="id") Integer id) {
+    public ResponseEntity getSingleUserAdmin(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
         ArrayList<Admin> admins = userService.getSingleUserAdmin(id);
 
         // no users found
@@ -94,7 +112,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/vendor/{id}")
-    public ResponseEntity getSingleUserVendor(@PathVariable(value="id") Integer id) {
+    public ResponseEntity getSingleUserVendor(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
         ArrayList<Vendor> vendors = userService.getSingleUserVendor(id);
 
         // no users found
@@ -111,7 +129,7 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/customer/{id}")
-    public ResponseEntity getSingleUserCustomer(@PathVariable(value="id") Integer id) {
+    public ResponseEntity getSingleUserCustomer(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
         ArrayList<Customer> customers = userService.getSingleUserCustomer(id);
 
         // no users found
@@ -124,11 +142,20 @@ public class UserController {
 
     /**
      * Return a single customer with orders based on their id
-     * @param userId, user ID
      * @return A CustomerDTO with orders
      */
-    @GetMapping("/get/orders/{userId}")
-    public ResponseEntity getSingleWithOrders(@PathVariable(value="userId") Integer userId) {
+    @GetMapping("/get/orders")
+    public ResponseEntity getSingleWithOrders(@RequestHeader(value="User-Data") String userData) {
+        Integer userId;
+        try {
+            JSONObject jsonObject = new JSONObject(userData);
+            userId = (Integer) jsonObject.get("userId");
+            if (!jsonObject.get("role").equals("customer"))
+                return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+        } catch (Exception e) {
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+        }
+
         CustomerDTO customer = userService.getSingleCustomerWithOrders(userId);
 
         // no product found
@@ -143,6 +170,8 @@ public class UserController {
      * Return a single user based on email
      * @param email, user email
      * @return the user
+     *
+     * restricted at apigateway so feignclient accesses this.
      */
     @GetMapping("/getByEmail/{email}")
     public ResponseEntity getSingleUser(@PathVariable(value="email") String email) {
@@ -154,8 +183,30 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/save")
+    /**
+     * Adds and or updates a customer account (restricted to apigateway)
+     * @param userDTO data
+     * @return user
+     */
+    @PutMapping("/saveAPI")
     public ResponseEntity addOrUpdateCustomer(@RequestBody CustomerDTO userDTO) {
+        User user = userService.addOrUpdateUser(userDTO);
+
+        if (user == null)
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    /**
+     * Adds and or updates a customer account.
+     * @param userDTO data
+     * @return user
+     *
+     * do not remove user-data check.
+     */
+    @PutMapping("/save")
+    public ResponseEntity addOrUpdateCustomer(@RequestBody CustomerDTO userDTO, @RequestHeader(value="User-Data") String userData) {
         User user = userService.addOrUpdateUser(userDTO);
 
         if (user == null)
@@ -169,7 +220,7 @@ public class UserController {
      * @param orderDTO, the new order to store in the database
      * @return Http Status Message
      */
-    @PutMapping("/addorder")
+    @PutMapping("/addOrder")
     public ResponseEntity addOrder(@RequestBody OrderDTO orderDTO) {
         userService.addOrder(orderDTO);
 

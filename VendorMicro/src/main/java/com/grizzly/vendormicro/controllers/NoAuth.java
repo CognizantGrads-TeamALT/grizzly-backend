@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
-import com.grizzly.vendormicro.VendorDTO;
+import com.grizzly.vendormicro.model.VendorDTO;
 import com.grizzly.vendormicro.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

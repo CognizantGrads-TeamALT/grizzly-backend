@@ -4,7 +4,11 @@ import com.grizzly.productmicro.image.Image;
 import com.grizzly.productmicro.image.ImageDTO;
 import com.grizzly.productmicro.image.ImageRepository;
 import com.grizzly.productmicro.image.ImageUtils;
+import com.grizzly.productmicro.model.Product;
+import com.grizzly.productmicro.model.ProductDTO;
+import com.grizzly.productmicro.model.ProductInventoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -426,7 +430,7 @@ public class ProductService {
      * @param ids, The list of Product ids that are to be fetched
      * @return ArrayList of Product objs whose IDs match ids
      */
-    public ArrayList<ProductDTO> getBatchbyId(List<String> ids) {
+    public ArrayList<ProductDTO> getBatchById(List<String> ids) {
         List<Integer> productIds = new ArrayList<>();
 
         for (String id: ids){

@@ -4,7 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 
-import com.grizzly.productmicro.ProductDTO;
+import com.grizzly.productmicro.model.ProductDTO;
 import com.grizzly.productmicro.ProductService;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,28 @@ public class AdminVendorAuth {
     @Autowired
     private ProductService productService;
 
-    private Boolean hasAccess(String userData) {
+    /**
+     * Returns "accessLevel"
+     * @param userData
+     * @return Integer
+     *
+     * 0 = un-authed
+     * -1 = admin
+     * else the Integer is vendorId
+     */
+    private Integer hasAccess(String userData) {
         try {
             JSONObject jsonObject = new JSONObject(userData);
-            return jsonObject.get("role").equals("admin") || jsonObject.get("role").equals("vendor");
+
+            if (jsonObject.get("role").equals("admin"))
+                return -1;
+            else if (jsonObject.get("role").equals("vendor"))
+                return (Integer) jsonObject.get("vendorId");
         } catch (Exception e) {
-            System.out.println("oh snap.");
+            return 0;
         }
 
-        return false;
+        return 0;
     }
 
     /**
@@ -39,8 +52,11 @@ public class AdminVendorAuth {
      */
     @PutMapping("/add")
     public ResponseEntity addProduct(@RequestBody ProductDTO newProduct, @RequestHeader(value="User-Data") String userData) {
-        if (!hasAccess(userData))
+        Integer accessLevel = hasAccess(userData);
+        if (accessLevel == 0)
             return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+        else if (accessLevel != -1)
+            newProduct.setVendorId(accessLevel);
 
         ProductDTO created;
         try {
@@ -71,8 +87,17 @@ public class AdminVendorAuth {
      */
     @PostMapping("/edit/{id}")
     public ResponseEntity edit(@PathVariable(value="id") Integer productId, @RequestBody ProductDTO request, @RequestHeader(value="User-Data") String userData) {
-        if (!hasAccess(userData))
+        // Authentication
+        Integer accessLevel = hasAccess(userData);
+        if (accessLevel == 0)
             return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+        else if (accessLevel != -1) {
+            ProductDTO productInfo = productService.getSingleById(productId);
+            if (productInfo != null) {
+                if (productInfo.getVendorId() != accessLevel)
+                    return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "This is not your product."));
+            }
+        }
 
         ProductDTO product;
         try {

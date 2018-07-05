@@ -1,5 +1,6 @@
 package com.grizzly.productmicro;
 
+import com.grizzly.productmicro.model.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

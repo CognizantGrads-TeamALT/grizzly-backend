@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import com.grizzly.apigatewayserver.auth.UserDetailsServiceImpl;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -20,6 +23,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     public WebSecurity(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService);
     }
 
     @Override
@@ -40,12 +48,15 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/product/batchFetch/**" ).permitAll()
                 .antMatchers( "/product/byCategory/**" ).permitAll()
                 .antMatchers( "/product/get/**").permitAll()
-                .antMatchers( "/product/getDetails/**" ).permitAll()
                 .antMatchers( "/product/search/**").permitAll()
 
                 // Vendor microservice
                 .antMatchers( "/vendor/batchFetch/**" ).permitAll()
                 .antMatchers( "/vendor/get/**" ).permitAll()
+
+                // User microservice
+                .antMatchers( "/user/getByEmail/**" ).denyAll() // only to be accessed through apigateway (feignclient).
+                .antMatchers( "/user/saveAPI" ).denyAll() // again, only for apigateway.
 
             .anyRequest().authenticated().and()
             .addFilter(new AuthorizationFilter(authenticationManager()))
@@ -58,8 +69,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return new AuthenticationFilter();
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
     }
 }

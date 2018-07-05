@@ -1,12 +1,12 @@
 package com.grizzly.categorymicro;
 
+import com.grizzly.categorymicro.model.Category;
+import com.grizzly.categorymicro.model.CategoryDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;

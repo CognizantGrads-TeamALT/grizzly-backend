@@ -1,5 +1,7 @@
 package com.grizzly.categorymicro;
 
+import com.grizzly.categorymicro.model.Category;
+import com.grizzly.categorymicro.model.CategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
