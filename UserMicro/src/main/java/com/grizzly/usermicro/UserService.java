@@ -171,8 +171,11 @@ public class UserService {
                 } else {
                     Customer customerUser = (Customer) user;
                     CustomerDTO existingUser = (CustomerDTO) newUser;
-                    customerUser.setContact_num(existingUser.getContact_num());
-                    customerUser.setAddress(existingUser.getAddress());
+                    if (existingUser.getAddress() != null)
+                        customerUser.setAddress(existingUser.getAddress());
+                    if (existingUser.getContact_num() != null)
+                        customerUser.setContact_num(existingUser.getContact_num());
+
                     saved = customerRepository.save(customerUser);
                 }
                 return saved;
@@ -181,8 +184,10 @@ public class UserService {
                 CustomerDTO details = (CustomerDTO) newUser;
                 newCustomer.setName(details.getName());
                 newCustomer.setEmail(details.getEmail());
-                newCustomer.setAddress(details.getAddress());
-                newCustomer.setContact_num(details.getContact_num());
+                if (details.getAddress() != null)
+                    newCustomer.setAddress(details.getAddress());
+                if (details.getContact_num() != null)
+                    newCustomer.setContact_num(details.getContact_num());
                 User created = customerRepository.save(newCustomer);
                 return created;
             }
