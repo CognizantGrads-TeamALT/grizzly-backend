@@ -9,8 +9,8 @@ public class AuthSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")          private Integer id;
 
-    @Lob
-    @Column(name="tokenId")     private String tokenId;
+    @Column(name="tokenId",     columnDefinition = "TEXT")
+                                private String tokenId;
     @Column(name="userData",    columnDefinition = "TEXT")
                                 private String userData;
     @Column(name="email")       private String email;

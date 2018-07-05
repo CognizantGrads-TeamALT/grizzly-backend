@@ -8,17 +8,19 @@ public class VendorDTO extends UserDTO {
     private String website;
     private String about;
     private String product_portfolio;
+    private Integer vendorId;
 
     public VendorDTO() {
         super();
     }
 
-    public VendorDTO(Integer userId, String address, String website, String about, String product_portfolio) {
+    public VendorDTO(Integer userId, String address, String website, String about, String product_portfolio, Integer vendorId) {
         this.userId = userId;
         this.address = address;
         this.website = website;
         this.about = about;
         this.product_portfolio = product_portfolio;
+        this.vendorId = vendorId;
     }
 
     public Vendor toEntity() {
@@ -27,6 +29,7 @@ public class VendorDTO extends UserDTO {
         vendor.setWebsite(website);
         vendor.setAbout(about);
         vendor.setProductPortfolio(product_portfolio);
+        vendor.setVendorId(vendorId);
         return vendor;
     }
 
@@ -68,5 +71,13 @@ public class VendorDTO extends UserDTO {
 
     public void setProductPortfolio(String product_portfolio) {
         this.product_portfolio = product_portfolio;
+    }
+
+    public Integer getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(Integer vendorId) {
+        this.vendorId = vendorId;
     }
 }

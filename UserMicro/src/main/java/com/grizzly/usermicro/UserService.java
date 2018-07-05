@@ -12,7 +12,6 @@ import com.grizzly.usermicro.orders.Order;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.orders.OrderRepository;
 import com.grizzly.usermicro.user.User;
-import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import com.grizzly.usermicro.vendor.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
 
 @Service
 public class UserService {
@@ -171,8 +168,11 @@ public class UserService {
                 } else {
                     Customer customerUser = (Customer) user;
                     CustomerDTO existingUser = (CustomerDTO) newUser;
-                    customerUser.setContact_num(existingUser.getContact_num());
-                    customerUser.setAddress(existingUser.getAddress());
+                    if (existingUser.getAddress() != null)
+                        customerUser.setAddress(existingUser.getAddress());
+                    if (existingUser.getContact_num() != null)
+                        customerUser.setContact_num(existingUser.getContact_num());
+
                     saved = customerRepository.save(customerUser);
                 }
                 return saved;
@@ -181,8 +181,10 @@ public class UserService {
                 CustomerDTO details = (CustomerDTO) newUser;
                 newCustomer.setName(details.getName());
                 newCustomer.setEmail(details.getEmail());
-                newCustomer.setAddress(details.getAddress());
-                newCustomer.setContact_num(details.getContact_num());
+                if (details.getAddress() != null)
+                    newCustomer.setAddress(details.getAddress());
+                if (details.getContact_num() != null)
+                    newCustomer.setContact_num(details.getContact_num());
                 User created = customerRepository.save(newCustomer);
                 return created;
             }
@@ -307,7 +309,6 @@ public class UserService {
     }
 
     public void addOrder(OrderDTO orderDTO){
-
         Order newOrder = orderDTO.toEntity();
         orderRepository.save(newOrder);
 
@@ -321,7 +322,5 @@ public class UserService {
 
             orderItemRepository.save(currentItem);
         }
-
-
     }
 }

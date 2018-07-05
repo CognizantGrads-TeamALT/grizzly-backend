@@ -10,7 +10,6 @@ import com.grizzly.usermicro.customer.Customer;
 import com.grizzly.usermicro.customer.CustomerDTO;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.user.User;
-import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
