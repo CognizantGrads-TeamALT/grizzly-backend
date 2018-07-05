@@ -23,7 +23,7 @@ public class AdminAuth {
     private Boolean hasAccess(String userData) {
         try {
             JSONObject jsonObject = new JSONObject(userData);
-            return jsonObject.get("role").equals("admin");
+            return jsonObject.get("role").equals("admin") || jsonObject.get("role").equals("vendor");
         } catch (Exception e) {
             System.out.println("oh snap.");
         }
