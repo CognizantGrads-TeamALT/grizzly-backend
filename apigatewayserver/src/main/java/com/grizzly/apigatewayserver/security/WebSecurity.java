@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import com.grizzly.apigatewayserver.auth.UserDetailsServiceImpl;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
@@ -42,14 +43,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 // Vendor microservice
                 .antMatchers( "/vendor/batchFetch/**" ).permitAll()
                 .antMatchers( "/vendor/get/**" ).permitAll()
-                .antMatchers( "/vendor/search/**" ).permitAll() ;
+                .antMatchers( "/vendor/search/**" ).permitAll()
 
                 // User microservice
 
-            //.anyRequest().authenticated().and()
-            //.addFilter(new AuthorizationFilter(authenticationManager()))
-            // this disables session creation on Spring Security
-            //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .anyRequest().authenticated().and()
+            .addFilter(new AuthorizationFilter(authenticationManager()))
+             //this disables session creation on Spring Security
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     //@Bean
