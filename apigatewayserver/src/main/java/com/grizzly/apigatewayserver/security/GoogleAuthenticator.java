@@ -28,18 +28,11 @@ public class GoogleAuthenticator {
     public static Payload verifyIdToken(String idTokenString) {
         try {
             GoogleIdToken idToken = verifier.verify(idTokenString);
-            if (idToken != null) {
-                Payload payload = idToken.getPayload();
 
-                System.out.println(payload.toPrettyString());
-                return payload;
-            } else {
-                System.out.println("Invalid ID token.");
-            }
-        } catch (GeneralSecurityException e) {
-            System.out.println("GeneralSecurityException");
-        } catch (IOException e) {
-            System.out.println("IOException");
+            if (idToken != null)
+                return idToken.getPayload();
+        } catch (Exception e) {
+            return null;
         }
 
         return null;

@@ -1,6 +1,8 @@
 package com.grizzly.apigatewayserver.security;
 
+import com.grizzly.apigatewayserver.filter.AuthenticationFilter;
 import com.grizzly.apigatewayserver.filter.AuthorizationFilter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,7 +25,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .csrf().disable().cors().and()
+            .csrf().disable() // this wasted hours of my life, debugging this crap.
+            .cors().and()
             .authorizeRequests()
                 // public calls available for everyone
                 .antMatchers("/auth/**").permitAll() // permit auth calls
@@ -45,19 +48,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/vendor/get/**" ).permitAll()
                 .antMatchers( "/vendor/search/**" ).permitAll()
 
-                // User microservice
-                .antMatchers( "/user/**" ).permitAll()
-
             .anyRequest().authenticated().and()
             .addFilter(new AuthorizationFilter(authenticationManager()))
              //this disables session creation on Spring Security
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    //@Bean
-    //public AuthenticationFilter addAuthenticationStringFilter() {
-    //    return new AuthenticationFilter();
-    //}
+    @Bean
+    public AuthenticationFilter addAuthenticationStringFilter() {
+        return new AuthenticationFilter();
+    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
