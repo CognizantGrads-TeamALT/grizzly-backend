@@ -46,6 +46,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/vendor/search/**" ).permitAll()
 
                 // User microservice
+                .antMatchers( "/user/**" ).permitAll()
 
             .anyRequest().authenticated().and()
             .addFilter(new AuthorizationFilter(authenticationManager()))
