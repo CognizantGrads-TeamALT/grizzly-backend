@@ -23,7 +23,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .cors().and()
+            .csrf().disable().cors().and()
             .authorizeRequests()
                 // public calls available for everyone
                 .antMatchers("/auth/**").permitAll() // permit auth calls
