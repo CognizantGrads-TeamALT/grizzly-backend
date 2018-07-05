@@ -22,7 +22,7 @@ public class AdminAuth {
     private Boolean hasAccess(String userData) {
         try {
             JSONObject jsonObject = new JSONObject(userData);
-            return jsonObject.get("role").equals("admin") || jsonObject.get("role").equals("vendor");
+            return jsonObject.get("role").equals("admin");
         } catch (Exception e) {
             System.out.println("oh snap.");
         }
@@ -36,7 +36,10 @@ public class AdminAuth {
      * @return
      */
     @PutMapping("/add")
-    public ResponseEntity addCategory(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity addCategory(@RequestBody CategoryDTO categoryDTO, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         CategoryDTO created = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription());
 
         if (created == null) {
@@ -54,7 +57,10 @@ public class AdminAuth {
      * @return HTTP status response only
      */
     @PostMapping("/edit/{id}")
-    public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
+    public ResponseEntity edit(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         CategoryDTO category = categoryService.edit(id, request.getName(), request.getDescription());
 
         // null if the ID did not map to an existing category
@@ -73,7 +79,10 @@ public class AdminAuth {
      * @return HTTP status response only
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteCategory(@PathVariable(value="id") Integer id) {
+    public ResponseEntity deleteCategory(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         try {
             categoryService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
@@ -93,7 +102,10 @@ public class AdminAuth {
      * @return HTTP status response only
      */
     @PostMapping("/setBlock/{id}")
-    public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request) {
+    public ResponseEntity setBlock(@PathVariable(value="id") Integer id, @RequestBody CategoryDTO request, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         CategoryDTO category = categoryService.setEnabled(id, request.getEnabled());
 
         // null if the ID did not map to an existing category
