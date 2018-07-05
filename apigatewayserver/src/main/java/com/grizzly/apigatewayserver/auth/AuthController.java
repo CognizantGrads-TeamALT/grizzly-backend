@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     // clear token from cache
-    @GetMapping("/logout")
+    @PutMapping("/logout")
     public ResponseEntity logout(@RequestHeader(HEADER_STRING) String token) {
         Boolean deleted = authService.deleteSession(token);
 

@@ -6,8 +6,8 @@ import java.util.Arrays;
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 
-import com.grizzly.productmicro.ProductDTO;
-import com.grizzly.productmicro.ProductInventoryDTO;
+import com.grizzly.productmicro.model.ProductDTO;
+import com.grizzly.productmicro.model.ProductInventoryDTO;
 import com.grizzly.productmicro.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class NoAuth {
         String[] request = ids.split(",");
         ArrayList<ProductDTO> products;
         try {
-            products = productService.getBatchbyId(Arrays.asList(request));
+            products = productService.getBatchById(Arrays.asList(request));
         }
         // ids were entered into SQL null
         catch (IllegalArgumentException e) {
@@ -47,25 +47,6 @@ public class NoAuth {
             return buildResponse(new ApiError(HttpStatus.NOT_FOUND,
                     "No products were found.",
                     "ids: " + ids));
-        }
-
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
-
-    /**
-     * Return a single product based on id
-     * @param id, product ID
-     * @return the product
-     *
-     * NO AUTHENTICATION
-     */
-    @GetMapping("/get/{id}")
-    public ResponseEntity getSingle(@PathVariable(value="id") Integer id) {
-        ArrayList<ProductDTO> products = productService.getSingle(id);
-
-        // no product found
-        if (products == null || products.isEmpty()) {
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No product was found.", "id: " + id));
         }
 
         return new ResponseEntity<>(products, HttpStatus.OK);
@@ -94,9 +75,9 @@ public class NoAuth {
      * @param id, product ID
      * @return the product with imgs
      *
-     * NO AUTHENTICATION TODO DELETE THIS METHOD
+     * NO AUTHENTICATION
      */
-    @GetMapping("/getDetails/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity getSingleWithImgs(@PathVariable(value="id") Integer id) {
         ProductDTO product = productService.getSingleById(id);
 
@@ -106,26 +87,6 @@ public class NoAuth {
         }
 
         return new ResponseEntity<>(product, HttpStatus.OK);
-    }
-
-    /**
-     * getting product inventory
-     * @param pageIndex
-     * @param vendorId
-     * @return
-     *
-     * NO AUTHENTICATION
-     */
-    @GetMapping("/getInventory/{pageIndex}/{vendorId}")
-    public ResponseEntity getInventory(@PathVariable Integer pageIndex, @PathVariable Integer vendorId){
-        ArrayList<ProductInventoryDTO> products = productService.getInventory(pageIndex,vendorId);
-
-        if (products == null || products.isEmpty()){
-            return buildResponse(new ApiError(HttpStatus.NOT_FOUND, "No inventory was found.", "vendor id: " + vendorId));
-        }
-
-
-        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     /**

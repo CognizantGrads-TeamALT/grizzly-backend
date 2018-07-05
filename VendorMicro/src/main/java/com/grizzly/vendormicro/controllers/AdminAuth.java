@@ -1,8 +1,8 @@
 package com.grizzly.vendormicro.controllers;
 
 import com.grizzly.grizlibrary.errorhandling.ApiError;
-import com.grizzly.vendormicro.Vendor;
-import com.grizzly.vendormicro.VendorDTO;
+import com.grizzly.vendormicro.model.Vendor;
+import com.grizzly.vendormicro.model.VendorDTO;
 import com.grizzly.vendormicro.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -20,15 +20,21 @@ public class AdminAuth {
     @Autowired
     private VendorService vendorService;
 
+    /**
+     * Returns "accessLevel"
+     * @param userData
+     * @return Integer
+     *
+     * true = admin
+     * false = not admin
+     */
     private Boolean hasAccess(String userData) {
         try {
             JSONObject jsonObject = new JSONObject(userData);
             return jsonObject.get("role").equals("admin");
         } catch (Exception e) {
-            System.out.println("oh snap.");
+            return false;
         }
-
-        return false;
     }
 
     /**

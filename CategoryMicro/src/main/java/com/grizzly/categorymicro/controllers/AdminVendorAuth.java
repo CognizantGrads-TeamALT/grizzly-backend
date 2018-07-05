@@ -17,15 +17,21 @@ public class AdminVendorAuth {
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * Returns "accessLevel"
+     * @param userData
+     * @return Boolean
+     *
+     * true = admin or vendor
+     * false = not admin or vendor
+     */
     private Boolean hasAccess(String userData) {
         try {
             JSONObject jsonObject = new JSONObject(userData);
             return jsonObject.get("role").equals("admin") || jsonObject.get("role").equals("vendor");
         } catch (Exception e) {
-            System.out.println("oh snap.");
+            return false;
         }
-
-        return false;
     }
 
     /**
@@ -34,12 +40,15 @@ public class AdminVendorAuth {
      * @return HTTP status response only
      */
     @PostMapping(value="/updateCount/{catID}")
-    public ResponseEntity incrementProductCount(@PathVariable(value="catID") String catID){
-        try{
+    public ResponseEntity incrementProductCount(@PathVariable(value="catID") String catID, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
+        try {
             categoryService.incrementProductCount(Integer.parseInt(catID));
         } catch(NumberFormatException e){
             return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "increment product count failed",
-                    "catiD: " + catID));
+                    "catID: " + catID));
         }
 
         return new ResponseEntity(HttpStatus.OK);

@@ -1,6 +1,6 @@
 package com.grizzly.categorymicro.controllers;
 
-import com.grizzly.categorymicro.CategoryDTO;
+import com.grizzly.categorymicro.model.CategoryDTO;
 import com.grizzly.categorymicro.CategoryService;
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
@@ -19,15 +19,21 @@ public class AdminAuth {
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * Returns "accessLevel"
+     * @param userData
+     * @return Integer
+     *
+     * true = admin
+     * false = not admin
+     */
     private Boolean hasAccess(String userData) {
         try {
             JSONObject jsonObject = new JSONObject(userData);
             return jsonObject.get("role").equals("admin");
         } catch (Exception e) {
-            System.out.println("oh snap.");
+            return false;
         }
-
-        return false;
     }
 
     /**

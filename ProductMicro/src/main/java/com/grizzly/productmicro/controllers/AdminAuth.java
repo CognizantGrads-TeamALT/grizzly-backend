@@ -3,7 +3,7 @@ package com.grizzly.productmicro.controllers;
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;
 
-import com.grizzly.productmicro.ProductDTO;
+import com.grizzly.productmicro.model.ProductDTO;
 import com.grizzly.productmicro.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -19,15 +19,21 @@ public class AdminAuth {
     @Autowired
     private ProductService productService;
 
+    /**
+     * Returns "accessLevel"
+     * @param userData
+     * @return Integer
+     *
+     * true = admin
+     * false = not admin
+     */
     private Boolean hasAccess(String userData) {
         try {
             JSONObject jsonObject = new JSONObject(userData);
             return jsonObject.get("role").equals("admin");
         } catch (Exception e) {
-            System.out.println("oh snap.");
+            return false;
         }
-
-        return false;
     }
 
     /**

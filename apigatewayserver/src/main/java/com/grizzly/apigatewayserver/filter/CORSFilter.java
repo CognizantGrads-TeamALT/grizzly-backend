@@ -11,9 +11,7 @@ import java.io.IOException;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-
 public class CORSFilter implements Filter {
-
     @Override
     public void init(FilterConfig fc) throws ServletException {
     }
@@ -33,11 +31,9 @@ public class CORSFilter implements Filter {
         } else {
             chain.doFilter(req, resp);
         }
-
     }
 
     @Override
     public void destroy() {
     }
-
 }

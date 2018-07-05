@@ -1,6 +1,6 @@
 package com.grizzly.categorymicro.controllers;
 
-import com.grizzly.categorymicro.CategoryDTO;
+import com.grizzly.categorymicro.model.CategoryDTO;
 import com.grizzly.categorymicro.CategoryService;
 import com.grizzly.grizlibrary.errorhandling.ApiError;
 import static com.grizzly.grizlibrary.helpers.Helper.buildResponse;

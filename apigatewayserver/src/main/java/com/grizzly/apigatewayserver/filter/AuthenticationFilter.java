@@ -42,11 +42,9 @@ public class AuthenticationFilter extends ZuulFilter {
 
             if (authSession != null) {
                 ctx.addZuulRequestHeader("User-Data", authSession.getUserData());
-                System.out.println("Added data: " + authSession.getUserData());
             }
         }
 
-        System.out.println("Hi there");
         return null;
     }
 }

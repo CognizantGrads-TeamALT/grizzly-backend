@@ -1,7 +1,7 @@
 package com.grizzly.vendormicro;
 
+import com.grizzly.vendormicro.model.Vendor;
 import org.springframework.data.domain.Pageable;
-//import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;

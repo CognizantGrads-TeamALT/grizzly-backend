@@ -14,7 +14,6 @@ public interface UserClient {
     @GetMapping(value = "/getByEmail/{email}")
     Object findByUserEmail(@RequestParam("email") String email);
 
-    @PutMapping(value = "/save")
+    @PutMapping(value = "/saveAPI")
     Object addOrUpdateUser(@RequestBody CustomerDTO customerDTO);
 }
-

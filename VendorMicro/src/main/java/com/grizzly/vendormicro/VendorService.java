@@ -4,6 +4,8 @@ import com.grizzly.vendormicro.image.Image;
 import com.grizzly.vendormicro.image.ImageDTO;
 import com.grizzly.vendormicro.image.ImageRepository;
 import com.grizzly.vendormicro.image.ImageUtils;
+import com.grizzly.vendormicro.model.Vendor;
+import com.grizzly.vendormicro.model.VendorDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

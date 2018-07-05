@@ -53,16 +53,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(HEADER_STRING);
 
         if (token != null) {
-            System.out.println(token);
             AuthSession authSession = authService.sessionStart(token);
 
-            if (authSession != null) {
-                System.out.println("Success login?");
+            if (authSession != null)
                 return new UsernamePasswordAuthenticationToken(authSession, null, new ArrayList<>());
-            }
         }
-
-        System.out.println("Fail login.");
 
         return null;
     }

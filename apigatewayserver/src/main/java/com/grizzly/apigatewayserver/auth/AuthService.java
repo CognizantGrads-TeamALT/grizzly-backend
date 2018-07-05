@@ -34,18 +34,14 @@ public class AuthService {
 
         // Session doesn't exist.
         if (authSession == null) {
-            System.out.println("Session does not exist?");
             // Fetch token data and validate.
             Payload tokenData = verifyToken(tokenId);
 
             // invalid token.
             if (tokenData == null) {
-                System.out.println("No payload?");
                 return null;
             }
         }
-
-        System.out.println("Returning.");
 
         // Return existing session.
         return authSession;
@@ -103,15 +99,13 @@ public class AuthService {
 
         LinkedHashMap<String, String> map = (LinkedHashMap) user;
 
-        System.out.println("DATA FROM USERMICRO: ");
-        System.out.println(map.toString());
-
         JSONObject jsonObject = new JSONObject(map);
         try {
             jsonObject.put("name", tokenData.get("name"));
         } catch (Exception e) {
-            System.out.println("oh no");
+            return null;
         }
+
         String jsonString = jsonObject.toString();
 
         AuthSession authSession =
