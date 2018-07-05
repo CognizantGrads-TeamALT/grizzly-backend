@@ -46,7 +46,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 // Vendor microservice
                 .antMatchers( "/vendor/batchFetch/**" ).permitAll()
                 .antMatchers( "/vendor/get/**" ).permitAll()
-                .antMatchers( "/vendor/search/**" ).permitAll()
 
             .anyRequest().authenticated().and()
             .addFilter(new AuthorizationFilter(authenticationManager()))

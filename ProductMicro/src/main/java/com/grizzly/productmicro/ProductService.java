@@ -62,7 +62,7 @@ public class ProductService {
     //(String name, Integer stock, Integer req, Integer buffer, Integer pending, Integer price, Integer rating)
 
     public ArrayList<ProductDTO> get(Integer pageIndex, String column_name) {
-        PageRequest request = getPageRequest(pageIndex, column_name, "product", 25);
+        PageRequest request = getPageRequest(pageIndex, column_name, "product", 30);
 
         Page<Product> products = productRepository.findAll(request);
 
