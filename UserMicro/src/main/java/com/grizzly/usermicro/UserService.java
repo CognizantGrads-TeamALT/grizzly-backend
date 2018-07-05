@@ -12,7 +12,6 @@ import com.grizzly.usermicro.orders.Order;
 import com.grizzly.usermicro.orders.OrderDTO;
 import com.grizzly.usermicro.orders.OrderRepository;
 import com.grizzly.usermicro.user.User;
-import com.grizzly.usermicro.user.UserDTO;
 import com.grizzly.usermicro.vendor.Vendor;
 import com.grizzly.usermicro.vendor.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import static com.grizzly.grizlibrary.helpers.Helper.makeListFromIterable;
 
 @Service
 public class UserService {
@@ -312,7 +309,6 @@ public class UserService {
     }
 
     public void addOrder(OrderDTO orderDTO){
-
         Order newOrder = orderDTO.toEntity();
         orderRepository.save(newOrder);
 
@@ -326,7 +322,5 @@ public class UserService {
 
             orderItemRepository.save(currentItem);
         }
-
-
     }
 }
