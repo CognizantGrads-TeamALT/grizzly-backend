@@ -86,6 +86,11 @@
             <artifactId>grizlibrary</artifactId>
             <version>0.0.5-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>2.0.3.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
