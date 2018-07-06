@@ -1,5 +1,6 @@
 package com.grizzly.productmicro;
 
+import com.grizzly.productmicro.client.CategoryClient;
 import com.grizzly.productmicro.image.Image;
 import com.grizzly.productmicro.image.ImageDTO;
 import com.grizzly.productmicro.image.ImageRepository;
@@ -8,16 +9,11 @@ import com.grizzly.productmicro.model.Product;
 import com.grizzly.productmicro.model.ProductDTO;
 import com.grizzly.productmicro.model.ProductInventoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -25,6 +21,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.grizzly.grizlibrary.helpers.Helper.getPageRequest;
+import static java.lang.Math.toIntExact;
 
 @Service
 public class ProductService {
@@ -33,6 +30,9 @@ public class ProductService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private CategoryClient categoryClient;
 
     // Convert a Product object into a ProductDTO
     public ProductDTO productToDTO(Product product) {
@@ -182,22 +182,10 @@ public class ProductService {
                 saveImageDTO(imageDTO[i], created.getProductId());
             }
 
-        try {
-            URL url = new URL("http://alt.ausgrads.academy:8765/categorymicro" +
-                                "category/updateCount/" + created.getCategoryId());
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-        } catch (MalformedURLException e) {
-            return null;
-        } catch (IOException e){
-            return null;
-        }
+        // Tell category microservice about our new product.
+        updateCategoryCount(created.getCategoryId());
 
-        ProductDTO productDTO = new ProductDTO(created.getName(), created.getVendorId(), created.getCategoryId(),
-                created.getDesc(), created.getPrice(), created.getRating(), created.getEnabled(), imageDTO);
-        productDTO.setProductId(created.getProductId());
-
-        return productDTO;
+        return productToDTO(created);
     }
 
     /**
@@ -227,6 +215,8 @@ public class ProductService {
      * @param deleteId, ID of the product to delete
      */
     public void deleteById(Integer deleteId) {
+        Integer categoryId = productRepository.findById(deleteId).get().getCategoryId();
+
         productRepository.deleteById(deleteId);
 
         // Delete imgs
@@ -235,6 +225,9 @@ public class ProductService {
         //    ImageUtils.deleteImage(img.getImage_url());
 
         imageRepository.deleteAll(images);
+
+        // Tell category microservice about our deleted product.
+        updateCategoryCount(categoryId);
     }
 
     /**
@@ -399,8 +392,7 @@ public class ProductService {
         Product prod;
         try{
             prod = productRepository.findByProductId(request.getProductId()).get(0);
-        }
-        catch (NoSuchElementException e){
+        } catch (NoSuchElementException e){
             return null;
         }
         prod.setName(request.getName());
@@ -409,7 +401,7 @@ public class ProductService {
         prod.setPending(request.getPending());
         prod.setPrice(request.getPrice());
         int req = request.getBuffer() - request.getStock();
-        if(req < 0) req =0;
+        if (req < 0) req = 0;
         prod.setReq(req);
 
         productRepository.save(prod);
@@ -446,5 +438,10 @@ public class ProductService {
         }
 
         return productResult;
+    }
+
+    private void updateCategoryCount(Integer categoryId) {
+        Integer count = toIntExact(productRepository.countByCategoryId(categoryId));
+        categoryClient.updateCount(categoryId, count);
     }
 }

@@ -43,6 +43,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/category/get/**" ).permitAll()
                 .antMatchers( "/category/search/**" ).permitAll()
                 .antMatchers( "/category/batchFetch/**" ).permitAll()
+                .antMatchers( "/category/updateCount" ).denyAll() // productmicro uses feign to use this
 
                 // Product microservice
                 .antMatchers( "/product/batchFetch/**" ).permitAll()

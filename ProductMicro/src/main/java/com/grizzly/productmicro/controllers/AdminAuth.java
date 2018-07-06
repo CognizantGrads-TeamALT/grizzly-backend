@@ -37,6 +37,36 @@ public class AdminAuth {
     }
 
     /**
+     * View a detailed product,edit and saved in the database
+     * @param productId, ID of the product we are editing
+     * @param request
+     * @return
+     *
+     * AUTHENTICATION (admin only)
+     */
+    @PostMapping("/edit/{id}")
+    public ResponseEntity edit(@PathVariable(value="id") Integer productId, @RequestBody ProductDTO request, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
+        ProductDTO product;
+        try {
+            product = productService.edit(productId, request);
+        }
+        catch (Exception e) {
+            // exception if the ID did not map to an existing product
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
+                    "name: " + request.getName()
+                            + "price: " + request.getPrice() +
+                            "desc: " + request.getDesc() +
+                            "categoryId: " + request.getCategoryId() +
+                            "; exception msg: " + e.getCause()));
+        }
+
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    /**
      * Delete a product based on a given ID
      * @param id, ID of the product to delete
      * @return HTTP status response only
