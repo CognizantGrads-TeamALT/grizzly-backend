@@ -347,6 +347,9 @@ public class ProductService {
             }
         }
 
+        // Tell category microservice about our deleted product.
+        updateCategoryCount(prod.getCategoryId());
+
         return productToDTO(prod);
     }
 
