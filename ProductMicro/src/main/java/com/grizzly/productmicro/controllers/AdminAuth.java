@@ -122,13 +122,13 @@ public class AdminAuth {
      *
      * AUTHENTICATION (admin only)
      */
-    @PostMapping("/setBlockByVendor/{id}")
-    public ResponseEntity setBlockByVendor(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
+    @PostMapping("/setBlockByVendor/{id}/{block}")
+    public ResponseEntity setBlockByVendor(@PathVariable(value="id") Integer id,@PathVariable(value="block") boolean block, @RequestHeader(value="User-Data") String userData) {
         if (!hasAccess(userData))
             return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
 
         try {
-            productService.disableByVendorId(id);
+            productService.disableByVendorId(id, block);
         }
         // this ID didn't match any vendors
         catch (EmptyResultDataAccessException e) {
@@ -146,13 +146,13 @@ public class AdminAuth {
      *
      * AUTHENTICATION (admin only)
      */
-    @PostMapping("/setBlockByCategory/{id}")
-    public ResponseEntity setBlockByCategory(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
+    @PostMapping("/setBlockByCategory/{id}/{block}")
+    public ResponseEntity setBlockByCategory(@PathVariable(value="id") Integer id,@PathVariable(value="block") boolean block, @RequestHeader(value="User-Data") String userData) {
         if (!hasAccess(userData))
             return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
 
         try {
-            productService.disableByCategoryId(id);
+            productService.disableByCategoryId(id, block);
         }
         // this ID didn't match any categories
         catch (EmptyResultDataAccessException e) {
