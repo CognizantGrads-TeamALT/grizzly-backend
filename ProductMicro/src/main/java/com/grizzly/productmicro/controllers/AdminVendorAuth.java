@@ -55,8 +55,10 @@ public class AdminVendorAuth {
         Integer accessLevel = hasAccess(userData);
         if (accessLevel == 0)
             return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
-        else if (accessLevel != -1)
+        else if (accessLevel != -1) {
             newProduct.setVendorId(accessLevel);
+            newProduct.setEnabled(false); // disabled by default for vendor.
+        }
 
         ProductDTO created;
         try {
@@ -75,44 +77,5 @@ public class AdminVendorAuth {
         }
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
-
-    /**
-     * View a detailed product,edit and saved in the database
-     * @param productId, ID of the product we are editing
-     * @param request
-     * @return
-     *
-     * AUTHENTICATION (admin + vendor)
-     */
-    @PostMapping("/edit/{id}")
-    public ResponseEntity edit(@PathVariable(value="id") Integer productId, @RequestBody ProductDTO request, @RequestHeader(value="User-Data") String userData) {
-        // Authentication
-        Integer accessLevel = hasAccess(userData);
-        if (accessLevel == 0)
-            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
-        else if (accessLevel != -1) {
-            ProductDTO productInfo = productService.getSingleById(productId);
-            if (productInfo != null) {
-                if (productInfo.getVendorId() != accessLevel)
-                    return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "This is not your product."));
-            }
-        }
-
-        ProductDTO product;
-        try {
-            product = productService.edit(productId, request);
-        }
-        catch (Exception e) {
-            // exception if the ID did not map to an existing product
-            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Edit product Failed.",
-                    "name: " + request.getName()
-                            + "price: " + request.getPrice() +
-                            "desc: " + request.getDesc() +
-                            "categoryId: " + request.getCategoryId() +
-                            "; exception msg: " + e.getCause()));
-        }
-
-        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 }

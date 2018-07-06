@@ -177,7 +177,7 @@ public class CategoryService {
      * @param catID, ID of the Category to increment count
      * @return HTTP status response only
      */
-    public void incrementProductCount(Integer catID) {
-        categoryRepository.incrementProductCount(catID);
+    public void updateProductCount(Integer catID, Integer newCount) {
+        categoryRepository.updateCategoryCount(catID, newCount);
     }
 }

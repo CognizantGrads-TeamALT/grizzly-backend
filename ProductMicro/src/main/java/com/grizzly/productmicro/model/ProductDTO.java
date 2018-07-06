@@ -1,7 +1,6 @@
 package com.grizzly.productmicro.model;
 
 import com.grizzly.productmicro.image.ImageDTO;
-import com.grizzly.productmicro.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

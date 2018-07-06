@@ -29,6 +29,9 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
     @Query("UPDATE product p SET enabled = false, categoryId = 0 WHERE p.categoryId = :categoryId")
     void disableByCategoryId(@Param("categoryId") Integer categoryId);
 
+    @Query("SELECT COUNT(p) FROM product p WHERE p.categoryId = :categoryId")
+    Integer countByCategoryId(@Param("categoryId") Integer categoryId);
+
     @Query("SELECT p FROM product p WHERE p.categoryId = :categoryId")
     List<Product> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);
 

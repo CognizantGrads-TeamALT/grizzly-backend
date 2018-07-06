@@ -87,4 +87,23 @@ public class NoAuth {
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
+
+    /**
+     * Update a productCount when a product is added
+     * @param catID, ID of the Category to increment count
+     * @return HTTP status response only
+     *
+     * FOR USE BY PRODUCT MICRO FEIGN CLIENT
+     */
+    @PostMapping(value="/updateCount")
+    public ResponseEntity incrementProductCount(@RequestParam("catID") Integer catID, @RequestParam("newCount") Integer newCount) {
+        try {
+            categoryService.updateProductCount(catID, newCount);
+        } catch(NumberFormatException e){
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST, "Unable to update category count",
+                    "catID: " + catID + " newCount: " + newCount));
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

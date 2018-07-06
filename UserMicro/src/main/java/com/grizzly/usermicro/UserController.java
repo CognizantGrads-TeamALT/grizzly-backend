@@ -47,6 +47,9 @@ public class UserController {
      */
     @GetMapping("/get/vendor/{pageIndex}/{column_name}")
     public ResponseEntity getAllVendors(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         ArrayList<Vendor> vendors = userService.getAllVendors(pageIndex, column_name);
 
         // no products found
@@ -63,6 +66,9 @@ public class UserController {
      */
     @GetMapping("/get/customer/{pageIndex}/{column_name}")
     public ResponseEntity getAllCustomers(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         ArrayList<Customer> customers = userService.getAllCustomers(pageIndex, column_name);
 
         // no products found
@@ -79,6 +85,9 @@ public class UserController {
      */
     @GetMapping("/get/admin/{pageIndex}/{column_name}")
     public ResponseEntity getAllAdmins(@PathVariable(value="pageIndex") Integer pageIndex, @PathVariable(value="column_name") String column_name, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         ArrayList<Admin> admins = userService.getAllAdmins(pageIndex, column_name);
 
         // no products found
@@ -96,6 +105,9 @@ public class UserController {
      */
     @GetMapping("/get/admin/{id}")
     public ResponseEntity getSingleUserAdmin(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         ArrayList<Admin> admins = userService.getSingleUserAdmin(id);
 
         // no users found
@@ -112,7 +124,9 @@ public class UserController {
      * @return the user
      */
     @GetMapping("/get/vendor/{id}")
-    public ResponseEntity getSingleUserVendor(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
+    public ResponseEntity getSingleUserVendor(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {if (!hasAccess(userData))
+        return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         ArrayList<Vendor> vendors = userService.getSingleUserVendor(id);
 
         // no users found
@@ -130,6 +144,9 @@ public class UserController {
      */
     @GetMapping("/get/customer/{id}")
     public ResponseEntity getSingleUserCustomer(@PathVariable(value="id") Integer id, @RequestHeader(value="User-Data") String userData) {
+        if (!hasAccess(userData))
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
         ArrayList<Customer> customers = userService.getSingleUserCustomer(id);
 
         // no users found
@@ -173,8 +190,8 @@ public class UserController {
      *
      * restricted at apigateway so feignclient accesses this.
      */
-    @GetMapping("/getByEmail/{email}")
-    public ResponseEntity getSingleUser(@PathVariable(value="email") String email) {
+    @GetMapping("/getByEmail")
+    public ResponseEntity getSingleUser(@RequestParam(value="email") String email) {
         User user = userService.findByUserEmail(email);
 
         if (user == null)
@@ -221,7 +238,20 @@ public class UserController {
      * @return Http Status Message
      */
     @PutMapping("/addOrder")
-    public ResponseEntity addOrder(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity addOrder(@RequestBody OrderDTO orderDTO, @RequestHeader(value="User-Data") String userData) {
+        Integer userId;
+        try {
+            JSONObject jsonObject = new JSONObject(userData);
+            userId = (Integer) jsonObject.get("userId");
+            if (!jsonObject.get("role").equals("customer"))
+                return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+
+            if (orderDTO.getUser_id() != userId)
+                return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+        } catch (Exception e) {
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+        }
+
         userService.addOrder(orderDTO);
 
         return new ResponseEntity(HttpStatus.OK);
