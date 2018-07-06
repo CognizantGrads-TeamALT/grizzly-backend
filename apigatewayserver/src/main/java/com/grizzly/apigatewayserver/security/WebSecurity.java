@@ -56,7 +56,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/vendor/get/**" ).permitAll()
 
                 // User microservice
-                .antMatchers( "/user/getByEmail" ).denyAll() // only to be accessed through apigateway (feignclient).
+                .antMatchers( "/user/getByEmail/**" ).denyAll() // only to be accessed through apigateway (feignclient).
                 .antMatchers( "/user/saveAPI" ).denyAll() // again, only for apigateway.
 
             .anyRequest().authenticated().and()

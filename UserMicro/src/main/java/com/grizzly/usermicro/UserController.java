@@ -190,8 +190,8 @@ public class UserController {
      *
      * restricted at apigateway so feignclient accesses this.
      */
-    @GetMapping("/getByEmail")
-    public ResponseEntity getSingleUser(@RequestParam(value="email") String email) {
+    @GetMapping("/getByEmail/{email}")
+    public ResponseEntity getSingleUser(@PathVariable(value="email") String email) {
         User user = userService.findByUserEmail(email);
 
         if (user == null)
