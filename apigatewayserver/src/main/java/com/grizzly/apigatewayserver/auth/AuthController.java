@@ -34,7 +34,7 @@ public class AuthController {
         Boolean deleted = authService.deleteSession(token);
 
         if (deleted)
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(deleted, HttpStatus.OK);
         else
             return new ResponseEntity(HttpStatus.NOT_FOUND);
     }

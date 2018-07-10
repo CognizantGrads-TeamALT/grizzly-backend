@@ -254,7 +254,7 @@ public class UserController {
 
         userService.addOrder(orderDTO);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(orderDTO.getTxn_id(), HttpStatus.OK);
     }
 }
 

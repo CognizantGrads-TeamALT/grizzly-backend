@@ -98,7 +98,7 @@ public class AdminAuth {
                     "id: " + id));
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     /**
