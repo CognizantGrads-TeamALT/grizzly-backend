@@ -104,6 +104,6 @@ public class NoAuth {
                     "catID: " + catID + " newCount: " + newCount));
         }
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(newCount, HttpStatus.OK);
     }
 }
