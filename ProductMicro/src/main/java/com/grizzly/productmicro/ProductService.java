@@ -231,6 +231,24 @@ public class ProductService {
     }
 
     /**
+     * Get all products (given pagination and sorting) for a given vendor
+     * @param vendorId, ID of the vendor to filter by
+     * @param pageIndex, index of the page of results to retrieve from the database
+     * @param column_name, name of the product field to sort the results by
+     * @return list of products in the category
+     */
+    public ArrayList<ProductDTO> getByVendor(Integer vendorId, Integer pageIndex, String column_name) {
+        List<Product> products = productRepository.findByVendorId(vendorId, getPageRequest(pageIndex, column_name, "product", 25));
+
+        ArrayList<ProductDTO> productsResult = new ArrayList<>();
+        for (Product product : products) {
+            productsResult.add(productToDTO(product));
+        }
+
+        return productsResult;
+    }
+
+    /**
      * Get all products (given pagination and sorting) for a given category
      * @param catId, ID of the category to filter by
      * @param pageIndex, index of the page of results to retrieve from the database

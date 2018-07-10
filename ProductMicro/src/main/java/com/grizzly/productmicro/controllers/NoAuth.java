@@ -110,6 +110,30 @@ public class NoAuth {
     }
 
     /**
+     * Get all products that are in a given vendor, paginated and sorted
+     * @param vendorId, ID of the vendor to filter by
+     * @param pageIndex, index of the page of results to fetch
+     * @param column_name, name of the product field we are sorting by (defaults to product ID)
+     * @return list of products in the given category
+     *
+     * NO AUTHENTICATION
+     */
+    @GetMapping("/byVendor/{vendorId}/{pageIndex}/{column_name}")
+    public ResponseEntity getByVendor(@PathVariable(value="vendorId") Integer vendorId,
+                                        @PathVariable(value="pageIndex") Integer pageIndex,
+                                        @PathVariable(value="column_name") String column_name) {
+        ArrayList<ProductDTO> products = productService.getByVendor(vendorId, pageIndex, column_name);
+
+        if (products == null || products.isEmpty()) {
+            return buildResponse(new ApiError(HttpStatus.BAD_REQUEST,
+                    "No products were found.",
+                    "vendorId: " + vendorId + "; pageIndex: " + pageIndex + "; column_name: " + column_name));
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
      * Get all products that are in a given category, paginated and sorted
      * @param catId, ID of the category to filter by
      * @param pageIndex, index of the page of results to fetch
