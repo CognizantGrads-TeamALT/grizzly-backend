@@ -217,6 +217,30 @@ public class UserController {
 
     /**
      * Adds and or updates a customer account.
+     * @param
+     * @return user
+     *
+     * do not remove user-data check.
+     */
+    @GetMapping("/userData")
+    public ResponseEntity getData(@RequestHeader(value="User-Data") String userData) {
+        User user;
+
+        try {
+            JSONObject jsonObject = new JSONObject(userData);
+            user = userService.findByUserEmail(jsonObject.get("email").toString());
+        } catch (Exception e) {
+            return buildResponse(new ApiError(HttpStatus.FORBIDDEN, "You do not have access.", "You do not have the proper clearance."));
+        }
+
+        if (user == null)
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    /**
+     * Adds and or updates a customer account.
      * @param userDTO data
      * @return user
      *
